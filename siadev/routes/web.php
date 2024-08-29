@@ -24,22 +24,12 @@ Route::get('/home', function () {
 
 
 Route::get('/all_students', [StudentController::class, 'index'])->name('students.index');
+Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.student_details');
+Route::get('/student_promotion', function () {return view('pages.students.student_promotion');});
+Route::post('/admission_form_student', function () {return view('pages.students.admission_form_student');});
 
-Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.show');
-
-Route::get('/student_promotion', function () {
-    return view('pages.students.student_promotion');
-});
-Route::get('/admission_form_student', function () {
-    return view('pages.students.admission_form_student');
-});
-
-// CRUD for  Students
-// Route to display the form (GET request)
-Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
-
-// Route to handle form submission (POST request)
-Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+Route::post('/admission_form_student', [StudentController::class, 'store'])->name('students.store');
+Route::resource('students', StudentController::class); //Atu funciona ba CRUD
 
 // Route for Menus of Teachers
 Route::get('/all_teachers', function () {
