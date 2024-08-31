@@ -77,9 +77,7 @@
                                 <td>{{ $student->department->department_name }}</td>
                                 <td>{{ $student->semester->semester_name }}</td>
                                 <td>
-                                    <a
-                                        href="{{ route('students.student_details', ['student_id' => $student->id]) }}">Ver</a>
-
+                                    <a href="{{ route('students.show', ['student_id' => $student->student_id]) }}">Ver</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -12,24 +12,18 @@ Route::get('/home', function () {
     return view('pages.home');
 });
 
-// Menus for Students
-// Route::get('/all_students', function () {
-//     return view('pages.students.all_students');
-// });
 
+// Resource route for students (includes all CRUD operations)
+Route::resource('students', StudentController::class);
 
-// Route::get('/student_details/{id}', function () {
-//     return view('pages.students.student_details');
-// });
+// Specific routes for additional pages
+Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.show');
 
-
-Route::get('/all_students', [StudentController::class, 'index'])->name('students.index');
-Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.student_details');
-Route::get('/student_promotion', function () {return view('pages.students.student_promotion');});
-Route::post('/admission_form_student', function () {return view('pages.students.admission_form_student');});
-
+Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.show');
+Route::put('/student_details/{student_id}', [StudentController::class, 'update'])->name('students.update');
 Route::post('/admission_form_student', [StudentController::class, 'store'])->name('students.store');
-Route::resource('students', StudentController::class); //Atu funciona ba CRUD
+
+
 
 // Route for Menus of Teachers
 Route::get('/all_teachers', function () {

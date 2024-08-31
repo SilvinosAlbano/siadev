@@ -34,100 +34,81 @@
                 </div>
             </div>
 
-            <form action="{{ route('students.student_details', ['student_id' => $student->id]) }}" method="POST"
+            <form action="{{ route('students.update', ['student_id' => $student->student_id]) }}" method="POST"
                 enctype="multipart/form-data" id="studentForm">
                 @csrf
                 @method('PUT')
 
                 <div class="single-info-details">
-                    <div class="item-img">
-                        <img src="{{ asset('storage/' . $student->student_image) }}" alt="student">
+                    <div class="item-img mb-4">
+                        <img src="{{ asset('storage/' . $student->student_image) }}" alt="student" class="rounded-circle"
+                            width="150">
                     </div>
                     <div class="item-content">
-                        <div class="header-inline item-header">
-                            <h3 class="text-dark-medium font-medium">{{ $student->complete_name }}</h3>
-                        </div>
-                        <p>
-                            <textarea name="observation" class="form-control" rows="3" readonly>{{ $student->observation }}</textarea>
-                        </p>
-                        <div class="info-table table-responsive">
-                            <table class="table text-nowrap">
-                                <tbody>
-                                    <tr>
-                                        <td>Name:</td>
-                                        <td><input type="text" name="complete_name" class="form-control"
-                                                value="{{ $student->complete_name }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gender:</td>
-                                        <td>
-                                            <select name="gender" class="form-control" disabled>
-                                                <option value="male" {{ $student->gender == 'male' ? 'selected' : '' }}>
-                                                    Male</option>
-                                                <option value="female" {{ $student->gender == 'female' ? 'selected' : '' }}>
-                                                    Female</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Place of Birth:</td>
-                                        <td><input type="text" name="place_of_birth" class="form-control"
-                                                value="{{ $student->place_of_birth }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date of Birth:</td>
-                                        <td><input type="text" name="date_of_birth" class="form-control"
-                                                value="{{ $student->date_of_birth }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Department:</td>
-                                        <td>
-                                            <select name="department_id" class="form-control" disabled>
-                                                @foreach ($departments as $department)
-                                                    <option value="{{ $department->id }}"
-                                                        {{ $student->department_id == $department->id ? 'selected' : '' }}>
-                                                        {{ $department->department_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Semester:</td>
-                                        <td>
-                                            <select name="semester_id" class="form-control" disabled>
-                                                @foreach ($semesters as $semester)
-                                                    <option value="{{ $semester->id }}"
-                                                        {{ $student->semester_id == $semester->id ? 'selected' : '' }}>
-                                                        {{ $semester->semester_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>NRE:</td>
-                                        <td><input type="text" name="nre" class="form-control"
-                                                value="{{ $student->nre }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Start Year:</td>
-                                        <td><input type="text" name="start_year" class="form-control"
-                                                value="{{ $student->start_year }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Address:</td>
-                                        <td><input type="text" name="address" class="form-control"
-                                                value="{{ $student->address }}" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phone:</td>
-                                        <td><input type="text" name="phone" class="form-control"
-                                                value="{{ $student->phone }}" readonly></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="complete_name">Name:</label>
+                                <input type="text" name="complete_name" class="form-control"
+                                    value="{{ $student->complete_name }}" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="gender">Gender:</label>
+                                <select name="gender" class="form-control" disabled>
+                                    <option value="male" {{ $student->gender == 'male' ? 'selected' : '' }}>Male</option>
+                                    <option value="female" {{ $student->gender == 'female' ? 'selected' : '' }}>Female
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="place_of_birth">Place of Birth:</label>
+                                <input type="text" name="place_of_birth" class="form-control"
+                                    value="{{ $student->place_of_birth }}" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="date_of_birth">Date of Birth:</label>
+                                <input type="text" name="date_of_birth" class="form-control"
+                                    value="{{ $student->date_of_birth }}" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="department_id">Department:</label>
+                                <select name="department_id" class="form-control" disabled>
+                                    <option value="{{ $student->department_id }}">{{ $student->department }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="semester_id">Semester:</label>
+                                <select name="semester_id" class="form-control" disabled>
+                                    <option value="{{ $student->semester_id }}">{{ $student->semester }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="nre">NRE:</label>
+                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="start_year">Start Year:</label>
+                                <input type="text" name="start_year" class="form-control"
+                                    value="{{ $student->start_year }}" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="address">Address:</label>
+                                <input type="text" name="address" class="form-control" value="{{ $student->address }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="text" name="phone" class="form-control" value="{{ $student->phone }}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label for="observation">Observation:</label>
+                                <textarea name="observation" class="form-control" rows="3" readonly>{{ $student->observation }}</textarea>
+                            </div>
                         </div>
                         <div class="form-group mt-3">
-                            <button type="submit" class="btn btn-primary" id="saveButton" disabled>Save Changes</button>
+                            <button type="submit" class="btn btn-lg btn-primary" id="saveButton" disabled>Save
+                                Changes</button>
                         </div>
                     </div>
                 </div>
