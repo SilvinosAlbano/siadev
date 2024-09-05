@@ -1,26 +1,30 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Module extends Model
 {
-    protected $table = 'modules'; // Specify the table name
-    protected $primaryKey = 'module_id'; // Specify the primary key column
-    public $incrementing = false; // UUIDs are not incrementing integers
-    protected $keyType = 'string'; // UUIDs are strings
+    protected $primaryKey = 'id_module';
+    protected $keyType = 'string';
+    public $incrementing = false;
 
-    protected $fillable = ['name']; // Specify which columns are mass assignable
+    protected $fillable = ['module_name', 'description'];
 
-    protected static function booted()
+    // Relationship with users through student_modules_roles
+    public function users()
     {
-        static::creating(function ($module) {
-            $module->module_id = (string) Str::uuid(); // Generate UUID on creation
-        });
+        return $this->belongsToMany(User::class, 'student_modules_roles', 'module_id', 'user_id')
+                    ->withPivot('role_id', 'expired_date')
+                    ->withTimestamps();
     }
-    public function permissions()
+    
+
+    // Relationship with roles if needed
+    public function roles()
     {
-        return $this->hasMany(ModulePermission::class, 'module_name', 'module_id');
+        return $this->belongsToMany(Role::class, 'student_modules_roles', 'module_id', 'role_id')
+                    ->withPivot('expired_date');
     }
 }

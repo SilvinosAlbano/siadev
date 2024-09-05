@@ -21,6 +21,10 @@ class CreateStudentsTable extends Migration
             $table->string('student_image')->nullable();
             $table->text('observation')->nullable();
             $table->timestamps();
+
+            // Foreign keys
+            $table->foreign('department_id')->references('department_id')->on('departments')->onDelete('cascade');
+            $table->foreign('semester_id')->references('semester_id')->on('semesters')->onDelete('cascade');
         });
     }
 

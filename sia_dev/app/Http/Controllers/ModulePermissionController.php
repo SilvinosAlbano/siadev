@@ -1,21 +1,20 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Role;
-use App\Models\Permission;
-use App\Models\ModulePermission; // Import the model
+use App\Models\Module;
+use App\Models\StudentModulesRoles; // Adjust as needed
 
 class ModulePermissionController extends Controller
 {
     public function showAssignRolesForm()
     {
         $roles = Role::all();
-        $permissions = Permission::all();
-        $modules = ['Students', 'Teachers', 'Departments', 'Classes', 'Subjects', 'Attendances'];
+        $modules = Module::all();
 
-        return view('pages.users.assign_role', compact('roles', 'permissions', 'modules'));
+        return view('pages.users.assign_role', compact('roles', 'modules'));
     }
 
     public function assignRoles(Request $request)
@@ -32,16 +31,14 @@ class ModulePermissionController extends Controller
             foreach ($roleIds as $roleId) {
                 $expiresAt = $request->input("expires_at.$module");
 
-                // Insert or update the module_permissions table
-                ModulePermission::updateOrCreate(
+                // Insert or update the student_modules_roles table
+                StudentModulesRoles::updateOrCreate(
                     [
-                        'module_name' => $module,
                         'role_id' => $roleId,
-                        // Other necessary fields
+                        'user_id' => $request->user_id, // Ensure user_id is passed correctly
                     ],
                     [
-                        'expires_at' => $expiresAt,
-                        // Other necessary fields
+                        'expired_date' => $expiresAt,
                     ]
                 );
             }

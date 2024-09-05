@@ -2,31 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    use HasFactory;
-
     protected $primaryKey = 'id_roles';
-    public $incrementing = false;
     protected $keyType = 'string';
+    public $incrementing = false;
 
-    protected $fillable = [
-        'id_roles',
-        'name',
-        'guard_name',
-    ];
+    protected $fillable = ['role_name', 'description'];
 
-    public function permissions()
+    // Relationship with users through student_modules_roles
+    public function users()
     {
-        return $this->belongsToMany(Permission::class, 'module_permissions', 'role_id', 'permission_id')
-                    ->withPivot('expires_at');
+        return $this->belongsToMany(User::class, 'student_modules_roles', 'role_id', 'user_id')
+                    ->withPivot('expired_date');
     }
 
-    public function modelHasRoles()
+    // Relationship with modules if needed
+    public function modules()
     {
-        return $this->hasMany(ModelHasRole::class, 'role_id', 'id_roles');
+        return $this->belongsToMany(Module::class, 'student_modules_roles', 'role_id', 'module_id')
+                    ->withPivot('expired_date');
     }
 }

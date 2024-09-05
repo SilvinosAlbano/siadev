@@ -20,15 +20,6 @@
                 <div class="item-title">
                     <h3>Manage Roles and Permissions</h3>
                 </div>
-                <div class="dropdown">
-                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
-                        aria-expanded="false">...</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                    </div>
-                </div>
             </div>
 
             <form action="{{ route('assign.roles') }}" method="POST">
@@ -39,7 +30,7 @@
                             <tr>
                                 <th>Module</th>
                                 @foreach ($roles as $role)
-                                    <th class="text-center">{{ $role->name }}</th>
+                                    <th class="text-center">{{ $role->role_name }}</th>
                                 @endforeach
                                 <th>Expiry Date</th>
                             </tr>
@@ -47,15 +38,16 @@
                         <tbody>
                             @foreach ($modules as $module)
                                 <tr>
-                                    <td>{{ $module }}</td>
+                                    <td>{{ $module->module_name }}</td>
                                     @foreach ($roles as $role)
                                         <td class="text-center">
-                                            <input class="" type="checkbox" name="roles[{{ $module }}][]"
+                                            <input type="checkbox" name="roles[{{ $module->id_module }}][]"
                                                 value="{{ $role->id_roles }}">
                                         </td>
                                     @endforeach
                                     <td>
-                                        <input type="date" name="expires_at[{{ $module }}]" class="form-control">
+                                        <input type="date" name="expires_at[{{ $module->id_module }}]"
+                                            class="form-control">
                                     </td>
                                 </tr>
                             @endforeach

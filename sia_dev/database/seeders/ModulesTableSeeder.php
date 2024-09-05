@@ -6,61 +6,61 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class RolesTableSeeder extends Seeder
+class ModulesTableSeeder extends Seeder
 {
     public function run()
     {
         $now = Carbon::now();
 
-        // Define the roles data with unique UUIDs
-        $roles = [
+        // Define the modules data with unique UUIDs
+        $modules = [
             [
-                'id_roles' => '6d2f6e72-bc3e-4e93-b2bb-fc6f4b3b7dbe',
-                'role_name' => 'Read',
+                'id_module' => 'd2d8d3e7-bf3f-4c0d-a05b-f6e1d1a6726e',
+                'module_name' => 'Gestão Docentes',
                 'description' => 'Consultas',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
             [
-                'id_roles' => '8e6e4d7b-02d3-4f84-9e6e-64f79d5277f3',
-                'role_name' => 'Extract',
+                'id_module' => 'b1e7c3d9-0c5f-4b78-8731-ef7e3e1b8c6e',
+                'module_name' => 'Gestão Usuários',
                 'description' => 'Equipa Relatório',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
             [
-                'id_roles' => 'b8c4d4be-d9e0-4a2e-bc6b-0b8c1e3c1e4d',
-                'role_name' => 'Update',
+                'id_module' => 'f2d3c4b1-9189-4e27-9b5a-f7e6a7f8d8e9',
+                'module_name' => 'Gestão Estudantes',
                 'description' => 'Funcionário Normal',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
             [
-                'id_roles' => 'a5d5b9e1-f78c-4d4f-a1e8-0e2b5d4e6f0d',
-                'role_name' => 'Admin',
+                'id_module' => 'c2e8e8b6-4d4a-4b2e-bc1b-3c4e5f6a7a8b',
+                'module_name' => 'Gestão Disciplinas',
                 'description' => 'Administrador',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
             [
-                'id_roles' => 'e2e9b9b8-02e9-4b8e-9e0b-3c6d7e2b8f6d',
-                'role_name' => 'Create',
+                'id_module' => 'a7d8f2e0-8d4e-4b7f-8b2a-3c8e4f9d5e6a',
+                'module_name' => 'Gestão Classes',
                 'description' => 'Gestor',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
             [
-                'id_roles' => 'e3c8b9b8-2d7b-4e0f-9e2d-6b7f8e0a9d6d',
-                'role_name' => 'Delete',
+                'id_module' => 'e9c3b7e8-9f1c-4d6e-8a9b-2c7e8f6d4a9b',
+                'module_name' => 'Delete',
                 'description' => 'Funcionário Experiência',
                 'created_at' => $now,
                 'updated_at' => null,
             ],
         ];
 
-        // Insert roles into the database
-        DB::table('roles')->insert($roles);
+        // Insert modules into the database
+        DB::table('modules')->insert($modules);
 
-        $this->command->info('Roles table seeded successfully!');
+        $this->command->info('Modules table seeded successfully!');
     }
 }

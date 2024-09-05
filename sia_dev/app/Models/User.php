@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,15 +22,19 @@ class User extends Authenticatable
         });
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
-                    ->where('model_type', self::class);
-    }
-
+    // Relationship with roles through student_modules_roles
     public function modules()
     {
-        return $this->belongsToMany(ModulePermission::class, 'model_has_permissions', 'model_id', 'permission_id')
-                    ->where('model_type', self::class);
+        return $this->belongsToMany(Module::class, 'student_modules_roles', 'user_id', 'module_id')
+                    ->withPivot('role_id', 'expired_date')
+                    ->withTimestamps();
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'student_modules_roles', 'user_id', 'role_id')
+                    ->withPivot('expired_date')
+                    ->withTimestamps();
+    }
+
 }
