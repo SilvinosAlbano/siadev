@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\DocenteController;
 // Users Routes
 
 // In web.php
@@ -32,3 +32,13 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::put('/student_details/{student_id}', [StudentController::class, 'update'])->name('students.update');
     Route::post('/admission_form_student', [StudentController::class, 'store'])->name('students.store');
 // });
+
+
+// route for teachers
+// Route for Menus of Teachers
+Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
+Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
+Route::get('/habilitacao_docente/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
+Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
+Route::post('/store_docente', [DocenteController::class,'store'])->name('store_docente');
+Route::resource('docentes', DocenteController::class);
