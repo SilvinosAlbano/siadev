@@ -13,17 +13,17 @@ class StudentController extends Controller
     public function index()
     {
         $semesters = Semester::all();
-        $departments = ModelDepartamento::all();
+        $modelDepartamentos= ModelDepartamento::all();
         $students = Student::all();
         // $students = Student::with('roles', 'modules', 'student', 'docente')->paginate(10);
-        return view('pages.students.all_students', compact('students', 'semesters', 'departments'));
+        return view('pages.students.all_students', compact('students', 'semesters', 'modelDepartamentos'));
     }
 
     public function create()
     {
         $semesters = Semester::all();
-        $departments = ModelDepartamento::all();
-        return view('pages.students.admission_form_student', compact('semesters', 'departments'));
+        $modelDepartamentos= ModelDepartamento::all();
+        return view('pages.students.admission_form_student', compact('semesters', 'modelDepartamentos'));
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class StudentController extends Controller
             'date_of_birth' => 'required|date_format:d/m/Y',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
-            'department_id' => 'required|string|max:255',
+            'departamento_id' => 'required|string|max:255',
             'semester_id' => 'required|string|max:255',
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'observation' => 'nullable|string',
@@ -56,8 +56,8 @@ class StudentController extends Controller
     {
         $student = Student::with(['departamento', 'semester'])->findOrFail($student_id);
         $semesters = Semester::all();
-        $departments = ModelDepartamento::all();
-        return view('pages.students.student_details', compact('student', 'semesters', 'departments'));
+        $modelDepartamentos= ModelDepartamento::all();
+        return view('pages.students.student_details', compact('student', 'semesters', 'modelDepartamentos'));
     }
 
     public function edit(Student $student)
@@ -74,7 +74,7 @@ class StudentController extends Controller
             'date_of_birth' => 'required|date_format:d/m/Y',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
-            'department_id' => 'required|integer',
+            'departamento_id' => 'required|integer',
             'semester' => 'required|integer|in:1,2,3',
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'observation' => 'nullable|string',

@@ -15,7 +15,7 @@ class CreateStudentsTable extends Migration
             $table->string('place_of_birth');
             $table->date('date_of_birth');
             $table->string('nre')->nullable();
-            $table->uuid('department_id');
+            $table->uuid('departamento_id');
             $table->uuid('semester_id');
             $table->integer('start_year');
             $table->string('student_image')->nullable();
@@ -23,7 +23,7 @@ class CreateStudentsTable extends Migration
             $table->timestamps();
 
             // Foreign keys
-            $table->foreign('department_id')->references('id_departamento')->on('departamento')->onDelete('cascade');
+            $table->foreign('departamento_id')->references('id_departamento')->on('departamento')->onDelete('cascade');
             $table->foreign('semester_id')->references('semester_id')->on('semesters')->onDelete('cascade');
         });
     }

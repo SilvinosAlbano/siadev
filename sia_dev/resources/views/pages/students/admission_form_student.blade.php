@@ -72,8 +72,8 @@
                         <label>Departamento *</label>
                         <select class="form-control select2" name="department" required>
                             <option value="" selected hidden>Selecionar *</option>
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->department_id }}" {{ $department->department_id }}>
+                            @foreach ($modelDepartamentos as $department)
+                                <option value="{{ $department->departamento_id }}" {{ $department->departamento_id }}>
                                     {{ $department->department_name }}</option>
                             @endforeach
                         </select>

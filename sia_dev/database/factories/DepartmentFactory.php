@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\ModelDepartamento;
+use App\Models\ModelDepartamento; // Update this to the correct model
 
 class DepartmentFactory extends Factory
 {

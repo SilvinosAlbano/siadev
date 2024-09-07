@@ -61,12 +61,12 @@
                                     value="{{ $student->date_of_birth }}" readonly>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label for="department_id">Departamento:</label>
-                                <select name="department_id" class="form-control" disabled>
+                                <label for="departamento_id">Departamento:</label>
+                                <select name="departamento_id" class="form-control" disabled>
 
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $student->department_id }}"
-                                            {{ $student->department_id == $dept->department_id ? 'selected' : '' }}>
+                                    @foreach ($modelDepartamentosas $dept)
+                                        <option value="{{ $student->departamento_id }}"
+                                            {{ $student->departamento_id == $dept->departamento_id ? 'selected' : '' }}>
                                             {{ $dept->department_name }}</option>
                                     @endforeach
                                 </select>
@@ -75,7 +75,7 @@
                                 <label for="semester_id">Semestre:</label>
                                 <select name="semester_id" class="form-control" disabled>
                                     < @foreach ($semesters as $sems)
-                                        <option value="{{ $student->department_id }}"
+                                        <option value="{{ $student->departamento_id }}"
                                             {{ $student->semester_id == $sems->semester_id ? 'selected' : '' }}>
                                             {{ $sems->semester_name }}</option>
                                         @endforeach
