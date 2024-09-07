@@ -39,9 +39,9 @@ class Student extends Model
         });
     }
 
-    public function department()
+    public function departamento()
     {
-        return $this->belongsTo(Department::class, 'departamento_id');
+        return $this->belongsTo(ModelDepartamento::class, 'departamento_id');
     }
 
     public function semester()

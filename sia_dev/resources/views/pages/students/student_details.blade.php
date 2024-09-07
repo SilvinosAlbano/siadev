@@ -64,10 +64,10 @@
                                 <label for="departamento_id">Departamento:</label>
                                 <select name="departamento_id" class="form-control" disabled>
 
-                                    @foreach ($modelDepartamentosas $dept)
+                                    @foreach ($modelDepartamentos as $dept)
                                         <option value="{{ $student->departamento_id }}"
                                             {{ $student->departamento_id == $dept->departamento_id ? 'selected' : '' }}>
-                                            {{ $dept->department_name }}</option>
+                                            {{ $dept->departamento_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
