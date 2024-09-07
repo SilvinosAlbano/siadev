@@ -200,7 +200,7 @@ class DocenteController extends Controller
         return redirect()->route('docentes')->with('success', 'Docente status updated to deleted successfully');
     }
 
-    public function restore($id)
+   /*  public function restore($id)
         {
             // Find the docente by its ID
             $docente = ModelDocente::findOrFail($id);
@@ -212,6 +212,6 @@ class DocenteController extends Controller
             // Redirect with success message
             return redirect()->route('docentes')->with('success', 'Docente restored successfully');
         }
-
+ */
 
 }

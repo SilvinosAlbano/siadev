@@ -3574,16 +3574,20 @@ ul {
 
         .vertical-tab {
             display: flex;
+
             @media only screen and (max-width: 767px) {
                 display: block;
             }
+
             .nav-tabs {
                 min-width: 140px;
                 margin-right: 30px;
                 border-bottom: none;
+
                 @media only screen and (max-width: 767px) {
                     margin-bottom: 30px;
                 }
+
                 .nav-item {
                     .nav-link {
                         color: #646464;
@@ -3593,6 +3597,7 @@ ul {
                         padding: 10px 30px;
                         position: relative;
                         height: 100%;
+
                         &:after {
                             content: "";
                             width: 0;
@@ -3738,16 +3743,20 @@ ul {
                 .modal-content {
                     .modal-body {
                         padding: 40px;
+
                         @media only screen and (max-width: 479px) {
                             text-align: center;
                         }
+
                         .success-message {
                             display: flex;
                             justify-content: center;
                             align-items: center;
+
                             @media only screen and (max-width: 479px) {
                                 display: block;
                             }
+
                             .item-title {
                                 font-size: 16px;
                                 color: #646464;
@@ -3755,6 +3764,7 @@ ul {
                                 margin-bottom: 0;
                                 flex: 1;
                             }
+
                             .item-icon {
                                 margin-right: 45px;
                                 text-align: center;
@@ -3852,9 +3862,11 @@ ul {
                     .modal-body {
                         position: relative;
                         padding: 50px 50px 30px;
+
                         @media only screen and (max-width: 479px) {
                             padding: 50px 20px 30px;
                         }
+
                         .close-btn {
                             border-bottom: none;
                             position: absolute;
@@ -4056,13 +4068,16 @@ ul {
                 right: 0;
                 margin: 50px;
                 max-width: 300px;
+
                 @media only screen and (max-width: 767px) {
                     top: 0;
                 }
+
                 .modal-content {
                     .modal-body {
                         text-align: center;
                         padding: 50px 20px 20px;
+
                         .close-btn {
                             border-bottom: none;
                             position: absolute;
@@ -4094,14 +4109,17 @@ ul {
                             color: #111111;
                             margin-bottom: 10px;
                         }
+
                         .feedback-form {
                             .form-group {
                                 text-align: left;
+
                                 .form-check label {
                                     padding-left: 30px;
                                     font-weight: 500;
                                     color: #444444;
                                 }
+
                                 .item-btn {
                                     margin-top: 20px;
                                     background-color: #042954;
@@ -4142,6 +4160,7 @@ ul {
     right: 0;
     height: 100%;
     width: 100%;
+
     @media only screen and (max-width: 1024px) {
         position: relative;
         height: auto;
@@ -4156,9 +4175,11 @@ ul {
     justify-content: center;
     flex-direction: column;
     padding: 50px;
+
     @media only screen and (max-width: 575px) {
         padding: 50px 20px;
     }
+
     .login-box {
         min-width: 470px;
         padding: 6rem 7rem;
@@ -4167,13 +4188,16 @@ ul {
         -webkit-box-shadow: 0px 5px 49px 0px rgba(0, 0, 0, 0.5);
         box-shadow: 0px 5px 49px 0px rgba(0, 0, 0, 0.5);
         margin-bottom: 30px;
+
         @media only screen and (max-width: 575px) {
             min-width: 300px;
             padding: 6rem 4rem;
         }
+
         @media only screen and (max-width: 479px) {
             padding: 6rem 2rem;
         }
+
         .item-logo {
             text-align: center;
             margin-bottom: 40px;
@@ -5266,6 +5290,14 @@ ul {
 
 .btn-gradient-yellow {
     background-color: #ffae01;
+}
+
+.btn-gradient-sia {
+    /* background-color: #21f32c; */
+    background: -webkit-gradient(linear, left top, right top, from(#21f32c), to(#02c044));
+    background: -webkit-linear-gradient(left, #21f32c, #02c044);
+    background: -o-linear-gradient(left, #21f32c, #02c044);
+    background: linear-gradient(to right, #21f32c, #02c044);
 }
 
 .gradient-dodger-blue {

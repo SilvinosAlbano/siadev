@@ -53,7 +53,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Username</th>
-                            <th>Email</th>
+                            <th>Tipo Usuário</th>
                             <th>Modules & Roles</th>
                             <th>Actions</th>
                         </tr>
@@ -61,9 +61,17 @@
                     <tbody>
                         @forelse($users as $user)
                             <tr>
-                                <td>{{ $user->name }}</td>
+                                <td>
+                                    @if ($user->student)
+                                        {{ $user->student->complete_name }}
+                                    @elseif ($user->docente)
+                                        {{ $user->docente->nome_docente }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
                                 <td>{{ $user->username }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->tipo_usuario }}</td>
                                 <td>
                                     @foreach ($user->modules as $module)
                                         <div>
