@@ -42,4 +42,9 @@ Route::get('/habilitacao_docente/{id}', [DocenteController::class, 'habilitacao'
 Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
 Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
 Route::get('/docentes/data', [DocenteController::class, 'getDocentesData'])->name('docentes.data');
-Route::get('/editar/{id}', [DocenteController::class, 'update'])->name('editar');
+Route::get('/editar/{id}', [DocenteController::class, 'edit'])->name('editar');
+Route::put('/docentes/{id_docente}', [DocenteController::class, 'update'])->name('docentes.update');
+Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
+
+Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
+

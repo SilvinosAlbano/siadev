@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModelDocente extends Model
 {
@@ -14,6 +14,11 @@ class ModelDocente extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'docentes';
+    use SoftDeletes; // Enables soft deletes
+    
+    // Other model code...
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'id_docente',
