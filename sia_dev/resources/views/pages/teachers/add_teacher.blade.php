@@ -34,7 +34,7 @@
                         <select class="select2" name="sexo">
                             <option value="">Escolha *</option>
                             <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
+                            <option value="Feminino">Feminino</option>
                         </select>
                     </div>
                 </div>

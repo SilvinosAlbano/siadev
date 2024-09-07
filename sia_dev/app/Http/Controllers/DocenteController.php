@@ -11,19 +11,54 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DocentesExport;
 
 
 class DocenteController extends Controller
 {
-    public function index()
+   
+
+    public function index(Request $request)
     {
-        // $docente = ModelDocente::all(); // Assuming you have a Docente model
-        $docente = ModelDocente::paginate(10);
-        
+        // Fetching estatuto options from ModelEstatuto
+        $estatutoOptions = ModelEstatuto::all();
     
-        return view('pages.teachers.all_teachers', compact('docente'));
+        // Base query for searching docentes
+        $query = ModelDocente::query();
+    
+        // Filter by nome_docente
+        if ($request->filled('nome_docente')) {
+            $query->where('nome_docente', 'like', '%' . $request->nome_docente . '%');
+        }
+    
+        // Filter by sexo
+        if ($request->filled('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+    
+        // Filter by id_estatuto
+        if ($request->filled('id_estatuto')) {
+            $query->where('id_estatuto', $request->id_estatuto);
+        }
+    
+        // Get the results
+        $docente = $query->paginate(10);
+    
+        // Calculate total counts for Masculino and Feminino
+        $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
+        $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
+    
+        // Check if no data found
+        if ($docente->isEmpty()) {
+            return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
+                ->with('error', 'No data found for the search criteria.');
+        }
+    
+        return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'));
     }
     
+
 
     public function showDetail($id)
     {
@@ -197,7 +232,7 @@ class DocenteController extends Controller
         $docente->save();
         
         // Redirect back with success message
-        return redirect()->route('docentes')->with('success', 'Docente status updated to deleted successfully');
+        return redirect()->route('docentes.index')->with('success', 'Docente status  deleted successfully');
     }
 
    /*  public function restore($id)
@@ -213,5 +248,39 @@ class DocenteController extends Controller
             return redirect()->route('docentes')->with('success', 'Docente restored successfully');
         }
  */
+
+ public function report(Request $request)
+    {
+        $query = ModelDocente::query();
+        
+        // Apply filters
+        if ($request->filled('nome_docente')) {
+            $query->where('nome_docente', 'like', "%{$request->nome_docente}%");
+        }
+        if ($request->filled('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+        if ($request->filled('id_estatuto')) {
+            $query->where('id_estatuto', $request->id_estatuto);
+        }
+        if ($request->filled('nivel_educacao')) {
+            $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
+        }
+        if ($request->filled('controlo_estado')) {
+            $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
+            $query->where('controlo_estado', $controlo_estado);
+        }
+        
+        $docentes = $query->paginate(10);
+        
+        $estatutos = ModelEstatuto::all();
+        
+        return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new DocentesExport($request->all()), 'docentes.xlsx');
+    }
 
 }

@@ -38,8 +38,7 @@
                                 Docentes</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/teacher_details" class="nav-link"><i class="fas fa-angle-right"></i>Detalhos de
-                                Docentes</a>
+                            <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a href="/teacher_payment" class="nav-link"><i class="fas fa-angle-right"></i>Pagamento de
