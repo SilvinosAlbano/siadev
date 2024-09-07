@@ -12,9 +12,9 @@ class DepartmentFactory extends Factory
     public function definition()
     {
         return [
-            'department_id' => $this->faker->uuid,
-            'department_name' => $this->faker->word,
-            'faculty' => 'Ciência de Saúde', // or use a default value if needed
+            'id_departamento' => $this->faker->uuid,
+            'departamento' => $this->faker->word,
+            'faculdade' => 'Ciência de Saúde', // or use a default value if needed
         ];
     }
 }

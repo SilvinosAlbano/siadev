@@ -11,7 +11,7 @@ class StudentSeeder extends Seeder
 {
     public function run()
     {
-        $departments = DB::table('departments')->pluck('department_id')->toArray();
+        $departments = DB::table('departamento')->pluck('id_departamento')->toArray();
         $semesters = DB::table('semesters')->pluck('semester_id')->toArray();
 
         $students = [

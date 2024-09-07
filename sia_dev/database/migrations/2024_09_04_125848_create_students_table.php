@@ -23,7 +23,7 @@ class CreateStudentsTable extends Migration
             $table->timestamps();
 
             // Foreign keys
-            $table->foreign('department_id')->references('department_id')->on('departments')->onDelete('cascade');
+            $table->foreign('department_id')->references('id_departamento')->on('departamento')->onDelete('cascade');
             $table->foreign('semester_id')->references('semester_id')->on('semesters')->onDelete('cascade');
         });
     }

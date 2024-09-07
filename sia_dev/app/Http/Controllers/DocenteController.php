@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\ModelDocente;
 use Illuminate\Support\Collection;
@@ -8,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
+
 
 class DocenteController extends Controller
 {
@@ -55,31 +57,55 @@ class DocenteController extends Controller
         return view('pages.teachers.add_teacher', compact('docente'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
+        // Validation Rules
         $validated = $request->validate([
-            'nome_docente' => 'required',
-            'sexo' => 'required',
-            'municipio' => 'required',
-            'posto_administrativo' => 'required',
-            'suco' => 'required',
+            'nome_docente' => 'required|string|max:255',
+            'sexo' => 'required|string|max:255',
             'data_moris' => 'required|date',
-            'nacionalidade' => 'required',
-            'categoria_estatuto' => 'required',
-            'departamento' => 'required',
-           
+            'suco' => 'required|string|max:255',
+            'posto_administrativo' => 'required|string|max:255',
+            'municipio' => 'required|string|max:255',
+            'nacionalidade' => 'nullable|string|max:255',
+            'nivel_educacao' => 'nullable|string|max:255',
+            'area_especialidade' => 'nullable|string|max:255',
+            'categoria_estatuto' => 'nullable|string|max:255',
+            'departamento' => 'nullable|string|max:255',
+            'ano_inicio' => 'nullable|date',
+            'observacao' => 'nullable|string',
         ]);
-
-        // Handle file upload for docente photo
-        if ($request->hasFile('photo_docente')) {
-            $fileName = time() . '.' . $request->photo_docente->extension();
-            $request->photo_docente->move(public_path('images/docentes'), $fileName);
-            $validated['photo_docente'] = $fileName;
-        }
-
-        ModelDocente::create($validated);
-
-        return redirect()->route('docentes.index')->with('success', 'Docente criado com sucesso!');
-    }
     
+        // Handle File Upload if an image is provided
+        $photo_docente = null;
+        if ($request->hasFile('photo_docente')) {
+            $image = $request->file('photo_docente');
+            $photo_docente = $image->hashName(); // Generate a unique name for the image
+            $image->storeAs('public/asset/posts', $photo_docente);
+        }
+    
+        // Create a new record in the database
+        ModelDocente::create([
+            'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
+            'nome_docente' => $validated['nome_docente'],
+            'sexo' => $validated['sexo'],
+            'data_moris' => $validated['data_moris'],
+            'suco' => $validated['suco'],
+            'posto_administrativo' => $validated['posto_administrativo'],
+            'municipio' => $validated['municipio'],
+            'nacionalidade' => $validated['nacionalidade'],
+            'nivel_educacao' => $validated['nivel_educacao'],
+            'area_especialidade' => $validated['area_especialidade'],
+            'categoria_estatuto' => $validated['categoria_estatuto'],
+            'departamento' => $validated['departamento'],
+            'ano_inicio' => $validated['ano_inicio'],
+            'observacao' => $validated['observacao']
+        ]);
+    
+        // Redirect with Success Message
+        return redirect()->route('docentes')->with(['success' => 'Dados com sucesso gravados']);    }
+    
+
+
+      
 }

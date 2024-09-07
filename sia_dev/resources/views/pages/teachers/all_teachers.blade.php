@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Teachers')
+@section('title', 'Dados Docentes')
 @section('content')
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area">
@@ -20,7 +20,7 @@
                 <div class="item-title">
                    <span> 
 
-                       <a class="btn btn-primary btn-lg" href="/adiciona_docente"><i class="fas fa-plus text-orange-peel"></i> Aumenta</a>
+                       <a class="btn btn-primary btn-lg" href="/adiciona_docente"><i class="fas fa-plus text-orange-peel"></i> Aumenta Foun</a>
                    </span>
                    
                    
@@ -47,19 +47,22 @@
                 @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
-                <table class="table display data-table text-nowrap">
+                <table id="docentes" class="table display data-table text-nowrap">
                     <thead>
                         <tr>
                             <th>
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input checkAll">
-                                    <label class="form-check-label">ID</label>
+                                    <!-- <label class="form-check-label">ID</label> -->
                                 </div>
                             </th>
                             <!-- <th>Photo</th> -->
                             <th>Nome</th>
                             <th>Sexo</th>
-                            <th>Municipio</th>
+                            <th>Data Moris</th>
+                            <th>Nivel Edukasaun</th>
+                            <th>Area Especialidade</th>
+                            <th>Tinan Hahu</th>
                             
                             <th></th>
                         </tr>
@@ -71,14 +74,16 @@
                             <td>
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input">
-                                    <label class="form-check-label">#0021</label>
+                                    <!-- <label class="form-check-label">#0021</label> -->
                                 </div>
                             </td>
                             <!-- <td class="text-center"><img class=" rounded-circle" width="30" src="{{asset('img/figure/student_2.jpg')}}" alt="student"></td> -->
                             <td>{{$data->nome_docente}}</td>
                             <td>{{$data->sexo}}</td>
-                            <td>{{$data->municipio}}</td>
-                           
+                            <td>{{$data->data_moris}}</td>
+                            <td>{{$data->nivel_educacao}}</td>
+                            <td>{{$data->area_especialidade}}</td>
+                            <td>{{$data->ano_inicio}}</td>
                            
                             
                             <td>

@@ -8,16 +8,16 @@ class CreateDepartmentsTable extends Migration
 {
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->uuid('department_id')->primary();
-            $table->string('department_name');
-            $table->string('faculty')->default('Ciência de Saúde'); // Default value
+        Schema::create('departamento', function (Blueprint $table) {
+            $table->uuid('id_departamento')->primary();
+            $table->string('departamento');
+            $table->string('faculdade')->default('Ciência de Saúde'); // Default value
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('departamento');
     }
 }

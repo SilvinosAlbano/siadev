@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Teachers')
+@section('title', 'Dados Docentes')
 @section('content')
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area">

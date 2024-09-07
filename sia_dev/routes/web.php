@@ -36,9 +36,9 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // route for teachers
 // Route for Menus of Teachers
-Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
+Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes');
 Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
 Route::get('/habilitacao_docente/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
 Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
-Route::post('/store_docente', [DocenteController::class,'store'])->name('store_docente');
-Route::resource('docentes', DocenteController::class);
+Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
+Route::get('/docentes/data', [DocenteController::class, 'getDocentesData'])->name('docentes.data');
