@@ -26,7 +26,7 @@ class CreateDocentesTable extends Migration
             $table->string('area_especialidade')->nullable();
             $table->string('universidade_origem')->nullable();
             $table->year('ano_inicio')->nullable();
-            $table->string('categoria_estatuto');
+            $table->uuid('id_estatuto');
             $table->string('departamento');
             $table->text('observacao')->nullable();
             $table->string('photo_docente')->nullable();

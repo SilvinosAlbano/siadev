@@ -94,7 +94,7 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="{{ route('detailho', $data->id_docente) }}"><i
                                                 class="fas fa-eye text-orange-red"></i> Detail</a>
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="{{ route('editar', $data->id_docente) }}"><i
                                                 class="fas fa-edit text-dark-pastel-green"></i> Edit</a>
                                         <a class="dropdown-item" href="#"><i
                                                 class="fas fa-trash text-orange-peel"></i> Delete</a>

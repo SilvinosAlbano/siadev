@@ -17,7 +17,7 @@
         </div>
         <div class="single-info-details">
             <div class="item-img">
-                <img src="{{asset('img/figure/student_2.jpg')}}" width="150" alt="docent">
+                <img src="{{asset('img/pessoa_neutra.png')}}" width="150" alt="docent">
                 {{-- <div class="header-inline item-header">
                     <h4 class="text-dark-medium font-medium text-center">{{$detail->nome_docente}}</h4>
                    
