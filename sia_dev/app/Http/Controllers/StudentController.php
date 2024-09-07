@@ -4,22 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Semester;
-use App\Models\Department;
+use App\Models\ModelDepartamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 class StudentController extends Controller
 {
     public function index()
     {
+        $semesters = Semester::all();
+        $departments = ModelDepartamento::all();
         $students = Student::all();
-        return view('pages.students.all_students', compact('students'));
+        // $students = Student::with('roles', 'modules', 'student', 'docente')->paginate(10);
+        return view('pages.students.all_students', compact('students', 'semesters', 'departments'));
     }
 
     public function create()
     {
         $semesters = Semester::all();
-        $departments = Department::all();
-        return view('pages.students.admission_form_student',compact('semesters','departments'));
+        $departments = ModelDepartamento::all();
+        return view('pages.students.admission_form_student', compact('semesters', 'departments'));
     }
 
     public function store(Request $request)
@@ -31,8 +35,8 @@ class StudentController extends Controller
             'date_of_birth' => 'required|date_format:d/m/Y',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
-            'department_id' => 'required|integer',
-            'semester' => 'required|integer|in:1,2,3',
+            'department_id' => 'required|string|max:255',
+            'semester_id' => 'required|string|max:255',
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'observation' => 'nullable|string',
             'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -50,10 +54,10 @@ class StudentController extends Controller
 
     public function show($student_id)
     {
-        $student = Student::with(['department', 'semester'])->findOrFail($student_id);
+        $student = Student::with(['departamento', 'semester'])->findOrFail($student_id);
         $semesters = Semester::all();
-        $departments = Department::all();
-        return view('pages.students.student_details', compact('student','semesters','departments'));
+        $departments = ModelDepartamento::all();
+        return view('pages.students.student_details', compact('student', 'semesters', 'departments'));
     }
 
     public function edit(Student $student)

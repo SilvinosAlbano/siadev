@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
+use App\Models\ModelDepartamento;
 
 class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
-        return view('departments.index', compact('departments'));
+        $departments = ModelDepartamento::all();
+        return view('departamento.index', compact('departments'));
     }
 
     public function show($id)
 {
-    $department = Department::find($id);
+    $department = ModelDepartamento::find($id);
 
     if (!$department) {
         abort(404, 'Department not found');
     }
 
-    return view('departments.show', compact('department'));
+    return view('departamento.show', compact('department'));
 }
 
 

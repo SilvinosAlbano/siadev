@@ -20,18 +20,9 @@
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>About Me</h3>
+                    <h3>Sobre Estudante</h3>
                 </div>
-                <div class="dropdown">
-                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
-                        aria-expanded="false">...</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                        <a class="dropdown-item" href="#" id="editButton"><i
-                                class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                    </div>
-                </div>
+                <a class="align-left" href="#" id="editButton"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
             </div>
 
             <form action="{{ route('students.update', ['student_id' => $student->student_id]) }}" method="POST"
@@ -78,8 +69,6 @@
                                             {{ $student->department_id == $dept->department_id ? 'selected' : '' }}>
                                             {{ $dept->department_name }}</option>
                                     @endforeach
-                                    {{-- <option value="{{ $student->department_id }}">{{ $student->department->department_name }}</option> --}}
-
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
@@ -94,7 +83,8 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="nre">NRE:</label>
-                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}" readonly>
+                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}"
+                                    readonly>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="start_year">Ano Início:</label>

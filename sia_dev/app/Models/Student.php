@@ -49,9 +49,9 @@ class Student extends Model
         return $this->belongsTo(Semester::class, 'semester_id');
     }
 
-     // Relationship with User
-     public function user()
-     {
-         return $this->hasOne(User::class, 'student_id', 'student_id');
-     }
+    // Relationship with User
+    public function user()
+    {
+        return $this->hasOne(User::class, 'student_id', 'student_id');
+    }
 }

@@ -12,10 +12,4 @@ class ModelDepartamento extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'departamento';
-
-    protected $fillable = [
-        'id_departamento',
-        'departamento'
-        
-    ];
 }

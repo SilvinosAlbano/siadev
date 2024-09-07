@@ -30,6 +30,7 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::resource('students', StudentController::class);
     Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.show');
     Route::put('/student_details/{student_id}', [StudentController::class, 'update'])->name('students.update');
+    Route::get('/admission_form_student', [StudentController::class, 'create'])->name('students.create');
     Route::post('/admission_form_student', [StudentController::class, 'store'])->name('students.store');
 // });
 
@@ -47,4 +48,3 @@ Route::put('/docentes/{id_docente}', [DocenteController::class, 'update'])->name
 Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
 
 Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
-

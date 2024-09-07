@@ -10,7 +10,7 @@ class User extends Authenticatable
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['user_id', 'name', 'email', 'password', 'student_id'];
+    protected $fillable = ['user_id', 'name', 'email', 'password', 'docente_student_id','tipo_usuario'];
     protected $hidden = ['password', 'remember_token'];
 
     protected static function boot()
@@ -35,6 +35,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'student_modules_roles', 'user_id', 'role_id')
                     ->withPivot('expired_date')
                     ->withTimestamps();
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'docente_student_id');
+    }
+
+    public function docente()
+    {
+        return $this->belongsTo(ModelDocente::class, 'docente_student_id');
     }
 
 }

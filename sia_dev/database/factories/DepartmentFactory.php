@@ -3,11 +3,11 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Department;
+use App\Models\ModelDepartamento;
 
 class DepartmentFactory extends Factory
 {
-    protected $model = Department::class;
+    protected $model = ModelDepartamento::class;
 
     public function definition()
     {
