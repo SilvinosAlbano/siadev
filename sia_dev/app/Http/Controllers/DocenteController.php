@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\ModelDocente;
+use App\Models\User;
 use App\Models\ModelDepartamento;
 use App\Models\ModelEstatuto;
 use Illuminate\Support\Collection;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DocentesExport;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 
 class DocenteController extends Controller
@@ -126,6 +129,7 @@ class DocenteController extends Controller
     
         // Create a new record in the database
         $docente = ModelDocente::create([
+            'id_docente' => (string) Str::uuid(),
             'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
             'nome_docente' => $validated['nome_docente'],
             'sexo' => $validated['sexo'],
@@ -142,7 +146,18 @@ class DocenteController extends Controller
             'ano_inicio' => $validated['ano_inicio'],
             'observacao' => $validated['observacao']
         ]);
-    
+
+        #create user
+        User::create([
+            'user_id' => (string) Str::uuid(),
+            'username' => $docente->nome_docente, // Assuming 'nre' is actually 'nome_docente' or handle it properly
+            'email' => $request->email ?? null, // Set email to null or receive it from request
+            'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
+            'docente_student_id' => $docente->id_docente,
+            'tipo_usuario' => 'Docente', // Assuming 'Docente' is a valid type for 'tipo_usuario'
+        ]);
+
+        
         // Check if the insertion was successful
         if ($docente) {
             // Redirect with Success Message

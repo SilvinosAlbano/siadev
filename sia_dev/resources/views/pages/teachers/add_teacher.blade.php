@@ -57,9 +57,9 @@
 
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Data Moris *</label>
-                        <input type="text" name="data_moris" placeholder="dd/mm/yyyy"
-                            class="border form-control air-datepicker">
-                        <i class="far fa-calendar-alt"></i>
+                        <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
+                            class="border form-control">
+                        <!-- <i class="far fa-calendar-alt"></i> -->
                     </div>
                 </div>
 
