@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\ModelDepartamento; 
 use Carbon\Carbon;
 
-class DepartmentSeeder extends Seeder
+class DepartamentoSeeder extends Seeder
 {
     public function run()
     {
@@ -35,11 +35,10 @@ class DepartmentSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-           
         ];
 
         // Insert departments into the database
-        DB::table('departamento')->insert($departamento);
+        ModelDepartamento::insert($departamento); // Use the model to insert data
 
         $this->command->info('Departments table seeded successfully!');
     }

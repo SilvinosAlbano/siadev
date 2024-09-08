@@ -1,24 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'Students')
+@section('title', 'Users')
 
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Students</h3>
+        <h3>Users</h3>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li>All Students</li>
+            <li>All Users</li>
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
 
-    <!-- Student Table Area Start Here -->
+    <!-- Users Table Area Start Here -->
     <div class="card height-auto">
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>All Students Data</h3>
+                    <h3>All Users Data</h3>
                 </div>
                 <div class="dropdown">
                     <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -33,15 +33,12 @@
             <form class="mg-b-20">
                 <div class="row gutters-8">
                     <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                        <input type="text" placeholder="Search by Roll ..." class="form-control">
-                    </div>
-                    <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
                         <input type="text" placeholder="Search by Name ..." class="form-control">
                     </div>
-                    <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                        <input type="text" placeholder="Search by Class ..." class="form-control">
+                    <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
+                        <input type="text" placeholder="Search by Type ..." class="form-control">
                     </div>
-                    <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                    <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
                         <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                     </div>
                 </div>
@@ -53,7 +50,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Username</th>
-                            <th>Tipo Usuário</th>
+                            <th>Type</th>
                             <th>Modules & Roles</th>
                             <th>Actions</th>
                         </tr>
@@ -106,5 +103,5 @@
             </div>
         </div>
     </div>
-    <!-- Student Table Area End Here -->
+    <!-- Users Table Area End Here -->
 @endsection

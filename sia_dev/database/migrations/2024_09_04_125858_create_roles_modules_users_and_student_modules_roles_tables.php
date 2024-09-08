@@ -30,8 +30,8 @@ class CreateRolesModulesUsersAndStudentModulesRolesTables extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique()->nullable();
             $table->string('password');
-            $table->uuid('student_id')->nullable();
-            $table->foreign('student_id')->references('student_id')->on('students')->onDelete('cascade');
+            $table->uuid('docente_student_id')->nullable();
+            $table->string('tipo_usuario');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -5,10 +5,13 @@
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Students</h3>
+        <h3>Dados detalhos de estudante <strong>{{ $student->complete_name }}</strong></h3>
         <ul>
             <li>
                 <a href="/home">Home</a>
+            </li>
+            <li>
+                <a href="/students">Lista Estudantes</a>
             </li>
             <li>Student Details</li>
         </ul>
@@ -20,19 +23,25 @@
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>About Me</h3>
+                    <h3>Sobre Estudante</h3>
                 </div>
-                <div class="dropdown">
-                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
-                        aria-expanded="false">...</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                        <a class="dropdown-item" href="#" id="editButton"><i
-                                class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                    </div>
-                </div>
+                <a class="align-left btn btn-lg" href="#" id="editButton"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                        <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                    </svg> Edit</a>
             </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <form action="{{ route('students.update', ['student_id' => $student->student_id]) }}" method="POST"
                 enctype="multipart/form-data" id="studentForm">
@@ -41,8 +50,17 @@
 
                 <div class="single-info-details">
                     <div class="item-img mb-4">
-                        <img src="{{ asset('storage/' . $student->student_image) }}" alt="student" class="rounded-circle"
-                            width="150">
+                        <div class="item-img mb-4">
+                            @if ($student->student_image)
+                                <!-- Display the student's image if it exists -->
+                                <img src="{{ asset('storage/asset/posts/' . $student->student_image) }}" alt="student"
+                                    class="image-fluid" width="150">
+                            @else
+                                <!-- Display a default image if no student image is available -->
+                                <img src="{{ asset('img/pessoa_neutra.png') }}" width="150" alt="estudante">
+                            @endif
+                        </div>
+
                     </div>
                     <div class="item-content">
                         <div class="row">
@@ -54,8 +72,9 @@
                             <div class="col-md-6 form-group">
                                 <label for="gender">Sexo:</label>
                                 <select name="gender" class="form-control" disabled>
-                                    <option value="male" {{ $student->gender == 'male' ? 'selected' : '' }}>Male</option>
-                                    <option value="female" {{ $student->gender == 'female' ? 'selected' : '' }}>Female
+                                    <option value="Male" {{ $student->gender == 'Male' ? 'selected' : '' }}>Masculino
+                                    </option>
+                                    <option value="Female" {{ $student->gender == 'Female' ? 'selected' : '' }}>Feminino
                                     </option>
                                 </select>
                             </div>
@@ -70,31 +89,29 @@
                                     value="{{ $student->date_of_birth }}" readonly>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label for="department_id">Departamento:</label>
-                                <select name="department_id" class="form-control" disabled>
-
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $student->department_id }}"
-                                            {{ $student->department_id == $dept->department_id ? 'selected' : '' }}>
-                                            {{ $dept->department_name }}</option>
+                                <label for="departamento_id">Departamento:</label>
+                                <select name="departamento_id" id="departamento_id" class="form-control" disabled>
+                                    @foreach ($modelDepartamentos as $dept)
+                                        <option value="{{ $dept->id_departamento }}"
+                                            {{ $student->id_departamento == $dept->id_departamento ? 'selected' : '' }}>
+                                            {{ $dept->departamento }}</option>
                                     @endforeach
-                                    {{-- <option value="{{ $student->department_id }}">{{ $student->department->department_name }}</option> --}}
-
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="semester_id">Semestre:</label>
-                                <select name="semester_id" class="form-control" disabled>
-                                    < @foreach ($semesters as $sems)
-                                        <option value="{{ $student->department_id }}"
+                                <select name="semester_id" id="semester_id" class="form-control" disabled>
+                                    @foreach ($semesters as $sems)
+                                        <option value="{{ $sems->semester_id }}"
                                             {{ $student->semester_id == $sems->semester_id ? 'selected' : '' }}>
                                             {{ $sems->semester_name }}</option>
-                                        @endforeach
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="nre">NRE:</label>
-                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}" readonly>
+                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}"
+                                    readonly>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="start_year">Ano Início:</label>
@@ -140,4 +157,5 @@
             document.getElementById('saveButton').removeAttribute('disabled');
         });
     </script>
+
 @endsection

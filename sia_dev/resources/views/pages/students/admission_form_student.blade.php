@@ -21,6 +21,15 @@
                     <h3>{{ isset($student) ? 'Editar Estudante' : 'Adicionar novo Estudante' }}</h3>
                 </div>
             </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form class="new-added-form"
                 action="{{ isset($student) ? route('students.update', $student->id) : route('students.store') }}"
                 method="POST" enctype="multipart/form-data">
@@ -38,12 +47,10 @@
                         <label>Sexo *</label>
                         <select class="form-control select2" name="gender" required>
                             <option value="" disabled>Selecionar *</option>
-                            <option value="male" {{ old('gender', $student->gender ?? '') == 'male' ? 'selected' : '' }}>
+                            <option value="Male" {{ old('gender', $student->gender ?? '') == 'Male' ? 'selected' : '' }}>
                                 Masculino</option>
-                            <option value="female"
-                                {{ old('gender', $student->gender ?? '') == 'female' ? 'selected' : '' }}>Feminino</option>
-                            <option value="other" {{ old('gender', $student->gender ?? '') == 'other' ? 'selected' : '' }}>
-                                Outro</option>
+                            <option value="Female"
+                                {{ old('gender', $student->gender ?? '') == 'Female' ? 'selected' : '' }}>Feminino</option>
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
@@ -70,20 +77,18 @@
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Departamento *</label>
-                        <select class="form-control select2" name="department" required>
-                            <option value="" selected hidden>Selecionar *</option>
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->department_id }}" {{ $department->department_id }}>
-                                    {{ $department->department_name }}</option>
+                        <select class="form-control select2" name="departamento_id" required>
+                            @foreach ($modelDepartamentos as $department)
+                                <option value="{{ $department->id_departamento }}">
+                                    {{ $department->departamento }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Semestre *</label>
-                        <select class="form-control select2" name="semester" required>
-                            <option value="" selected hidden>Selecionar *</option>
+                        <select class="form-control select2" name="semester_id" required>
                             @foreach ($semesters as $semester)
-                                <option value="{{ $semester->semester_id }}" {{ $semester->semester_id }}>
+                                <option value="{{ $semester->semester_id }}">
                                     {{ $semester->semester_name }}</option>
                             @endforeach
                         </select>

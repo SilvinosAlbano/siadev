@@ -20,7 +20,7 @@ class Student extends Model
         'place_of_birth',
         'date_of_birth',
         'nre',
-        'department_id',
+        'departamento_id',
         'semester_id',
         'start_year',
         'student_image',
@@ -39,9 +39,9 @@ class Student extends Model
         });
     }
 
-    public function department()
+    public function departamento()
     {
-        return $this->belongsTo(Department::class, 'department_id');
+        return $this->belongsTo(ModelDepartamento::class, 'departamento_id');
     }
 
     public function semester()
@@ -49,9 +49,9 @@ class Student extends Model
         return $this->belongsTo(Semester::class, 'semester_id');
     }
 
-     // Relationship with User
-     public function user()
-     {
-         return $this->hasOne(User::class, 'student_id', 'student_id');
-     }
+    // Relationship with User
+    public function user()
+    {
+        return $this->hasOne(User::class, 'student_id', 'student_id');
+    }
 }

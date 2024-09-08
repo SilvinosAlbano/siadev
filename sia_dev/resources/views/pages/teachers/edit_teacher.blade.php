@@ -95,7 +95,7 @@
                         <label>Categoria Estatuto (P/IP/C) *</label>
                         <select class="select2" name="id_estatuto">
                             @foreach($estatuto as $est)
-                                <option value="{{ $est->id_estatutu }}" {{ $editar->id_estatuto == $est->id_estatutu ? 'selected' : '' }}>
+                                <option value="{{ $est->id_tipo }}" {{ $editar->id_estatuto == $est->id_tipo ? 'selected' : '' }}>
                                     {{ $est->estatuto }}
                                 </option>
                             @endforeach

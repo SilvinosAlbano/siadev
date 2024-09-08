@@ -49,7 +49,7 @@
                                 </div>
                             </th>
                             <th>Gender</th>
-                            <th>Department</th>
+                            <th>departamento</th>
                             <th>Semester</th>
                             <th>Actions</th>
                         </tr>
@@ -64,7 +64,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $student->gender }}</td>
-                                <td>{{ $student->department->departamento ?? 'N/A' }}</td>
+                                <td>{{ $student->departamento->departamento ?? 'N/A' }}</td>
                                 <td>{{ $student->semester->semester_name ?? 'N/A' }}</td>
                                 <td>
                                     <a href="{{ route('students.show', ['student_id' => $student->student_id]) }}">Ver</a>

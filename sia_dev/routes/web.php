@@ -6,13 +6,22 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
-// Users Routes
 
-// In web.php
+// Students Routes
+Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+Route::get('/students/{student_id}', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/{student_id}/edit', [StudentController::class, 'edit'])->name('students.edit');
+Route::put('/students/{student_id}', [StudentController::class, 'update'])->name('students.update');
+Route::delete('/students/{student_id}', [StudentController::class, 'destroy'])->name('students.destroy');
+
+// Existing routes for users and roles management
 Route::get('/all_users', [UserController::class, 'index'])->name('users.index');
 Route::get('user_details/{user}', [UserController::class, 'show'])->name('users.show');
 Route::get('/users_details/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-// Handle form submission for assigning roles
+Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
 Route::post('/assign_role', [ModulePermissionController::class, 'assignRoles'])->name('assign.roles');
 Route::get('/assign_role', [ModulePermissionController::class, 'showAssignRolesForm'])->name('assign.roles.form');
 
@@ -24,14 +33,6 @@ Route::get('/home', function () {return view('pages.home');});
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-// Protected Routes (requires authentication)
-// Route::middleware('auth')->group(function () {
-    Route::resource('students', StudentController::class);
-    Route::get('/student_details/{student_id}', [StudentController::class, 'show'])->name('students.show');
-    Route::put('/student_details/{student_id}', [StudentController::class, 'update'])->name('students.update');
-    Route::post('/admission_form_student', [StudentController::class, 'store'])->name('students.store');
-// });
 
 
 // route for teachers
@@ -47,9 +48,4 @@ Route::put('/docentes/{id_docente}', [DocenteController::class, 'update'])->name
 Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
 
 Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
-
-Route::get('/docente-report', [DocenteController::class, 'report'])->name('docentes.report');
-Route::get('/docente-export', [DocenteController::class, 'export'])->name('docentes.export');
-
-#end
 

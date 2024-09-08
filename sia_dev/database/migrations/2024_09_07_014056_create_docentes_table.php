@@ -13,7 +13,7 @@ class CreateDocentesTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('public.docentes', function (Blueprint $table) {
+        Schema::create('docentes', function (Blueprint $table) {
             $table->uuid('id_docente')->primary(); // Set as primary key and UUID type
             $table->string('nome_docente');
             $table->string('sexo');
@@ -41,6 +41,6 @@ class CreateDocentesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('public.docentes');
+        Schema::dropIfExists('docentes');
     }
 }
