@@ -1,131 +1,80 @@
 @extends('layouts.app')
 
-@section('title', 'Student Details')
+@section('title', 'User Details')
 
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
-    <div class="breadcrumbs-area">
-        <h3>Students</h3>
-        <ul>
-            <li>
-                <a href="/home">Home</a>
-            </li>
-            <li>Student Details</li>
+    <div class="breadcrumbs-area mb-4">
+        <h3>User Details for <strong>{{ $user->username }}</strong></h3>
+        <ul class="breadcrumb">
+            <li><a href="{{ url('/home') }}">Home</a></li>
+            <li><a href="{{ route('users.index') }}">User List</a></li>
+            <li class="active">User Details</li>
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
 
-    <!-- Student Details Area Start Here -->
-    <div class="card height-auto">
+    <!-- User Details Area Start Here -->
+    <div class="card">
         <div class="card-body">
-            <div class="heading-layout1">
-                <div class="item-title">
-                    <h3>Sobre Estudante</h3>
-                </div>
-                <a class="align-left" href="#" id="editButton"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>About User</h4>
+                {{-- Uncomment the following if you want to include an edit button --}}
+                {{-- <a href="{{ route('users.edit', $user->user_id) }}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a> --}}
             </div>
 
-            <form action="{{ route('students.update', ['student_id' => $student->student_id]) }}" method="POST"
-                enctype="multipart/form-data" id="studentForm">
-                @csrf
-                @method('PUT')
-
-                <div class="single-info-details">
-                    <div class="item-img mb-4">
-                        <img src="{{ asset('storage/' . $student->student_image) }}" alt="student" class="rounded-circle" width="150">
-                    </div>
-                    <div class="item-content">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label for="complete_name">Nome Completo:</label>
-                                <input type="text" name="complete_name" class="form-control"
-                                    value="{{ $student->complete_name }}" readonly>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="gender">Sexo:</label>
-                                <select name="gender" class="form-control" disabled>
-                                    <option value="male" {{ $student->gender == 'male' ? 'selected' : '' }}>Male</option>
-                                    <option value="female" {{ $student->gender == 'female' ? 'selected' : '' }}>Female
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="place_of_birth">Lugar de Nascimento:</label>
-                                <input type="text" name="place_of_birth" class="form-control"
-                                    value="{{ $student->place_of_birth }}" readonly>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="date_of_birth">Data de Nascimento:</label>
-                                <input type="text" name="date_of_birth" class="form-control"
-                                    value="{{ $student->date_of_birth }}" readonly>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="departamento_id">Departamento:</label>
-                                <select name="departamento_id" class="form-control" disabled>
-
-                                        <option value="{{ $student->departamento_id }}"
-                                            {{ $student->departamento_id == $dept->departamento_id ? 'selected' : '' }}>
-                                            {{ $dept->department_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="semester_id">Semestre:</label>
-                                <select name="semester_id" class="form-control" disabled>
-                                    < @foreach ($semesters as $sems)
-                                        <option value="{{ $student->departamento_id }}"
-                                            {{ $student->semester_id == $sems->semester_id ? 'selected' : '' }}>
-                                            {{ $sems->semester_name }}</option>
-                                        @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="nre">NRE:</label>
-                                <input type="text" name="nre" class="form-control" value="{{ $student->nre }}"
-                                    readonly>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="start_year">Ano Início:</label>
-                                <input type="text" name="start_year" class="form-control"
-                                    value="{{ $student->start_year }}" readonly>
-                            </div>
-                            {{-- <div class="col-md-6 form-group">
-                                <label for="address">Address:</label>
-                                <input type="text" name="address" class="form-control" value="{{ $student->address }}"
-                                    readonly>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="phone">Phone:</label>
-                                <input type="text" name="phone" class="form-control" value="{{ $student->phone }}"
-                                    readonly>
-                            </div> --}}
-                            <div class="col-md-12 form-group">
-                                <label for="observation">Observação:</label>
-                                <textarea name="observation" class="form-control" rows="3" readonly>{{ $student->observation }}</textarea>
-                            </div>
-                        </div>
-                        <div class="form-group mt-3">
-                            <button type="submit" class="btn-fill-lg btn-gradient-yellow" id="saveButton" disabled>Save
-                                Changes</button>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <strong>Name:</strong>
+                    <p>
+                        @if ($user->tipo_usuario === 'Estudante')
+                            {{ optional($user->student)->complete_name ?? 'No name available' }}
+                        @elseif ($user->tipo_usuario === 'Docente')
+                            {{ optional($user->docente)->nome_docente ?? 'No name available' }}
+                        @else
+                            {{ 'Unknown type' }}
+                        @endif
+                    </p>
                 </div>
-            </form>
+                <div class="col-md-4 mb-3">
+                    <strong>Username:</strong>
+                    <p>{{ $user->username }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <strong>Email:</strong>
+                    <p>{{ $user->email }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <strong>Type:</strong>
+                    <p>{{ ucfirst($user->tipo_usuario) }}</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="mb-3">Modules and Roles</h5>
+            @forelse($user->modules as $module)
+                <div class="mb-4">
+                    <h6>{{ $module->module_name }}</h6>
+                    <p><strong>Description:</strong> {{ $module->description }}</p>
+                    @php
+                        $role = $user->roles->where('pivot.module_id', $module->id_module)->first();
+                    @endphp
+                    <p><strong>Role:</strong> {{ $role ? $role->role_name : 'No role assigned' }}</p>
+                </div>
+                <hr>
+            @empty
+                <p>No modules assigned to this user.</p>
+            @endforelse
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('users.edit', $user->user_id) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('users.index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
         </div>
     </div>
-    <!-- Student Details Area End Here -->
-
-    <script>
-        document.getElementById('editButton').addEventListener('click', function(e) {
-            e.preventDefault();
-            // Enable all form fields
-            document.querySelectorAll('#studentForm input, #studentForm select, #studentForm textarea').forEach(
-                function(element) {
-                    element.removeAttribute('readonly');
-                    element.removeAttribute('disabled');
-                });
-            // Enable the Save button
-            document.getElementById('saveButton').removeAttribute('disabled');
-        });
-    </script>
+    <!-- User Details Area End Here -->
 @endsection
