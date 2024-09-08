@@ -21,8 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
 
     <script src="{{ asset('js/modernizr-3.6.0.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
 
 
 </head>

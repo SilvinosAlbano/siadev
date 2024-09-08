@@ -283,4 +283,33 @@ class DocenteController extends Controller
         return Excel::download(new DocentesExport($request->all()), 'docentes.xlsx');
     }
 
+
+    public function getData(Request $request)
+    {
+        $query = ModelDocente::query();
+        
+        // Apply filters if necessary
+        if ($request->has('nome_docente')) {
+            $query->where('nome_docente', 'like', '%' . $request->nome_docente . '%');
+        }
+        if ($request->has('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+        if ($request->has('id_estatuto')) {
+            $query->where('id_estatuto', $request->id_estatuto);
+        }
+        if ($request->has('nivel_educacao')) {
+            $query->where('nivel_educacao', 'like', '%' . $request->nivel_educacao . '%');
+        }
+        if ($request->has('controlo_estado')) {
+            $query->whereNull('controlo_estado', $request->controlo_estado == 'active' ? null : '!=', 'deleted');
+        }
+
+        return DataTables::of($query)
+            ->editColumn('controlo_estado', function ($data) {
+                return is_null($data->controlo_estado) ? 'Active' : 'Inactive';
+            })
+            ->make(true);
+    }
+
 }
