@@ -17,22 +17,28 @@ class CreateDocentesTable extends Migration
             $table->uuid('id_docente')->primary(); // Set as primary key and UUID type
             $table->string('nome_docente');
             $table->string('sexo');
-            $table->string('suco');
-            $table->string('id_posto_administrativo');
-            $table->string('id_municipio');
+            $table->uuid('id_suco');
+            $table->uuid('id_posto_administrativo');
+            $table->uuid('id_municipio');
             $table->date('data_moris');
             $table->string('nacionalidade');
             $table->string('nivel_educacao')->nullable();
             $table->string('area_especialidade')->nullable();
             $table->string('universidade_origem')->nullable();
-            $table->year('ano_inicio')->nullable();
+            $table->date('ano_inicio')->nullable();
             $table->uuid('id_estatuto');
-            $table->string('departamento');
+            $table->uuid('id_departamento');
             $table->text('observacao')->nullable();
             $table->string('photo_docente')->nullable();
+            
+            // Add timestamps (created_at, updated_at)
             $table->timestamps();
+    
+            // Add soft deletes (deleted_at)
+            $table->softDeletes();
         });
     }
+    
 
     /**
      * Reverse the migrations.

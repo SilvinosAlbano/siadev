@@ -22,49 +22,36 @@
                 </div>
 
             </div>
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
             <form class="new-added-form" method="POST" action="{{ route('docentes.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-xl-7 col-lg-6 col-12 form-group">
+                    <div class="col-xl-6 col-lg-6 col-12 form-group">
                         <label>Nome Docente *</label>
                         <input type="text" name="nome_docente" placeholder="" required class="form-control border">
+                        <!-- <input type="hidden" name="id_docente"> -->
                     </div>
-                    <div class="col-xl-5 col-lg-6 col-12 form-group">
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Sexo *</label>
                         <select class="select2" name="sexo">
                             <option value="">Escolha *</option>
                             <option value="Masculino">Masculino</option>
                             <option value="Feminino">Feminino</option>
-                        </select>
-                    </div>
-                </div>
-
-                {{-- fatin moris --}}
-                <div class="row">
-
-                    <div class="col-xl-2 col-lg-6 col-12 form-group">
-                        <label> Municipio *</label>
-                        <select class="select2" name="id_municipio" required>
-                            <option value="">Escolha *</option>
-                            <option value="Aileu">Aileu</option>
-                            <option value="Dili">Dili</option>
-                        </select>
-                    </div>
-                    <div class="col-xl-2 col-lg-6 col-12 form-group">
-                        <label>Posto *</label>
-                        <select class="select2" name="id_posto_administrativo">
-                            <option selected disabled value="">Escolha *</option>
-                            <option value="001">Remexio</option>
-                            <option value="001">Nain Feto</option>
-                        </select>
-                    </div>
-                    <div class="col-xl-2 col-lg-6 col-12 form-group">
-                        <label>Suco *</label>
-                        <select class="select2" name="suco">
-                            <option selected disabled value="">Escolha *</option>
-                            <option value="0001">Acumau</option>
-                            <option value="001">Bairo Pite</option>
-
                         </select>
                     </div>
 
@@ -74,6 +61,37 @@
                             class="border form-control air-datepicker">
                         <i class="far fa-calendar-alt"></i>
                     </div>
+                </div>
+
+                {{-- fatin moris --}}
+                <div class="row">
+
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label> Municipio *</label>
+                        <select class="select2" name="id_municipio" required>
+                            <option value="">Escolha *</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Aileu</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Dili</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Posto *</label>
+                        <select class="select2" name="id_posto_administrativo">
+                            <option selected disabled value="">Escolha *</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Remexio</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Nain Feto</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Suco *</label>
+                        <select class="select2" name="id_suco">
+                            <option selected disabled value="">Escolha *</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Acumau</option>
+                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Bairo Pite</option>
+
+                        </select>
+                    </div>
+                  
 
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Nacionalidade *</label>
@@ -107,7 +125,7 @@
                         <select class="select2" name="id_estatuto">
                             <option selected disabled value="">Escolha *</option>
                             @foreach ($estatuto as $est)
-                                <option value="{{ $est->id_tipo }}">{{ $est->estatuto }}</option>
+                                <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
                             @endforeach
 
 
@@ -147,8 +165,8 @@
                     <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
                     <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                 </div>
-        </div>
-        </form>
+       
+            </form>
     </div>
     </div>
     <!-- Add New Teacher Area End Here -->

@@ -41,11 +41,14 @@ Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.ind
 Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
 Route::get('/habilitacao_docente/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
 Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
-Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
+Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
+
 Route::get('/docentes/data', [DocenteController::class, 'getDocentesData'])->name('docentes.data');
 Route::get('/editar/{id}', [DocenteController::class, 'edit'])->name('editar');
 Route::put('/docentes/{id_docente}', [DocenteController::class, 'update'])->name('docentes.update');
 Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
 
 Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
+Route::get('/docente-report', [DocenteController::class, 'report'])->name('docentes.report');
+Route::get('/docente-export', [DocenteController::class, 'export'])->name('docentes.export');
 

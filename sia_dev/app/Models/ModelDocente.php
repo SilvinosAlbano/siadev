@@ -24,7 +24,7 @@ class ModelDocente extends Model
         'id_docente',
         'nome_docente',
         'sexo',
-        'suco',
+        'id_suco',
         'id_posto_administrativo',
         'id_municipio',
         'data_moris',

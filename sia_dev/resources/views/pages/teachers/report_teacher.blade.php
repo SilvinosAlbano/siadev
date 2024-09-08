@@ -2,7 +2,7 @@
 @section('title', 'Docente Report')
 @section('content')
 
-<div class="card height-auto">
+<div class="card height-auto mt-4">
     <div class="card-body">
         <div class="heading-layout1">
             <div class="item-title">
@@ -39,8 +39,8 @@
                 <div class="col-xl-2 col-lg-3 col-12 form-group">
                     <select class="select2" name="controlo_estado">
                         <option value="">Select Controlo Estado</option>
-                        <option value="active" {{ request('controlo_estado') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="deleted" {{ request('controlo_estado') == 'deleted' ? 'selected' : '' }}>Deleted</option>
+                        <option value="active" {{ request('controlo_estado') == 'active' ? 'selected' : '' }}>Ativo</option>
+                        <option value="deleted" {{ request('controlo_estado') == 'deleted' ? 'selected' : '' }}>Nao Ativo</option>
                     </select>
                 </div>
                 <div class="col-xl-1 col-lg-3 col-12 form-group">
