@@ -2440,19 +2440,29 @@ ul {
     padding: 10px 0;
 }
 
-.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a {
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a,
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li button {
     color: #646464;
     font-size: 15px;
     display: block;
     padding: 8px 25px;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+    background: none;
+    /* Ensures no background color for buttons */
+    border: none;
+    /* Removes border for buttons */
+    text-align: left;
+    /* Aligns text to the left if needed */
+    cursor: pointer;
+    /* Shows a pointer cursor for buttons */
+    -webkit-transition: background-color 0.3s ease-out, color 0.3s ease-out;
+    -moz-transition: background-color 0.3s ease-out, color 0.3s ease-out;
+    -ms-transition: background-color 0.3s ease-out, color 0.3s ease-out;
+    -o-transition: background-color 0.3s ease-out, color 0.3s ease-out;
+    transition: background-color 0.3s ease-out, color 0.3s ease-out;
 }
 
-.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a i:before {
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a i:before,
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li button i:before {
     margin-left: 0;
     margin-right: 10px;
     font-size: 15px;
@@ -2460,9 +2470,43 @@ ul {
     color: #444444;
 }
 
-.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a:hover {
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li a:hover,
+.header-main-menu .navbar-nav .header-admin .dropdown-menu .item-content .settings-list li button:hover {
     background-color: #f6f6f6;
+    color: #333;
+    /* Optional: Change text color on hover for better contrast */
 }
+
+
+.settings-list li a,
+.settings-list li button {
+    color: #646464;
+    font-size: 15px;
+    display: block;
+    padding: 8px 25px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease-out;
+}
+
+.settings-list li a i:before,
+.settings-list li button i:before {
+    margin-left: 0;
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #444444;
+}
+
+.settings-list li a:hover,
+.settings-list li button:hover {
+    background-color: #f6f6f6;
+    color: #333;
+}
+
 
 /*=============== 5.5 Sidebar Menu ==================*/
 .sidebar-menu-one {

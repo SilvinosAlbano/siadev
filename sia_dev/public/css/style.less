@@ -2544,11 +2544,73 @@ ul {
                                 }
                             }
                         }
+
+                        li {
+                            a {
+                                color: #646464;
+                                font-size: 15px;
+                                display: block;
+                                padding: 8px 25px;
+                                .transition(all,
+                                    0.3s,
+                                    ease-out);
+
+                                i {
+                                    &:before {
+                                        margin-left: 0;
+                                        margin-right: 10px;
+                                        font-size: 15px;
+                                        font-weight: 600;
+                                        color: #444444;
+                                    }
+                                }
+
+                                &:hover {
+                                    background-color: #f6f6f6;
+                                }
+                            }
+                        }
+
                     }
                 }
             }
         }
     }
+}
+
+.settings-list li a,
+.settings-list li button {
+    color: #646464;
+    font-size: 15px;
+    display: block;
+    padding: 8px 25px;
+    background: none;
+    /* No background for buttons */
+    border: none;
+    /* Removes button border */
+    text-align: left;
+    /* Aligns text to the left */
+    cursor: pointer;
+    /* Shows pointer cursor for buttons */
+    width: 100%;
+    /* Makes the button take full width */
+    transition: background-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+.settings-list li a i:before,
+.settings-list li button i:before {
+    margin-left: 0;
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #444444;
+}
+
+.settings-list li a:hover,
+.settings-list li button:hover {
+    background-color: #f6f6f6;
+    color: #333;
+    /* Optional: Adjust text color on hover */
 }
 
 

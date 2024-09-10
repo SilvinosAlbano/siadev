@@ -42,16 +42,23 @@
                 <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                     aria-expanded="false">
                     <div class="admin-title">
-                        <h5 class="item-title">Stevne Zone</h5>
-                        <span>Admin</span>
+                        <h5 class="item-title">{{ auth()->user()->username }}</h5>
+                        <span>{{ auth()->user()->tipo_usuario }}</span>
                     </div>
                     <div class="admin-img">
-                        <img src="img/figure/admin.jpg" alt="Admin">
+                        @if (auth()->user()->student_image)
+                            <!-- Display the student's image if it exists -->
+                            <img src="{{ asset('storage/asset/posts/' . auth()->user()->student_image) }}"
+                                alt="student" class="image-fluid" width="35">
+                        @else
+                            <!-- Display a default image if no student image is available -->
+                            <img src="{{ asset('img/pessoa_neutra.png') }}" width="35" alt="estudante">
+                        @endif
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <div class="item-header">
-                        <h6 class="item-title">Steven Zone</h6>
+                        <h6 class="item-title">{{ auth()->user()->username }}</h6>
                     </div>
                     <div class="item-content">
                         <ul class="settings-list">
@@ -61,10 +68,19 @@
                                         class="flaticon-chat-comment-oval-speech-bubble-with-text-lines"></i>Message</a>
                             </li>
                             <li><a href="#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                            <li><a href="\login"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                            <li>
+                                <!-- Logout Form styled like other links -->
+                                <form action="{{ route('auth.logout') }}" method="POST" style="display: block;">
+                                    @csrf
+                                    <button type="submit" class="settings-list-link">
+                                        <i class="flaticon-turn-off"></i>Log Out
+                                    </button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>
+
             </li>
         </ul>
     </div>

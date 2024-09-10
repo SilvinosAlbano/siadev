@@ -20,10 +20,16 @@
                 <div class="item-title">
                     <h3>All Students Data</h3>
                 </div>
-                <div class=" col-xl-3 col-lg-4 col-12 form-group">
-                    <a href="/admission_form_student" class="align-left fw-btn-fill btn-gradient-sia text-white">Adicionar
-                        novo Estudante</a>
-                </div>
+                @if (Auth::user()->canAccess('create', 'students') || Auth::user()->canAccess('admin', 'students'))
+                    <div class=" col-xl-2 col-lg-4 col-12 form-group">
+                        <a href="/admission_form_student" class="btn-fill-md text-light bg-dark-pastel-green"> <svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg> Adicionar</a>
+                    </div>
+                @endif
             </div>
             {{-- <form class="mg-b-20">
                 <div class="row gutters-8">

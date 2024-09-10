@@ -61,4 +61,6 @@ class UserController extends Controller
         return redirect()->route('users.show', $user_id)
                          ->with('success', 'User updated successfully!');
     }
+
+    
 }

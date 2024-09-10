@@ -15,6 +15,7 @@ class StudentController extends Controller
 {
     public function index()
     {
+        
         $semesters = Semester::all();
         $modelDepartamentos = ModelDepartamento::all();
         $students = Student::with(['departamento', 'semester'])->paginate(10); // Use with for eager loading and paginate
