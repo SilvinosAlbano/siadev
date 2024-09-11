@@ -95,7 +95,7 @@
                     <a href="/student_attendence" class="nav-link"><i
                             class="flaticon-checklist"></i><span>Atendimentos</span></a>
                 </li>
-                {{-- @if (Auth::user()->hasRole('admin')) --}}
+                {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}} <!-- Comment lai tama sei uza atu dev -->
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
                             class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Usuários</span></a>
@@ -105,12 +105,12 @@
                                 Usuários</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/users_details" class="nav-link"><i class="fas fa-angle-right"></i>Detalhos de
-                                Usuario</a>
+                            <a href="#/users_teachers" class="nav-link"><i class="fas fa-angle-right"></i>Usuários
+                                Funcionário</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/assign_role" class="nav-link"><i class="fas fa-angle-right"></i>Permissão de
-                                Acesso</a>
+                            <a href="#/users_students" class="nav-link"><i class="fas fa-angle-right"></i>Usuários
+                                Estudante</a>
                         </li>
                     </ul>
                 </li>

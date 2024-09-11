@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
-  
+
 
     <script src="{{ asset('js/modernizr-3.6.0.min.js') }}"></script>
 
@@ -54,7 +54,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             fetch(
-                '/api/check-authentication') // Example endpoint, should be created to return user authentication status
+                    '/api/check-authentication'
+                    ) // Example endpoint, should be created to return user authentication status
                 .then(response => response.json())
                 .then(data => {
                     if (!data.isAuthenticated) {

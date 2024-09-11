@@ -71,8 +71,9 @@
 
             <!-- Actions -->
             <div class="d-flex justify-content-between mt-4">
-                <a href="{{ route('users.edit', $user->user_id) }}" class="btn btn-warning">Edit</a>
-                <a href="{{ route('users.index') }}" class="btn btn-secondary">Back to List</a>
+                {{-- <a href="{{ route('users.edit', $user->user_id) }}" class="btn btn-warning">Edit</a> --}}
+                <a href="{{ route('users.index') }}" class="btn-fill-md radius-4 text-light bg-orange-red">Back to
+                    List</a>
             </div>
         </div>
     </div>

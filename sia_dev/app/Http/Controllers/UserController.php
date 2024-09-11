@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -15,12 +16,12 @@ class UserController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'like', "%{$search}%")
-                  ->orWhere('tipo_usuario', 'like', "%{$search}%");
+                    ->orWhere('tipo_usuario', 'like', "%{$search}%");
             });
         }
 
         $users = $query->with(['roles', 'modules'])
-                       ->paginate(10);
+            ->paginate(10);
 
         return view('pages.users.all_users', compact('users'));
     }
@@ -28,7 +29,7 @@ class UserController extends Controller
     public function show($user_id)
     {
         $user = User::with(['student', 'docente', 'roles', 'modules'])
-                    ->findOrFail($user_id);
+            ->findOrFail($user_id);
 
         return view('pages.users.user_details', compact('user'));
     }
@@ -59,8 +60,6 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('users.show', $user_id)
-                         ->with('success', 'User updated successfully!');
+            ->with('success', 'User updated successfully!');
     }
-
-    
 }

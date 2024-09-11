@@ -29,9 +29,9 @@ class Kernel extends HttpKernel
         'check.access' => \App\Http\Middleware\CheckUserAccess::class, // Ensure this is correct
     ];
 
-    public function __construct($app)
-    {
-        parent::__construct($app);
-        Log::info('Registered Middleware: ', array_keys($this->routeMiddleware));
-    }
+    // public function __construct($app)
+    // {
+    //     parent::__construct($app);
+    //     Log::info('Registered Middleware: ', array_keys($this->routeMiddleware));
+    // }
 }

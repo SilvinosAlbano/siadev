@@ -20,7 +20,9 @@
                 <div class="item-title">
                     <h3>All Students Data</h3>
                 </div>
-                @if (Auth::user()->canAccess('create', 'students') || Auth::user()->canAccess('admin', 'students'))
+                {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
+                @if (Auth::user()->canAccess('create', 'admission_form_student') ||
+                        Auth::user()->canAccess('admin', 'admission_form_student'))
                     <div class=" col-xl-2 col-lg-4 col-12 form-group">
                         <a href="/admission_form_student" class="btn-fill-md text-light bg-dark-pastel-green"> <svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

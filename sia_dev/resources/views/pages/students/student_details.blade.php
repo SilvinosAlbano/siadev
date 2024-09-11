@@ -141,7 +141,8 @@
                             </div>
                         </div>
                         <div class="form-group mt-3">
-                            @if (Auth::user()->hasAnyAccess(['create', 'admin', 'update'], 'students'))
+                            @if (Auth::user()->canAccess('create', 'admission_form_student') ||
+                                    Auth::user()->canAccess('admin', 'admission_form_student'))
                                 <button type="submit" class="btn-fill-lg btn-gradient-yellow" id="saveButton" disabled>Save
                                     Changes</button>
                             @else

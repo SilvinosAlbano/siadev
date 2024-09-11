@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ModulePermissionController;
+use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
 
@@ -45,12 +45,10 @@ Route::middleware('check.access')->group(function () {
 
     // Existing routes for users and roles management
     Route::get('/all_users', [UserController::class, 'index'])->name('users.index');
-    Route::get('user_details/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::get('/users_details/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::get('user_details/{user}',  [UserController::class, 'show'])->name('users.show');
+    Route::get('/assign_roles/{user}', [UserRoleController::class, 'assignRolesForm'])->name('assign.roles.form');
+    Route::post('/assign_roles/{user}', [UserRoleController::class, 'assignRoles'])->name('assign.roles');
 
-    Route::post('/assign_role', [ModulePermissionController::class, 'assignRoles'])->name('assign.roles');
-    Route::get('/assign_role', [ModulePermissionController::class, 'showAssignRolesForm'])->name('assign.roles.form');
 
     // route for teachers
     // Route for Menus of Teachers
