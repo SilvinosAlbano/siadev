@@ -13,11 +13,9 @@ Route::get('/unauthorized', function () {
     return view('unauthorized');
 });
 
-// Login and Logout routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
 
 // Password reset routes (optional, if you have a password reset functionality)
 Route::get('password/request', [AuthController::class, 'showPasswordRequestForm'])->name('password.request');
@@ -27,7 +25,7 @@ Route::post('password/reset', [AuthController::class, 'reset'])->name('password.
 
 // Example route for admin users
 // Route::group(['middleware' => ['auth', 'role:admin']], function () {
-Route::middleware(['auth'])->group(function () {
+Route::middleware('check.access')->group(function () {
     // Public Routes
     Route::get('/', function () {
         return view('pages.home');
@@ -35,8 +33,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', function () {
         return view('pages.home');
     });
-
-
 
     // Students Routes
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
@@ -55,12 +51,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/assign_role', [ModulePermissionController::class, 'assignRoles'])->name('assign.roles');
     Route::get('/assign_role', [ModulePermissionController::class, 'showAssignRolesForm'])->name('assign.roles.form');
-
-
-
-    // Auth::routes();
-
-
 
     // route for teachers
     // Route for Menus of Teachers

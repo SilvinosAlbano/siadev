@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log; // Ensure this import is included
+use Illuminate\Support\Facades\Log; 
 
 class User extends Authenticatable
 {
@@ -79,7 +79,7 @@ class User extends Authenticatable
                 $query->where('module_key', $module);
             })->exists();
 
-        Log::info("User ID: {$this->user_id}, Permission: {$permission}, Module: {$module}, Access: {$hasAccess}");
+        //Log::info("User ID: {$this->user_id}, Permission: {$permission}, Module: {$module}, Access: {$hasAccess}");
 
         return $hasAccess;
     }

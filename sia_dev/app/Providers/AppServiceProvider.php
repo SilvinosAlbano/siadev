@@ -20,12 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Blade::if('role', function ($role) {
-        //     return auth()->check() && auth()->user()->hasRole($role);
-        // });
-
-        // Blade::if('can', function ($permission) {
-        //     return auth()->check() && auth()->user()->can($permission);
-        // });
+        $this->app['router']->aliasMiddleware('check.access', \App\Http\Middleware\CheckUserAccess::class);
     }
 }
