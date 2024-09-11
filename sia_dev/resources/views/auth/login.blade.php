@@ -7,28 +7,82 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Login</title>
 </head>
+<style>
+    body {
+        background: linear-gradient(120deg, #ffffff 0%, #eeeeee 100%);
+        /* Or use a background image */
+        /* background: url('public/img/logo1.png') no-repeat center center fixed; */
+        background-size: cover;
+        /* C:\Users\ALFON\Desktop\siadev\siadev\sia_dev\public\img\logo1.png */
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">Login</div>
-                    <div class="card-body">
-                        @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
-                        <form method="POST" action="{{ route('login') }}">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="row w-100">
+            <div class="col-md-6 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <div class="item-logo ">
+                            <img src="img/logo1.png" alt="ics_logo" width="15%" class="align-center">
+                        </div>
+                        <h2 class="text-center mb-4">Bem-vindo ao SIA-ICS</h2>
+                        <form method="POST" action="{{ route('auth.login') }}">
                             @csrf
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" name="email" required>
+                            <!-- Username -->
+                            <div class="form-group mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                    id="username" name="username" value="{{ old('username') }}" required autofocus>
+                                @error('username')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="mb-3">
+
+                            <!-- Password -->
+                            <div class="form-group mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" name="password" required>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" required>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
+
+                            <!-- Remember Me -->
+                            <div class="form-check mb-4">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">Remember Me</label>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                            </div>
+
+                            <!-- Forgot Password -->
+                            <div class="text-center">
+                                <a href="{{ route('password.request') }}" class="text-decoration-none">Forgot Your
+                                    Password?</a>
+                            </div>
                         </form>
                     </div>
                 </div>

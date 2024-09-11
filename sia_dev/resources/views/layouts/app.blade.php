@@ -21,7 +21,7 @@
   
 
     <script src="{{ asset('js/modernizr-3.6.0.min.js') }}"></script>
-    
+
 
 
 </head>
@@ -50,6 +50,20 @@
         </div>
         <!-- Page Area End Here -->
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch(
+                '/api/check-authentication') // Example endpoint, should be created to return user authentication status
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.isAuthenticated) {
+                        window.location.href = '/login'; // Redirect to login if not authenticated
+                    }
+                })
+                .catch(error => console.error('Error checking authentication:', error));
+        });
+    </script>
     <!-- jquery-->
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/select2.min.js') }}"></script>
