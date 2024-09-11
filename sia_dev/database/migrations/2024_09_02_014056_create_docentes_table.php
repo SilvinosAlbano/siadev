@@ -22,14 +22,17 @@ class CreateDocentesTable extends Migration
             $table->uuid('id_municipio');
             $table->date('data_moris');
             $table->string('nacionalidade');
+            $table->string('categoria');
             $table->string('nivel_educacao')->nullable();
             $table->string('area_especialidade')->nullable();
             $table->string('universidade_origem')->nullable();
             $table->date('ano_inicio')->nullable();
+            $table->uuid('id_tipo_categoria')->nullable();
             $table->uuid('id_estatuto');
             $table->uuid('id_departamento');
             $table->text('observacao')->nullable();
             $table->string('photo_docente')->nullable();
+            $table->string('controlo_estado')->nullable();
             
             // Add timestamps (created_at, updated_at)
             $table->timestamps();

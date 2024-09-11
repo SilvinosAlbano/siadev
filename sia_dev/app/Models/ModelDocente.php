@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
 // use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModelDocente extends Model
@@ -35,9 +37,17 @@ class ModelDocente extends Model
         'ano_inicio',
         'id_estatuto',
         'id_departamento',
+        'id_tipo_categoria',
         'observacao',
+        'categoria',
         'photo_docente'
     ];
 
-    
+    public function getAllData() 
+    {
+        return DB::table('tipo_categoria_admin')
+            ->select('*')
+            ->orderBy('id_tipo_categoria', 'asc')
+            ->get();
+    }
 }

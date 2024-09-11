@@ -17,11 +17,23 @@
         </div>
         <div class="single-info-details">
             <div class="item-img">
-                <img src="{{asset('img/pessoa_neutra.png')}}" width="150" alt="docent">
-                {{-- <div class="header-inline item-header">
-                    <h4 class="text-dark-medium font-medium text-center">{{$detail->nome_docente}}</h4>
-                   
-                </div> --}}
+               
+
+                @if (is_null($detail->controlo_estado))
+                        <div class="ribbon  bg-primary">
+                                <span class="text-white text-center">
+                                Ativo
+                            </span>
+                        </div>
+                        @elseif ($detail->controlo_estado == 'deleted')
+                        <div class="ribbon  bg-danger">
+                            <span class="text-white text-center">
+                            Nao Ativo
+                        </span>
+                            </div>
+                        @endif
+                <img class="border" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
+                
             </div>
             <div class="item-content">
                 <div class="header-inline item-header">

@@ -91,8 +91,9 @@
                         <th>Data Moris</th>
                         <th>Nivel Educacao</th>
                         <th>Ano Inicio</th>
-                        <th>Controlo Estado</th>
-                        <th></th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +107,8 @@
                             <td>{{ $data->data_moris }}</td>
                             <td>{{ $data->nivel_educacao }}</td>
                             <td>{{ $data->ano_inicio }}</td>
+                            <td>{{ $data->categoria }}</td>
+
                             <td> 
                             @if (is_null($data->controlo_estado))
                                 <span class="text-success">Ativo</span>

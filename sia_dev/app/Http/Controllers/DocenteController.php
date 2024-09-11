@@ -92,81 +92,89 @@ class DocenteController extends Controller
     // docente adicionar
     public function formDocente()
     {
+        $tipo_admin = (new ModelDocente())->getAllData();
         $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
         $estatuto = ModelEstatuto::all();
         $docente = ModelDocente::paginate(10);
     
-        return view('pages.teachers.add_teacher', compact('docente','departamento','estatuto'));
+        return view('pages.teachers.add_teacher', compact('docente','departamento','estatuto','tipo_admin'));
     }
 
     public function store(Request $request): RedirectResponse
-    {
-        // Validation Rules
-        $validated = $request->validate([
-            'nome_docente' => 'required|string|max:255',
-            'sexo' => 'required|string|max:255',
-            'data_moris' => 'required|date',
-            'id_suco' => 'required|string|max:255',
-            'id_posto_administrativo' => 'required|string|max:255',
-            'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',
-            'nivel_educacao' => 'nullable|string|max:255',
-            'area_especialidade' => 'nullable|string|max:255',
-            'universidade_origem' => 'nullable|string|max:255',
-            'id_estatuto' => 'required|string|max:255',
-            'id_departamento' =>'required|string|max:255',
-            'ano_inicio' => 'nullable|date',
-            'observacao' => 'nullable|string',
-        ]);
-    
-        // Handle File Upload if an image is provided
-        $photo_docente = null; // Default value if no image is uploaded
-        if ($request->hasFile('photo_docente')) {
-            $image = $request->file('photo_docente');
-            $photo_docente = $image->hashName(); // Generate a unique name for the image
-            $image->storeAs('public/asset/posts', $photo_docente); // Store the image
-        }
-    
-        // Create a new record in the database
-        $docente = ModelDocente::create([
-            'id_docente' => (string) Str::uuid(),
-            'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
-            'nome_docente' => $validated['nome_docente'],
-            'sexo' => $validated['sexo'],
-            'data_moris' => $validated['data_moris'],
-            'id_suco' => $validated['id_suco'],
-            'id_posto_administrativo' => $validated['id_posto_administrativo'],
-            'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],
-            'nivel_educacao' => $validated['nivel_educacao'],
-            'area_especialidade' => $validated['area_especialidade'],
-            'universidade_origem' => $validated['universidade_origem'],
-            'id_estatuto' => $validated['id_estatuto'],
-            'id_departamento' => $validated['id_departamento'],
-            'ano_inicio' => $validated['ano_inicio'],
-            'observacao' => $validated['observacao']
-        ]);
+{
+    // Validation Rules
+    $validated = $request->validate([
+        'nome_docente' => 'required|string|max:255',
+        'sexo' => 'required|string|max:255',
+        'data_moris' => 'required|date',
+        'id_suco' => 'required|string|max:255',
+        'id_posto_administrativo' => 'required|string|max:255',
+        'id_municipio' => 'required|string|max:255',
+        'nacionalidade' => 'nullable|string|max:255',
+        'nivel_educacao' => 'nullable|string|max:255',
+        'area_especialidade' => 'nullable|string|max:255',
+        'universidade_origem' => 'nullable|string|max:255',
+        'id_estatuto' => 'required|string|max:255',
+        'id_departamento' =>'required|string|max:255',
+        'id_tipo_categoria' =>'nullable|string|max:255', // This can be nullable
+        'ano_inicio' => 'nullable|date',
+        'observacao' => 'nullable|string',
+        'categoria' => 'required|string|max:255',
+    ]);
 
-        #create user
-        User::create([
-            'user_id' => (string) Str::uuid(),
-            'username' => $docente->nome_docente, // Assuming 'nre' is actually 'nome_docente' or handle it properly
-            'email' => $request->email ?? null, // Set email to null or receive it from request
-            'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
-            'docente_student_id' => $docente->id_docente,
-            'tipo_usuario' => 'Docente', // Assuming 'Docente' is a valid type for 'tipo_usuario'
-        ]);
-
-        
-        // Check if the insertion was successful
-        if ($docente) {
-            // Redirect with Success Message
-            return redirect()->route('docentes.index')->with(['success' => 'Dados com sucesso gravados']);
-        } else {
-            // Return with an error message if insertion fails
-            return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
-        }
+    // Handle File Upload if an image is provided
+    $photo_docente = null; // Default value if no image is uploaded
+    if ($request->hasFile('photo_docente')) {
+        $image = $request->file('photo_docente');
+        $photo_docente = $image->hashName(); // Generate a unique name for the image
+        $image->storeAs('public/asset/posts', $photo_docente); // Store the image
     }
+
+    // Explicitly check if 'id_tipo_categoria' exists in the request
+    $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validated['id_tipo_categoria'] : null;
+
+    // Create a new record in the database
+    $docente = ModelDocente::create([
+        'id_docente' => (string) Str::uuid(),
+        'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
+        'nome_docente' => $validated['nome_docente'],
+        'sexo' => $validated['sexo'],
+        'data_moris' => $validated['data_moris'],
+        'id_suco' => $validated['id_suco'],
+        'id_posto_administrativo' => $validated['id_posto_administrativo'],
+        'id_municipio' => $validated['id_municipio'],
+        'nacionalidade' => $validated['nacionalidade'],
+        'nivel_educacao' => $validated['nivel_educacao'],
+        'area_especialidade' => $validated['area_especialidade'],
+        'universidade_origem' => $validated['universidade_origem'],
+        'id_estatuto' => $validated['id_estatuto'],
+        'id_departamento' => $validated['id_departamento'],
+        'id_tipo_categoria' => $id_tipo_categoria, // This will be null if not provided
+        'ano_inicio' => $validated['ano_inicio'],
+        'observacao' => $validated['observacao'],
+        'categoria' => $validated['categoria']
+    ]);
+
+    # Create user
+    User::create([
+        'user_id' => (string) Str::uuid(),
+        'username' => $docente->nome_docente, // Assuming 'nre' is actually 'nome_docente' or handle it properly
+        'email' => $request->email ?? null, // Set email to null or receive it from request
+        'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
+        'docente_student_id' => $docente->id_docente,
+        'tipo_usuario' => $docente->categoria, 
+    ]);
+
+    // Check if the insertion was successful
+    if ($docente) {
+        // Redirect with Success Message
+        return redirect()->route('docentes.index')->with(['success' => 'Dados com sucesso gravados']);
+    } else {
+        // Return with an error message if insertion fails
+        return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
+    }
+}
+
     
 
     

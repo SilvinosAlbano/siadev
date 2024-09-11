@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Adicionar Docentes')
 @section('content')
-
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area">
         <h3>Docentes</h3>
@@ -103,25 +102,43 @@
 
                 <div class="row">
 
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Nivel Educacao</label>
                         <input type="text" name="nivel_educacao" placeholder="" class="form-control border">
                     </div>
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Area Especialidade</label>
                         <input type="text" name="area_especialidade" placeholder="" class="form-control border">
                     </div>
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Universidade Origem</label>
                         <input type="text" name="universidade_origem" placeholder="" class="form-control border">
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Categoria *</label>
+                        <select class="select2" id="categoria" name="categoria" required>
+                            <option selected disabled value="">Escolha *</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" id="tipoDataRow" style="display: none;">
+                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Tipo Categoria Admin *</label>
+                        <select class="select2" name="id_tipo_categoria">
+                            <option selected disabled value="">Escolha *</option>
+                            @foreach ($tipo_admin as $est)
+                                <option value="{{ $est->id_tipo_categoria }}">{{ $est->tipo_categoria }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
-
-
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Categoria Estatuto (P/IP/C) *</label>
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                        <label>Estatuto (P/IP/C) *</label>
                         <select class="select2" name="id_estatuto">
                             <option selected disabled value="">Escolha *</option>
                             @foreach ($estatuto as $est)
@@ -170,5 +187,28 @@
     </div>
     </div>
     <!-- Add New Teacher Area End Here -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var categoria = document.getElementById('categoria');
+        var tipoDataRow = document.getElementById('tipoDataRow');
+
+        // Ensure the select2 is initialized before we add the event listener
+        $('.select2').select2();
+
+        // Initially hide the Tipo Data field
+        tipoDataRow.style.display = 'none';
+
+        // Event listener for change on Categoria field
+        $(categoria).on('change', function() {
+            var selectedValue = $(this).val(); // Get the selected value
+            if (selectedValue === 'Admin') {
+                tipoDataRow.style.display = 'block'; // Show the field when Admin is selected
+            } else {
+                tipoDataRow.style.display = 'none'; // Hide the field for other options
+            }
+        });
+    });
+</script>
+
 
 @endsection
