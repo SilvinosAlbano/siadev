@@ -10,7 +10,7 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary(); // Session ID
-            $table->integer('user_id')->nullable(); // Optional user ID
+            $table->uuid('user_id')->nullable(); // Optional user ID
             $table->text('payload'); // Session payload
             $table->integer('last_activity'); // Last activity timestamp
             $table->ipAddress('ip_address')->nullable(); // Optional IP address
