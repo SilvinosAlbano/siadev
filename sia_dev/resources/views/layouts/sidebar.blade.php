@@ -47,26 +47,22 @@
                 @endif
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
-                            class="flaticon-multiple-users-silhouette"></i><span>Docentes</span></a>
+                            class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
                             <a href="/docentes" class="nav-link"><i class="fas fa-angle-right"></i>Todos
-                                Docentes</a>
+                                Funcionarios</a>
                         </li>
                         <li class="nav-item">
                             <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
-                                Docentes</a>
+                                Funcionarios</a>
                         </li>
                         <li class="nav-item">
                             <a href="/teacher_payment" class="nav-link"><i class="fas fa-angle-right"></i>Pagamento
                                 de
-                                Docentes</a>
+                                Funcionarios</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/add_teacher" class="nav-link"><i class="fas fa-angle-right"></i>Adicionar
-                                Docentes
-                                Form</a>
-                        </li>
+                      
                     </ul>
                 </li>
                 <li class="nav-item sidebar-nav-item">
