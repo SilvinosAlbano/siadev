@@ -1,22 +1,19 @@
 
 @extends('layouts.app')
-
+@section('title', 'Habilitacao')
 @section('content') 
     <!-- Identificao Content -->
      @include('pages.teachers.header_teacher')
 
 
-     <div class="card">
-             <div class="card-header">
-                <div class="card-title">
-                    Habilitacao
-                </div>
                 <div class="card-body">
                     <div class="tab-content mt-4">              
             
-                         @include('pages.teachers.menu_tab')
-        
-                        <div class="table-responsive">
+                    @include('pages.teachers.menu_tab')
+                        
+                    <a class="btn btn-primary btn-lg" href="/adiciona_docente"><i class="fas fa-plus text-orange-peel"></i> Aumenta Foun</a>
+              
+                        <div class="table-responsive mt-2">
                             <table class="table display data-table text-nowrap">
                                 <thead>
                                     <tr>
@@ -44,12 +41,11 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> 
 
                    </div>
               </div>
-             </div>
-            </div>
+            
   
 @endsection
 

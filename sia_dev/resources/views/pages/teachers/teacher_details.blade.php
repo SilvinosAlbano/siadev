@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Teachers')
+@section('title', 'Deatail')
 
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
@@ -59,16 +59,16 @@
             </div>
         </div>
     </div>
+    <div class="card ui-tab-card mt-4">
+      @include('pages.teachers.menu_tab')
+
+                  @if (request('tab') == 'identificacao' || is_null(request('tab')))
+                      @include('pages.teachers.identificacao') <!-- Identificao Content -->
+                
+                  @endif
+
+        
+      </div>
 
     <!-- Tab Navigation (Static) -->
-    <div class="card ui-tab-card mt-2">
-    @include('pages.teachers.menu_tab')
-
-                @if (request('tab') == 'identificacao' || is_null(request('tab')))
-                    @include('pages.teachers.identificacao') <!-- Identificao Content -->
-               
-                @endif
-
-      
-    </div>
 @endsection

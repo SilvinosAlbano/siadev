@@ -1,4 +1,4 @@
-<div class="card-body border">
+<div class="card-body border mb-4">
             <div class="heading-layout1 mg-b-25">
                 <div class="item-title">
                     <h3>Ficha Funcão Docente</h3>
