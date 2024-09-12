@@ -3,41 +3,72 @@
 @section('title', 'Teachers')
 
 @section('content')
-    <!-- Breadcubs Area Start Here -->
-    @include('pages.teachers.header_teacher')
+    <!-- Breadcrumbs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>Docentes</h3>
+        <ul>
+            <li><a href="/docentes">Tabela</a></li>
+            <li>Docente Detalho</li>
+        </ul>
+    </div>
 
-    <div class="card ui-tab-card mt-2">
+    <!-- Header Section with Image and Info -->
+    <div class="card height-auto">
         <div class="card-body border">
-            <div class="heading-layout1 mg-b-25">
+            <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>Ficha Funcão Docente</h3>
+                    {{-- Header Title --}}
                 </div>
-              
             </div>
-            <div class="basic-tab">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">Identificao</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link"  href="{{ route('habilitacao_docente', $detail->id_docente) }}"  aria-selected="false">Habiltacao do Professor</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">Horario Ensinar</a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">Pagamento</a>
-                    </li>
-                </ul>
-
-
-                
-              </div>
-              
-              @yield('content')
-         
+            <div class="single-info-details">
+                <div class="item-img">
+                    @if (is_null($detail->controlo_estado))
+                        <div class="ribbon bg-primary">
+                            <span class="text-white text-center">Ativo</span>
+                        </div>
+                    @elseif ($detail->controlo_estado == 'deleted')
+                        <div class="ribbon bg-danger">
+                            <span class="text-white text-center">Nao Ativo</span>
+                        </div>
+                    @endif
+                    <img class="border" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
+                </div>
+                <div class="item-content">
+                    <div class="header-inline item-header">
+                        <h4 class="text-dark-medium font-medium">{{$detail->nome_docente}}</h4>
+                    </div>
+                    <div class="info-table table-responsive">
+                        <table class="table text-nowrap">
+                            <tbody>
+                                <tr>
+                                    <td>Sexo:</td>
+                                    <td class="font-medium text-dark-medium">{{$detail->sexo}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nivel Educacão:</td>
+                                    <td class="font-medium text-dark-medium">{{$detail->nivel_educacao}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Estatuto (P/IP/C):</td>
+                                    <td class="font-medium text-dark-medium">{{$detail->categoria_estatuto}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Student Table Area End Here -->
+
+    <!-- Tab Navigation (Static) -->
+    <div class="card ui-tab-card mt-2">
+    @include('pages.teachers.menu_tab')
+
+                @if (request('tab') == 'identificacao' || is_null(request('tab')))
+                    @include('pages.teachers.identificacao') <!-- Identificao Content -->
+               
+                @endif
+
+      
+    </div>
 @endsection

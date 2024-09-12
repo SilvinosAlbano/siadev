@@ -1,30 +1,33 @@
-
-<div class="card ui-tab-card mt-8">
-    <div class="card-body border">
-        <div class="heading-layout1 mg-b-25">
-            <div class="item-title">
-                <h3>Ficha Funcão Docente</h3>
+<div class="card-body border">
+            <div class="heading-layout1 mg-b-25">
+                <div class="item-title">
+                    <h3>Ficha Funcão Docente</h3>
+                </div>
             </div>
-          
+            <div class="basic-tab">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('detailho') ? 'active' : '' }}" href="{{ route('detailho', $detail->id_docente) }}">Identificao</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('habilitacao_docente') ? 'active' : '' }}" href="{{ route('habilitacao_docente', $detail->id_docente) }}">Habilitacao do Professor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('horario') ? 'active' : '' }}" href="{{ route('horario', $detail->id_docente) }}">Horario Ensinar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('pagamento') ? 'active' : '' }}" href="{{ route('pagamento', $detail->id_docente) }}">Pagamento</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Dynamic Content Section -->
+           
+
+            </div>
+
+           
         </div>
 
-    </div>
-</div>
-    <div class="basic-tab mb-6">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-selected="true">Identificao</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link"  href="{{ route('habilitacao_docente', $detail->id_docente) }}"  aria-selected="false">Habiltacao do Professor</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">Horario Ensinar</a>
-            </li>
 
-            <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-selected="false">Pagamento</a>
-            </li>
-        </ul>
-    
-</div>
+        

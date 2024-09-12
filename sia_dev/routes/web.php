@@ -54,7 +54,11 @@ Route::middleware('check.access')->group(function () {
     // Route for Menus of Teachers
     Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
     Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
-    Route::get('/habilitacao_docente/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
+    Route::get('/habilitacao/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
+    Route::get('/teacher/horario/{id}', [DocenteController::class, 'horario'])->name('horario');
+    Route::get('/teacher/pagamento/{id}', [DocenteController::class, 'pagamento'])->name('pagamento');
+
+
     Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
 

@@ -69,23 +69,70 @@ class DocenteController extends Controller
         return view('pages.teachers.teacher_details', compact('detail'));
     }
 
-    public function show(string $id)
-    {
+    // public function show($id, Request $request)
+    // {
     
-        // Retrieve detail of the pessoa by ID
-        $detail = ModelDocente::findOrFail($id);  
-        // Return the view with the retrieved detail and atividades
-        return view('pages.teachers.teacher_details', compact('detail'));
-    }
+    //     // Retrieve detail of the pessoa by ID
+    //     $detail = ModelDocente::findOrFail($id);  
+    //     $tab = $request->query('tab');
+    //     // Return the view with the retrieved detail and atividades
+    //     return view('pages.teachers.teacher_details', compact('detail','tab'));
+    // }
 
 
-    public function habilitacao(string $id)
+    public function show($id, Request $request)
     {
-        $docente = ModelDocente::all(); // Assuming you have a Docente model
-        // $docente = ModelDocente::paginate(10);
-        $detail = ModelDocente::findOrFail($id);  
-        return view('pages.teachers.habilitacao_docente', compact('docente','detail'));
+        // Get the 'tab' query parameter
+        $tab = $request->query('tab');
+    
+        // Determine which content to show based on the 'tab' parameter
+        switch ($tab) {
+            case 'habilitacao_docente':
+                // Logic for 'habilitacao_docente'
+                $content = view('pages.teachers.habilitacao_docente');
+                break;
+    
+            case 'pagamento':
+                // Logic for 'pagamento'
+                $content = view('pages.teachers.pagamento');
+                break;
+    
+            case 'horario':
+                // Logic for 'horario'
+                $content = view('pages.teachers.horario');
+                break;
+    
+            default:
+                // Default content if 'tab' is not set or does not match any case
+                $content = view('pages.teachers.identificacao');
+                break;
+        }
+    
+        // Return the main view with dynamic content
+        return view('detailho', ['content' => $content, 'id' => $id]);
     }
+    
+
+
+
+    public function habilitacao($id)
+    {
+        $detail = ModelDocente::findOrFail($id);
+        return view('pages.teachers.habilitacao_docente', compact('detail'));
+    }
+
+    public function horario($id)
+    {
+        $detail = ModelDocente::findOrFail($id);
+        return view('pages.teachers.horario', compact('detail'));
+    }
+
+    public function pagamento($id)
+    {
+        $detail = ModelDocente::findOrFail($id);
+        return view('pages.teachers.pagamento', compact('detail'));
+    }
+
        
 
 
