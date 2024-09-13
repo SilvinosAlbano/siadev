@@ -13,8 +13,8 @@
     </div>
     <!-- Breadcubs Area End Here -->
     <!-- Add New Teacher Area Start Here -->
-    <div class="card height-auto">
-        <div class="card-body">
+    <div class="card height-auto mb-8">
+        <div class="card-body mb-4">
             <div class="heading-layout1">
                 <div class="item-title">
                     <h3>Adicionar Novo Docentes</h3>
@@ -29,182 +29,243 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+            @endif
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-            <form class="new-added-form" method="POST" action="{{ route('docentes.store') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 col-12 form-group">
-                        <label>Nome Docente *</label>
-                        <input type="text" name="nome_docente" placeholder="" required class="form-control border">
-                        <!-- <input type="hidden" name="id_docente"> -->
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Sexo *</label>
-                        <select class="select2" name="sexo">
-                            <option value="">Escolha *</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Feminino">Feminino</option>
-                        </select>
-                    </div>
-
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Data Moris *</label>
-                        <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
-                            class="border form-control">
-                        <!-- <i class="far fa-calendar-alt"></i> -->
-                    </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
                 </div>
+            @endif
 
-                {{-- fatin moris --}}
-                <div class="row">
+                <form class="new-added-form mb-4" method="POST" action="{{ route('docentes.store') }}"   enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label>Nome Docente *</label>
+                            <input type="text" name="nome_docente" placeholder="" required class="form-control border">
+                            <!-- <input type="hidden" name="id_docente"> -->
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                            <label>Sexo *</label>
+                            <select class="select2" name="sexo">
+                                <option value="">Escolha *</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </div>
 
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label> Municipio *</label>
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                            <label>Data Moris *</label>
+                            <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
+                                class="border form-control">
+                            <!-- <i class="far fa-calendar-alt"></i> -->
+                        </div>
+                    </div>
+
+                    {{-- fatin moris --}}
+                    <div class="row">
+
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                        <label>Municipio *</label>
                         <select class="select2" name="id_municipio" required>
                             <option value="">Escolha *</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Aileu</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Dili</option>
+                            @foreach($municipios as $municipio)
+                                <option value="{{ $municipio->id_municipio }}">{{ $municipio->municipio }}</option>
+                            @endforeach
                         </select>
                     </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+
+
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
                         <label>Posto *</label>
                         <select class="select2" name="id_posto_administrativo">
                             <option selected disabled value="">Escolha *</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Remexio</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Nain Feto</option>
                         </select>
                     </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
                         <label>Suco *</label>
                         <select class="select2" name="id_suco">
                             <option selected disabled value="">Escolha *</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Acumau</option>
-                            <option value="83cca938-f283-3cab-8e50-efa4b9a8ddde">Bairo Pite</option>
-
-                        </select>
+                        </select>                
+                                        
                     </div>
-                  
+                
+                
 
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Nacionalidade *</label>
-                        <input type="text" name="nacionalidade" placeholder="" class="form-control border">
-                    </div>
-                </div>
-
-                {{-- row habilitasaun --}}
-
-                <div class="row">
-
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Nivel Educacao</label>
-                        <input type="text" name="nivel_educacao" placeholder="" class="form-control border">
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Area Especialidade</label>
-                        <input type="text" name="area_especialidade" placeholder="" class="form-control border">
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Universidade Origem</label>
-                        <input type="text" name="universidade_origem" placeholder="" class="form-control border">
                     </div>
 
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Categoria *</label>
-                        <select class="select2" id="categoria" name="categoria" required>
-                            <option selected disabled value="">Escolha *</option>
-                            <option value="Docente">Docente</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row" id="tipoDataRow" style="display: none;">
-                <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Tipo Categoria Admin *</label>
-                        <select class="select2" name="id_tipo_categoria">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach ($tipo_admin as $est)
-                                <option value="{{ $est->id_tipo_categoria }}">{{ $est->tipo_categoria }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                
 
-                <div class="row">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <label>Aldeia *</label>
+                            <select class="select2" name="id_aldeia">
+                                <option selected disabled value="">Escolha *</option>
+                            </select>
+                        </div>
                     <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Estatuto (P/IP/C) *</label>
-                        <select class="select2" name="id_estatuto">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach ($estatuto as $est)
-                                <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
-                            @endforeach
+                            <label>Nacionalidade *</label>
+                            <input type="text" name="nacionalidade" placeholder="" class="form-control border">
+                        </div>
 
-
-                        </select>
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <label>Categoria *</label>
+                            <select class="select2" id="categoria" name="categoria" required>
+                                <option selected disabled value="">Escolha *</option>
+                                <option value="Docente">Docente</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="row mb-2" id="tipoDataRow" style="display: none;">
+                            <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                <label>Tipo Categoria Admin *</label>
+                                <select class="select2" name="id_tipo_categoria">
+                                    <option selected disabled value="">Escolha *</option>
+                                    @foreach ($tipo_admin as $est)
+                                        <option value="{{ $est->id_tipo_categoria }}">{{ $est->tipo_categoria }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <label>Estatuto (P/IP/C) *</label>
+                            <select class="select2" name="id_estatuto">
+                                <option selected disabled value="">Escolha *</option>
+                                @foreach ($estatuto as $est)
+                                    <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
+                                @endforeach
 
 
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Departamento *</label>
-                        <select class="select2" name="id_departamento">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach ($departamento as $dep)
-                                <option value="{{ $dep->id_departamento }}">{{ $dep->departamento }}</option>
-                            @endforeach
-                        </select>
+                            </select>
+                        </div>
+
+
+
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <label>Departamento *</label>
+                            <select class="select2" name="id_departamento">
+                                <option selected disabled value="">Escolha *</option>
+                                @foreach ($departamento as $dep)
+                                    <option value="{{ $dep->id_departamento }}">{{ $dep->departamento }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <label>Ano Inicio</label>
+                            <input type="date" name="ano_inicio" placeholder="" class="form-control">
+
+                        </div>
                     </div>
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Ano Inicio</label>
-                        <input type="date" name="ano_inicio" placeholder="" class="form-control">
 
+                    <div class="row">
+                        <div class="col-lg-8 col-12 form-group">
+                            <label>Observacão</label>
+                            <textarea class="textarea form-control border" name="observacao" id="form-message" cols="10" rows="5"></textarea>
+                        </div>
+                        <div class="col-lg-4 col-12 form-group mg-t-30">
+                            <label class="text-dark-medium">Upload Docente Photo (150px X 150px)</label>
+                            <input type="file" name="photo_docente" class="form-control-file">
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-lg-8 col-12 form-group">
-                        <label>Observacão</label>
-                        <textarea class="textarea form-control border" name="observacao" id="form-message" cols="10" rows="5"></textarea>
+                    <div class="col-12 form-group mg-t-8">
+                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+                        <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                     </div>
-                    <div class="col-lg-4 col-12 form-group mg-t-30">
-                        <label class="text-dark-medium">Upload Docente Photo (150px X 150px)</label>
-                        <input type="file" name="photo_docente" class="form-control-file">
-                    </div>
-                </div>
-
-                <div class="col-12 form-group mg-t-8">
-                    <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                    <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
-                </div>
-       
-            </form>
-    </div>
+        
+                </form>
+        </div>
     </div>
     <!-- Add New Teacher Area End Here -->
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var categoria = document.getElementById('categoria');
-        var tipoDataRow = document.getElementById('tipoDataRow');
+        document.addEventListener('DOMContentLoaded', function() {
+            var categoria = document.getElementById('categoria');
+            var tipoDataRow = document.getElementById('tipoDataRow');
 
-        // Ensure the select2 is initialized before we add the event listener
-        $('.select2').select2();
+            // Ensure the select2 is initialized before we add the event listener
+            $('.select2').select2();
 
-        // Initially hide the Tipo Data field
-        tipoDataRow.style.display = 'none';
+            // Initially hide the Tipo Data field
+            tipoDataRow.style.display = 'none';
 
-        // Event listener for change on Categoria field
-        $(categoria).on('change', function() {
-            var selectedValue = $(this).val(); // Get the selected value
-            if (selectedValue === 'Admin') {
-                tipoDataRow.style.display = 'block'; // Show the field when Admin is selected
-            } else {
-                tipoDataRow.style.display = 'none'; // Hide the field for other options
+            // Event listener for change on Categoria field
+            $(categoria).on('change', function() {
+                var selectedValue = $(this).val(); // Get the selected value
+                if (selectedValue === 'Admin') {
+                    tipoDataRow.style.display = 'block'; // Show the field when Admin is selected
+                } else {
+                    tipoDataRow.style.display = 'none'; // Hide the field for other options
+                }
+            });
+        });
+    </script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // When Municipio changes
+        $('select[name="id_municipio"]').on('change', function() {
+            var idMunicipio = $(this).val();
+            if (idMunicipio) {
+                $.ajax({
+                    url: '/get-postos/' + idMunicipio,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('select[name="id_posto_administrativo"]').empty();
+                        $('select[name="id_posto_administrativo"]').append('<option selected disabled>Escolha *</option>');
+                        $.each(data, function(key, value) {
+                            $('select[name="id_posto_administrativo"]').append('<option value="' + value.id_posto_administrativo + '">' + value.posto_administrativo + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        // When Posto changes
+        $('select[name="id_posto_administrativo"]').on('change', function() {
+            var idPosto = $(this).val();
+            if (idPosto) {
+                $.ajax({
+                    url: '/get-sucos/' + idPosto,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('select[name="id_suco"]').empty();
+                        $('select[name="id_suco"]').append('<option selected disabled>Escolha *</option>');
+                        $.each(data, function(key, value) {
+                            $('select[name="id_suco"]').append('<option value="' + value.id_sucos + '">' + value.sucos + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        // When Suco changes
+        $('select[name="id_suco"]').on('change', function() {
+            var idSuco = $(this).val();
+            if (idSuco) {
+                $.ajax({
+                    url: '/get-aldeias/' + idSuco,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('select[name="id_aldeia"]').empty();
+                        $('select[name="id_aldeia"]').append('<option selected disabled>Escolha *</option>');
+                        $.each(data, function(key, value) {
+                            $('select[name="id_aldeia"]').append('<option value="' + value.id_aldeias + '">' + value.aldeias + '</option>');
+                        });
+                    }
+                });
             }
         });
     });

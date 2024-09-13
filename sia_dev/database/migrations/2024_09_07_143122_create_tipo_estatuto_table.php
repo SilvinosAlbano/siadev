@@ -14,7 +14,7 @@ class CreateTipoEstatutoTable extends Migration
     public function up()
     {
         Schema::create('tipo_estatuto', function (Blueprint $table) {
-            $table->uuid('id_tipo')->primary();
+            $table->uuid('id_estatuto')->primary();
             $table->string('estatuto');
             $table->string('controlo_estado');
             $table->timestamps();

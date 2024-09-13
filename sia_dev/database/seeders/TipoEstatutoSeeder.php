@@ -17,17 +17,17 @@ class TipoEstatutoSeeder extends Seeder
     {
         $data = [
             [
-                'id_tipo' => (string) Str::uuid(),
+                'id_estatuto' => (string) Str::uuid(),
                 'estatuto' => 'Estatuto 1',
                 'controlo_estado' => 'Active',
             ],
             [
-                'id_tipo' => (string) Str::uuid(),
+                'id_estatuto' => (string) Str::uuid(),
                 'estatuto' => 'Estatuto 2',
                 'controlo_estado' => 'Inactive',
             ],
             [
-                'id_tipo' => (string) Str::uuid(),
+                'id_estatuto' => (string) Str::uuid(),
                 'estatuto' => 'Estatuto 3',
                 'controlo_estado' => 'Pending',
             ],

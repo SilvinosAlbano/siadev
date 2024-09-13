@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\DB;
 class ModelDocente extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'id_docente';
+    protected $primaryKey = 'id_funcionario';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $table = 'docentes';
+    protected $table = 'funcionario';
     // use SoftDeletes; // Enables soft deletes
     
     // Other model code...
@@ -23,8 +23,8 @@ class ModelDocente extends Model
     // protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'id_docente',
-        'nome_docente',
+        'id_funcionario',
+        'nome_funcionario',
         'sexo',
         'id_suco',
         'id_posto_administrativo',

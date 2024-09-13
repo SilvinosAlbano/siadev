@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\ModelDocente;
+use App\Models\ViewMunicipioPosto;
 use App\Models\User;
 use App\Models\ModelDepartamento;
 use App\Models\ModelEstatuto;
+use App\Models\HabilitacaoModel;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +29,12 @@ class DocenteController extends Controller
         // Fetching estatuto options from ModelEstatuto
         $estatutoOptions = ModelEstatuto::all();
     
-        // Base query for searching docentes
+        // Base query for searching funcionario
         $query = ModelDocente::query();
     
-        // Filter by nome_docente
-        if ($request->filled('nome_docente')) {
-            $query->where('nome_docente', 'like', '%' . $request->nome_docente . '%');
+        // Filter by nome_funcionario
+        if ($request->filled('nome_funcionario')) {
+            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
         }
     
         // Filter by sexo
@@ -65,19 +67,12 @@ class DocenteController extends Controller
 
     public function showDetail($id)
     {
+        
         $detail = ModelDocente::findOrFail($id);
         return view('pages.teachers.teacher_details', compact('detail'));
     }
 
-    // public function show($id, Request $request)
-    // {
-    
-    //     // Retrieve detail of the pessoa by ID
-    //     $detail = ModelDocente::findOrFail($id);  
-    //     $tab = $request->query('tab');
-    //     // Return the view with the retrieved detail and atividades
-    //     return view('pages.teachers.teacher_details', compact('detail','tab'));
-    // }
+   
 
 
     public function show($id, Request $request)
@@ -87,9 +82,9 @@ class DocenteController extends Controller
     
         // Determine which content to show based on the 'tab' parameter
         switch ($tab) {
-            case 'habilitacao_docente':
+            case 'habilitacao_funcionario':
                 // Logic for 'habilitacao_docente'
-                $content = view('pages.teachers.habilitacao_docente');
+                $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
                 break;
     
             case 'pagamento':
@@ -100,6 +95,15 @@ class DocenteController extends Controller
             case 'horario':
                 // Logic for 'horario'
                 $content = view('pages.teachers.horario');
+                break;
+
+            case 'inserir_habilitacao':
+                // Logic for 'horario'
+                $content = view('pages.teachers.habilitacao.habilitacao_inserir');
+                break;
+            case 'edit_habilitacao':
+                // Logic for 'horario'
+                $content = view('pages.teachers.habilitacao.habilitacao_alterar');
                 break;
     
             default:
@@ -114,12 +118,82 @@ class DocenteController extends Controller
     
 
 
+#start habilitacao   
+    
+    public function showHabilitacoes($id)
+    {
+            $detail = ModelDocente::findOrFail($id);
+        $habilitacoes = HabilitacaoModel::where('id_funcionario', $id)->get();
+        return view('pages.teachers.habilitacao.habilitacao_funcionario', compact('habilitacoes','detail'));
+    }
 
-    public function habilitacao($id)
+    public function create_habilitacao($id)
     {
         $detail = ModelDocente::findOrFail($id);
-        return view('pages.teachers.habilitacao_docente', compact('detail'));
+        return view('pages.teachers.habilitacao.habilitacao_inserir', compact('detail','id'));
     }
+    public function storeHabilitacao(Request $request)
+    {
+        $request->validate([
+            'habilitacao' => 'required|string|max:255',
+        ]);
+
+        $habilitacao = new HabilitacaoModel();
+        $habilitacao->id_funcionario = $request->input('id_funcionario');
+        $habilitacao->habilitacao = $request->input('habilitacao');
+        $habilitacao->area_especialidade = $request->input('area_especialidade');
+        $habilitacao->universidade_origem = $request->input('universidade_origem');
+        $habilitacao->save();
+
+        return redirect()->route('habilitacao_funcionario', ['id' => $request->input('id_funcionario')])
+                     ->with('success', 'Habilitação inserida com sucesso.');
+    }
+
+    // Show the form with existing data for editing
+    public function editHabilitacao($id)
+    {
+        // Fetch the habilitacao by its ID
+        $detail = HabilitacaoModel::findOrFail($id);
+
+        // Return the edit view and pass the habilitacao data
+        return view('pages.teachers.habilitacao.habilitacao_alterar', compact('detail','id'));
+    }
+
+        // Handle the update request
+        public function updateHabilitacao(Request $request, $id)
+        {
+            $request->validate([
+                'habilitacao' => 'required|string|max:255',
+                'area_especialidade' => 'required|string|max:255',
+                'universidade_origem' => 'required|string|max:255',
+            ]);
+
+            $habilitacao = HabilitacaoModel::findOrFail($id); // Find the habilitacao to update
+            $habilitacao->habilitacao = $request->input('habilitacao');
+            $habilitacao->area_especialidade = $request->input('area_especialidade');
+            $habilitacao->universidade_origem = $request->input('universidade_origem');
+            $habilitacao->save(); // Save the updated habilitacao
+
+            // Redirect back to the habilitacao page with a success message
+            return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
+                            ->with('success', 'Habilitação updated successfully.');
+        }
+
+
+
+
+        public function destroyHabilitacao($id)
+        {
+            $habilitacao = HabilitacaoModel::findOrFail($id);
+            $habilitacao->controlo_estado = 'deleted'; // Update status to 'deleted'
+            $habilitacao->save();
+        
+            return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
+            ->with('success', 'Habilitação updated successfully.');
+        }
+           
+
+    #end Habilitacao
 
     public function horario($id)
     {
@@ -143,26 +217,25 @@ class DocenteController extends Controller
         $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
         $estatuto = ModelEstatuto::all();
         $docente = ModelDocente::paginate(10);
-    
-        return view('pages.teachers.add_teacher', compact('docente','departamento','estatuto','tipo_admin'));
+        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+        ->distinct()
+        ->get();
+        return view('pages.teachers.add_teacher', compact('docente','departamento','estatuto','tipo_admin','municipios'));
     }
 
     public function store(Request $request): RedirectResponse
 {
     // Validation Rules
     $validated = $request->validate([
-        'nome_docente' => 'required|string|max:255',
+        'nome_funcionario' => 'required|string|max:255',
         'sexo' => 'required|string|max:255',
         'data_moris' => 'required|date',
+        'id_aldeia' =>'required|string|max:255',
         'id_suco' => 'required|string|max:255',
         'id_posto_administrativo' => 'required|string|max:255',
         'id_municipio' => 'required|string|max:255',
-        'nacionalidade' => 'nullable|string|max:255',
-        'nivel_educacao' => 'nullable|string|max:255',
-        'area_especialidade' => 'nullable|string|max:255',
-        'universidade_origem' => 'nullable|string|max:255',
+        'nacionalidade' => 'nullable|string|max:255',             
         'id_estatuto' => 'required|string|max:255',
-        'id_departamento' =>'required|string|max:255',
         'id_tipo_categoria' =>'nullable|string|max:255', // This can be nullable
         'ano_inicio' => 'nullable|date',
         'observacao' => 'nullable|string',
@@ -181,21 +254,18 @@ class DocenteController extends Controller
     $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validated['id_tipo_categoria'] : null;
 
     // Create a new record in the database
-    $docente = ModelDocente::create([
-        'id_docente' => (string) Str::uuid(),
+    $funcionarios = ModelDocente::create([
+        'id_funcionario' => (string) Str::uuid(),
         'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
-        'nome_docente' => $validated['nome_docente'],
+        'nome_funcionario' => $validated['nome_funcionario'],
         'sexo' => $validated['sexo'],
         'data_moris' => $validated['data_moris'],
+        'id_aldeia' => $validated['id_aldeia'],
         'id_suco' => $validated['id_suco'],
         'id_posto_administrativo' => $validated['id_posto_administrativo'],
         'id_municipio' => $validated['id_municipio'],
-        'nacionalidade' => $validated['nacionalidade'],
-        'nivel_educacao' => $validated['nivel_educacao'],
-        'area_especialidade' => $validated['area_especialidade'],
-        'universidade_origem' => $validated['universidade_origem'],
-        'id_estatuto' => $validated['id_estatuto'],
-        'id_departamento' => $validated['id_departamento'],
+        'nacionalidade' => $validated['nacionalidade'],        
+        'id_estatuto' => $validated['id_estatuto'],       
         'id_tipo_categoria' => $id_tipo_categoria, // This will be null if not provided
         'ano_inicio' => $validated['ano_inicio'],
         'observacao' => $validated['observacao'],
@@ -205,15 +275,15 @@ class DocenteController extends Controller
     # Create user
     User::create([
         'user_id' => (string) Str::uuid(),
-        'username' => $docente->nome_docente, // Assuming 'nre' is actually 'nome_docente' or handle it properly
+        'username' => $funcionarios->nome_funcionario, // Assuming 'nre' is actually 'nome_funcionario' or handle it properly
         'email' => $request->email ?? null, // Set email to null or receive it from request
         'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
-        'docente_student_id' => $docente->id_docente,
-        'tipo_usuario' => $docente->categoria, 
+        'docente_student_id' => $funcionarios->id_funcionario,
+        'tipo_usuario' => $funcionarios->categoria, 
     ]);
 
     // Check if the insertion was successful
-    if ($docente) {
+    if ($funcionarios) {
         // Redirect with Success Message
         return redirect()->route('docentes.index')->with(['success' => 'Dados com sucesso gravados']);
     } else {
@@ -238,22 +308,19 @@ class DocenteController extends Controller
     public function update(Request $request, $id): RedirectResponse
     {
         // Find the existing docente record
-        $docente = ModelDocente::findOrFail($id);
+        $funcionarios = ModelDocente::findOrFail($id);
     
         // Validation Rules
         $validated = $request->validate([
-            'nome_docente' => 'required|string|max:255',
+            'nome_funcionario' => 'required|string|max:255',
             'sexo' => 'required|string|max:255',
             'data_moris' => 'required|date',
-            'suco' => 'required|string|max:255',
+            'id_aldeia' => 'required|string|max:255',
+            'id_suco' => 'required|string|max:255',
             'id_posto_administrativo' => 'required|string|max:255',
             'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',
-            'nivel_educacao' => 'nullable|string|max:255',
-            'area_especialidade' => 'nullable|string|max:255',
-            'universidade_origem' => 'nullable|string|max:255',
-            'id_estatuto' => 'required|string|max:255',
-            'id_departamento' =>'required|string|max:255',
+            'nacionalidade' => 'nullable|string|max:255',           
+            'id_estatuto' => 'required|string|max:255',            
             'ano_inicio' => 'nullable|date',
             'observacao' => 'nullable|string',
         ]);
@@ -261,8 +328,8 @@ class DocenteController extends Controller
         // Handle File Upload if a new image is provided
         if ($request->hasFile('photo_docente')) {
             // Delete the old image if it exists
-            if ($docente->photo_docente) {
-                Storage::delete('public/asset/posts/' . $docente->photo_docente);
+            if ($funcionarios->photo_docente) {
+                Storage::delete('public/asset/posts/' . $funcionarios->photo_docente);
             }
     
             // Store the new image
@@ -271,24 +338,21 @@ class DocenteController extends Controller
             $image->storeAs('public/asset/posts', $photo_docente);
         } else {
             // If no new image, keep the current one
-            $photo_docente = $docente->photo_docente;
+            $photo_docente = $funcionarios->photo_docente;
         }
     
         // Update the existing record in the database
-        $docente->update([
+        $funcionarios->update([
             'photo_docente' => $photo_docente, // Use the new photo name if available, otherwise retain the old one
-            'nome_docente' => $validated['nome_docente'],
+            'nome_funcionario' => $validated['nome_funcionario'],
             'sexo' => $validated['sexo'],
             'data_moris' => $validated['data_moris'],
-            'suco' => $validated['suco'],
+            'id_aldeia' => $validated['id_aldeia'],
+            'id_suco' => $validated['id_suco'],
             'id_posto_administrativo' => $validated['id_posto_administrativo'],
             'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],
-            'nivel_educacao' => $validated['nivel_educacao'],
-            'area_especialidade' => $validated['area_especialidade'],
-            'universidade_origem' => $validated['universidade_origem'],
-            'id_estatuto' => $validated['id_estatuto'],
-            'id_departamento' => $validated['id_departamento'],
+            'nacionalidade' => $validated['nacionalidade'],            
+            'id_estatuto' => $validated['id_estatuto'],            
             'ano_inicio' => $validated['ano_inicio'],
             'observacao' => $validated['observacao']
         ]);
@@ -331,8 +395,8 @@ class DocenteController extends Controller
         $query = ModelDocente::query();
         
         // Apply filters
-        if ($request->filled('nome_docente')) {
-            $query->where('nome_docente', 'like', "%{$request->nome_docente}%");
+        if ($request->filled('nome_funcionario')) {
+            $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
         }
         if ($request->filled('sexo')) {
             $query->where('sexo', $request->sexo);
@@ -366,8 +430,8 @@ class DocenteController extends Controller
         $query = ModelDocente::query();
         
         // Apply filters if necessary
-        if ($request->has('nome_docente')) {
-            $query->where('nome_docente', 'like', '%' . $request->nome_docente . '%');
+        if ($request->has('nome_funcionario')) {
+            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
         }
         if ($request->has('sexo')) {
             $query->where('sexo', $request->sexo);

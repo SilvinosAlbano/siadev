@@ -6,7 +6,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
-
+use App\Http\Controllers\DivisaoAdministrativaController;
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -54,9 +54,19 @@ Route::middleware('check.access')->group(function () {
     // Route for Menus of Teachers
     Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
     Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
-    Route::get('/habilitacao/{id}', [DocenteController::class, 'habilitacao'])->name('habilitacao_docente');
-    Route::get('/teacher/horario/{id}', [DocenteController::class, 'horario'])->name('horario');
-    Route::get('/teacher/pagamento/{id}', [DocenteController::class, 'pagamento'])->name('pagamento');
+    Route::get('/habilitacao/{id}', [DocenteController::class, 'showHabilitacoes'])->name('habilitacao_funcionario');
+    Route::get('/funcionario/horario/{id}', [DocenteController::class, 'horario'])->name('horario');
+    Route::get('/funcionario/pagamento/{id}', [DocenteController::class, 'pagamento'])->name('pagamento');
+    Route::get('/funcionario/inserir_habilitacao/{id_funcionario}', [DocenteController::class, 'create_habilitacao'])->name('inserir_habilitacao');
+    Route::post('/funcionario/habilitacao/store', [DocenteController::class, 'storeHabilitacao'])->name('store_habilitacao');
+ 
+    Route::get('/alterar_habilitacao/{id}', [DocenteController::class, 'editHabilitacao'])->name('alterar_habilitacao.index');// Handle the update request
+   
+    Route::delete('/habilitacao/{id}', [DocenteController::class, 'destroyHabilitacao'])->name('destroy_habilitacao');
+
+
+ 
+    Route::put('/update_habilitacao/{id}', [DocenteController::class, 'updateHabilitacao'])->name('habilitacao.update');
 
 
     Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
@@ -70,4 +80,11 @@ Route::middleware('check.access')->group(function () {
     Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
     Route::get('/docente-report', [DocenteController::class, 'report'])->name('docentes.report');
     Route::get('/docente-export', [DocenteController::class, 'export'])->name('docentes.export');
+
+    
+    // routes/web.php
+    Route::get('/get-postos/{idMunicipio}', [DivisaoAdministrativaController::class, 'getPostos']);
+    Route::get('/get-sucos/{idPosto}', [DivisaoAdministrativaController::class, 'getSucos']);
+    Route::get('/get-aldeias/{idSuco}', [DivisaoAdministrativaController::class, 'getAldeias']);
+
 });

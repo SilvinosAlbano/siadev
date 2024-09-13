@@ -13,12 +13,17 @@
 
     <!-- Teacher Table Area Start Here -->
     <div class="card height-auto">
+        <div class="card-header shadow bg-white">
+            <div class="card-title">
+                
+            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_docente"> Aumenta Foun <i class="fas fa-plus text-orange-peel"></i></a>
+                
+            </div>
+        </div>
     <div class="card-body">
         <div class="heading-layout1">
             <div class="item-title">
-                <span>
-                    <a class="btn btn-primary btn-lg" href="/adiciona_docente"><i class="fas fa-plus text-orange-peel"></i> Aumenta Foun</a>
-                </span>
+               
             </div>
         </div>
         @if (session('error'))
@@ -102,7 +107,7 @@
                         <!-- <td>{{ $loop->iteration }}</td> -->
                         <td>{{ ($docente->currentPage() - 1) * $docente->perPage() + $loop->iteration }}</td>
 
-                            <td>{{ $data->nome_docente }}</td>
+                            <td>{{ $data->nome_funcionario }}</td>
                             <td>{{ $data->sexo }}</td>
                             <td>{{ $data->data_moris }}</td>
                             <td>{{ $data->nivel_educacao }}</td>
@@ -122,10 +127,10 @@
                                     <span class="flaticon-more-button-of-three-dots"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('detailho', $data->id_docente) }}">
+                                    <a class="dropdown-item" href="{{ route('detailho', $data->id_funcionario) }}">
                                         <i class="fas fa-eye text-orange-red"></i> Detail
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('editar', $data->id_docente) }}">
+                                    <a class="dropdown-item" href="{{ route('editar', $data->id_funcionario) }}">
                                         <i class="fas fa-edit text-dark-pastel-green"></i> Edit
                                     </a>
                                     <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_docente }}').submit();">
@@ -133,7 +138,7 @@
                                     </a>
                                 </div>
 
-                                <form id="delete-form-{{ $data->id_docente }}" action="{{ route('docentes.destroy', $data->id_docente) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this docente?');">
+                                <form id="delete-form-{{ $data->id_funcionario }}" action="{{ route('docentes.destroy', $data->id_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this docente?');">
                                     @csrf
                                     @method('DELETE')
                                 </form>

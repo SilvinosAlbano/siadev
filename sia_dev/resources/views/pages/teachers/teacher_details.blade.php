@@ -5,10 +5,10 @@
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Docentes</h3>
+        <h3>Funcionarios</h3>
         <ul>
             <li><a href="/docentes">Tabela</a></li>
-            <li>Docente Detalho</li>
+            <li>Funcionarios Detalho</li>
         </ul>
     </div>
 
@@ -35,7 +35,7 @@
                 </div>
                 <div class="item-content">
                     <div class="header-inline item-header">
-                        <h4 class="text-dark-medium font-medium">{{$detail->nome_docente}}</h4>
+                        <h4 class="text-dark-medium font-medium">{{$detail->nome_funcionario}}</h4>
                     </div>
                     <div class="info-table table-responsive">
                         <table class="table text-nowrap">
@@ -52,6 +52,7 @@
                                     <td>Estatuto (P/IP/C):</td>
                                     <td class="font-medium text-dark-medium">{{$detail->categoria_estatuto}}</td>
                                 </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -60,13 +61,12 @@
         </div>
     </div>
     <div class="card ui-tab-card mt-4">
-      @include('pages.teachers.menu_tab')
+         @include('pages.teachers.menu_tab')
 
-                  @if (request('tab') == 'identificacao' || is_null(request('tab')))
-                      @include('pages.teachers.identificacao') <!-- Identificao Content -->
-                
-                  @endif
-
+            @if (request('tab') == 'identificacao' || is_null(request('tab')))
+                @include('pages.teachers.identificacao') <!-- Identificao Content -->
+        
+            @endif
         
       </div>
 
