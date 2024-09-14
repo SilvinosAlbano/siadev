@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\ModelDepartamento;
 use App\Models\ModelEstatuto;
 use App\Models\HabilitacaoModel;
+use App\Models\FuncionarioEstatutoModel;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DocentesExport;
+use Database\Seeders\FuncionarioEstatuto;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,40 +28,39 @@ class DocenteController extends Controller
 
     public function index(Request $request)
     {
-        // Fetching estatuto options from ModelEstatuto
-        $estatutoOptions = ModelEstatuto::all();
+          // Fetching estatuto options from ModelEstatuto
+          $estatutoOptions = ModelEstatuto::all();
     
-        // Base query for searching funcionario
-        $query = ModelDocente::query();
-    
-        // Filter by nome_funcionario
-        if ($request->filled('nome_funcionario')) {
-            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
-        }
-    
-        // Filter by sexo
-        if ($request->filled('sexo')) {
-            $query->where('sexo', $request->sexo);
-        }
-    
-        // Filter by id_estatuto
-        if ($request->filled('id_estatuto')) {
-            $query->where('id_estatuto', $request->id_estatuto);
-        }
-    
-        // Get the results
-        $docente = $query->paginate(10);
-    
+          // Base query for searching funcionario
+          $query = ModelDocente::query();
+      
+
+          // Filter by nome_funcionario
+          if ($request->filled('nome_funcionario')) {
+              $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
+          }
+      
+          // Filter by sexo
+          if ($request->filled('sexo')) {
+              $query->where('sexo', $request->sexo);
+          }
+      
+          // Filter by id_estatuto
+          if ($request->filled('id_estatuto')) {
+              $query->where('id_estatuto', $request->id_estatuto);
+          }
+        $docente = DB::table('view_gfuncionario')->paginate(10);
+
         // Calculate total counts for Masculino and Feminino
         $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
         $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
-    
+
         // Check if no data found
         if ($docente->isEmpty()) {
             return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
                 ->with('error', 'No data found for the search criteria.');
         }
-    
+
         return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'));
     }
     
@@ -67,13 +68,23 @@ class DocenteController extends Controller
 
     public function showDetail($id)
     {
-        
-        $detail = ModelDocente::findOrFail($id);
+        // Fetch the detail data from the view_gfuncionario view based on id_funcionario
+        $detail = DB::table('view_gfuncionario')
+            ->where('id_funcionario', $id)
+            ->first();
+    
+        // Check if the data was found
+        if (!$detail) {
+            // Optionally, handle the case where no data was found
+            return redirect()->back()->with('error', 'Details not found.');
+        }
+    
+        // Return the view with the detail data
         return view('pages.teachers.teacher_details', compact('detail'));
     }
-
+    
    
-
+    
 
     public function show($id, Request $request)
     {
@@ -86,26 +97,34 @@ class DocenteController extends Controller
                 // Logic for 'habilitacao_docente'
                 $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
                 break;
-    
-            case 'pagamento':
-                // Logic for 'pagamento'
-                $content = view('pages.teachers.pagamento');
-                break;
-    
-            case 'horario':
-                // Logic for 'horario'
-                $content = view('pages.teachers.horario');
-                break;
+                    
+                case 'horario':
+                    // Logic for 'horario'
+                    $content = view('pages.teachers.horario');
+                    break;
+                    
+                case 'inserir_habilitacao':
+                    // Logic for 'horario'
+                    $content = view('pages.teachers.habilitacao.habilitacao_inserir');
+                    break;
+                case 'edit_habilitacao':
+                    // Logic for 'horario'
+                    $content = view('pages.teachers.habilitacao.habilitacao_alterar');
+                    break;
+                            
+                    case 'estatuto':
+                        // Logic for 'pagamento'
+                        $content = view('pages.teachers.estatuto.estatuto');
+                        break;
+                    case 'inserir_estatuto':
+                        // Logic for 'horario'
+                        $content = view('pages.teachers.estatuto.estatuto_inserir');
+                        break;
 
-            case 'inserir_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_inserir');
-                break;
-            case 'edit_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_alterar');
-                break;
-    
+                    case 'edit_estatuto':
+                        // Logic for 'horario'
+                        $content = view('pages.teachers.estatuto.estatuto_alterar');
+                        break;
             default:
                 // Default content if 'tab' is not set or does not match any case
                 $content = view('pages.teachers.identificacao');
@@ -118,7 +137,7 @@ class DocenteController extends Controller
     
 
 
-#start habilitacao   
+    #start habilitacao   
     
     public function showHabilitacoes($id)
     {
@@ -159,58 +178,133 @@ class DocenteController extends Controller
         return view('pages.teachers.habilitacao.habilitacao_alterar', compact('detail','id'));
     }
 
-        // Handle the update request
-        public function updateHabilitacao(Request $request, $id)
-        {
-            $request->validate([
-                'habilitacao' => 'required|string|max:255',
-                'area_especialidade' => 'required|string|max:255',
-                'universidade_origem' => 'required|string|max:255',
-            ]);
+    // Handle the update request
+    public function updateHabilitacao(Request $request, $id)
+    {
+        $request->validate([
+            'habilitacao' => 'required|string|max:255',
+            'area_especialidade' => 'required|string|max:255',
+            'universidade_origem' => 'required|string|max:255',
+        ]);
 
-            $habilitacao = HabilitacaoModel::findOrFail($id); // Find the habilitacao to update
-            $habilitacao->habilitacao = $request->input('habilitacao');
-            $habilitacao->area_especialidade = $request->input('area_especialidade');
-            $habilitacao->universidade_origem = $request->input('universidade_origem');
-            $habilitacao->save(); // Save the updated habilitacao
+        $habilitacao = HabilitacaoModel::findOrFail($id); // Find the habilitacao to update
+        $habilitacao->habilitacao = $request->input('habilitacao');
+        $habilitacao->area_especialidade = $request->input('area_especialidade');
+        $habilitacao->universidade_origem = $request->input('universidade_origem');
+        $habilitacao->save(); // Save the updated habilitacao
 
-            // Redirect back to the habilitacao page with a success message
-            return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
-                            ->with('success', 'Habilitação updated successfully.');
-        }
-
-
+        // Redirect back to the habilitacao page with a success message
+        return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
+                        ->with('success', 'Habilitação updated successfully.');
+    }
 
 
-        public function destroyHabilitacao($id)
-        {
-            $habilitacao = HabilitacaoModel::findOrFail($id);
-            $habilitacao->controlo_estado = 'deleted'; // Update status to 'deleted'
-            $habilitacao->save();
-        
-            return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
-            ->with('success', 'Habilitação updated successfully.');
-        }
-           
+    public function destroyHabilitacao($id)
+    {
+        $habilitacao = HabilitacaoModel::findOrFail($id);
+        $habilitacao->controlo_estado = 'deleted'; // Update status to 'deleted'
+        $habilitacao->save();
+    
+        return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
+        ->with('success', 'Habilitação updated successfully.');
+    }   
 
     #end Habilitacao
 
+    #start Horarrio
     public function horario($id)
     {
         $detail = ModelDocente::findOrFail($id);
         return view('pages.teachers.horario', compact('detail'));
     }
+    #end horario
 
-    public function pagamento($id)
+    #start Estatuto...
+    public function estatuto($id)
     {
+    // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
+    $detail = ModelDocente::findOrFail($id);
+    $estatuto = DB::table('view_estatuto_funcionario')
+                    ->where('id_funcionario', $id)
+                    ->paginate(10);
+    return view('pages.teachers.estatuto.estatuto_funcionario', compact('estatuto', 'detail'));
+}
+
+
+    public function create_estatuto($id)
+    {
+        $estatuto = ModelEstatuto::all();
         $detail = ModelDocente::findOrFail($id);
-        return view('pages.teachers.pagamento', compact('detail'));
+        return view('pages.teachers.estatuto.estatuto_inserir', compact('detail','id','estatuto'));
     }
 
+    public function storeEstatuto(Request $request)
+    {
+        $request->validate([
+            'id_estatuto' => 'required|string|max:255',
+        ]);
+
+        $estatuto = new FuncionarioEstatutoModel();
+        $estatuto->id_funcionario = $request->input('id_funcionario');
+        $estatuto->id_estatuto = $request->input('id_estatuto');
+        $estatuto->data_inicio = $request->input('data_inicio');
+        $estatuto->data_fim = $request->input('data_fim');
+        $estatuto->save();
+
+        return redirect()->route('estatuto', ['id' => $request->input('id_funcionario')])
+                     ->with('success', 'Estatuto Funcionarios inserida com sucesso.');
+    }
+
+
+    public function editEstatuto($id)
+    {
+        // Fetch the habilitacao by its ID
+        // $editar = DB::table('view_estatuto_funcionario')
+        // ->where('id_funcionario', $id);
+       
+        $estatuto = ModelEstatuto::all();
+        $detail = FuncionarioEstatutoModel::findOrFail($id);
+        // Return the edit view and pass the habilitacao data
+        return view('pages.teachers.estatuto.estatuto_alterar', compact('id','estatuto','detail'));
+    }
+    public function updateEstatuto(Request $request, $id)
+    {
+        $request->validate([
+            'id_estatuto' => 'required|string|max:255',
+            'data_inicio' => 'required|string|max:255',
+          
+        ]);
+
+        $estatuto = FuncionarioEstatutoModel::findOrFail($id); // Find the habilitacao to update
+        $estatuto->id_estatuto = $request->input('id_estatuto');
+        $estatuto->data_inicio = $request->input('data_inicio');
+        $estatuto->data_fim = $request->input('data_fim');
+        $estatuto->save(); // Save the updated habilitacao
+
+        // Redirect back to the habilitacao page with a success message
+        return redirect()->route('estatuto', ['id' => $request->input('id_funcionario')])
+        ->with('success', 'Estatuto Funcionarios Atualizar com sucesso.');
+    }
+
+    public function destroyEstatuto($id)
+    {
+        // Check if the record exists before attempting deletion
+        $estatuto = DB::table('estatuto_funcionario')->where('id_estatuto_funcionario', $id)->first();
+    
+        if ($estatuto) {
+            // Perform the delete action
+            DB::table('estatuto_funcionario')->where('id_estatuto_funcionario', $id)->delete();
+    
+            return redirect()->back()->with('success', 'estatuto funcionario apaga com sucesso.');
+        } else {
+            return redirect()->back()->with('error', 'Estatuto not found.');
+        }
+    }
+    
+    #end estatutpo
        
 
-
-    // docente adicionar
+# Start Funcionario adicionar
     public function formDocente()
     {
         $tipo_admin = (new ModelDocente())->getAllData();
@@ -230,7 +324,7 @@ class DocenteController extends Controller
         'nome_funcionario' => 'required|string|max:255',
         'sexo' => 'required|string|max:255',
         'data_moris' => 'required|date',
-        'id_aldeia' =>'required|string|max:255',
+        'id_aldeias' =>'required|string|max:255',
         'id_suco' => 'required|string|max:255',
         'id_posto_administrativo' => 'required|string|max:255',
         'id_municipio' => 'required|string|max:255',
@@ -239,6 +333,8 @@ class DocenteController extends Controller
         'id_tipo_categoria' =>'nullable|string|max:255', // This can be nullable
         'ano_inicio' => 'nullable|date',
         'observacao' => 'nullable|string',
+        'no_contacto' => 'nullable|string',
+        'email' => 'nullable|string',
         'categoria' => 'required|string|max:255',
     ]);
 
@@ -260,7 +356,7 @@ class DocenteController extends Controller
         'nome_funcionario' => $validated['nome_funcionario'],
         'sexo' => $validated['sexo'],
         'data_moris' => $validated['data_moris'],
-        'id_aldeia' => $validated['id_aldeia'],
+        'id_aldeias' => $validated['id_aldeias'],
         'id_suco' => $validated['id_suco'],
         'id_posto_administrativo' => $validated['id_posto_administrativo'],
         'id_municipio' => $validated['id_municipio'],
@@ -269,6 +365,8 @@ class DocenteController extends Controller
         'id_tipo_categoria' => $id_tipo_categoria, // This will be null if not provided
         'ano_inicio' => $validated['ano_inicio'],
         'observacao' => $validated['observacao'],
+        'no_contacto' => $validated['no_contacto'],
+        'email' => $validated['email'],
         'categoria' => $validated['categoria']
     ]);
 
@@ -390,34 +488,34 @@ class DocenteController extends Controller
         }
  */
 
- public function report(Request $request)
-    {
-        $query = ModelDocente::query();
+//  public function report(Request $request)
+//     {
+//         $query = ModelDocente::query();
         
-        // Apply filters
-        if ($request->filled('nome_funcionario')) {
-            $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
-        }
-        if ($request->filled('sexo')) {
-            $query->where('sexo', $request->sexo);
-        }
-        if ($request->filled('id_estatuto')) {
-            $query->where('id_estatuto', $request->id_estatuto);
-        }
-        if ($request->filled('nivel_educacao')) {
-            $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
-        }
-        if ($request->filled('controlo_estado')) {
-            $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
-            $query->where('controlo_estado', $controlo_estado);
-        }
+//         // Apply filters
+//         if ($request->filled('nome_funcionario')) {
+//             $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
+//         }
+//         if ($request->filled('sexo')) {
+//             $query->where('sexo', $request->sexo);
+//         }
+//         if ($request->filled('id_estatuto')) {
+//             $query->where('id_estatuto', $request->id_estatuto);
+//         }
+//         if ($request->filled('nivel_educacao')) {
+//             $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
+//         }
+//         if ($request->filled('controlo_estado')) {
+//             $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
+//             $query->where('controlo_estado', $controlo_estado);
+//         }
         
-        $docentes = $query->paginate(10);
+//         $docentes = $query->paginate(10);
         
-        $estatutos = ModelEstatuto::all();
+//         $estatutos = ModelEstatuto::all();
         
-        return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
-    }
+//         return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
+//     }
 
     public function export(Request $request)
     {
@@ -425,32 +523,6 @@ class DocenteController extends Controller
     }
 
 
-    public function getData(Request $request)
-    {
-        $query = ModelDocente::query();
-        
-        // Apply filters if necessary
-        if ($request->has('nome_funcionario')) {
-            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
-        }
-        if ($request->has('sexo')) {
-            $query->where('sexo', $request->sexo);
-        }
-        if ($request->has('id_estatuto')) {
-            $query->where('id_estatuto', $request->id_estatuto);
-        }
-        if ($request->has('nivel_educacao')) {
-            $query->where('nivel_educacao', 'like', '%' . $request->nivel_educacao . '%');
-        }
-        if ($request->has('controlo_estado')) {
-            $query->whereNull('controlo_estado', $request->controlo_estado == 'active' ? null : '!=', 'deleted');
-        }
-
-        return DataTables::of($query)
-            ->editColumn('controlo_estado', function ($data) {
-                return is_null($data->controlo_estado) ? 'Active' : 'Inactive';
-            })
-            ->make(true);
-    }
+   
 
 }

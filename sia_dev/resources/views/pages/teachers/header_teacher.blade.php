@@ -1,10 +1,10 @@
 <div class="breadcrumbs-area">
-    <h3>Docentes</h3>
+    <h3>Funcionario</h3>
     <ul>
         <li>
             <a href="/docentes">Tabela</a>
         </li>
-        <li>Docente Detalho</li>
+        <li>Funcionario Detalho</li>
     </ul>
 </div>
 <div class="card height-auto">
@@ -33,11 +33,12 @@
                             </div>
                         @endif
                 <img class="border" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
-                
+               
             </div>
+          
             <div class="item-content">
                 <div class="header-inline item-header">
-                    <h4 class="text-dark-medium font-medium">{{$detail->nome_docente}}</h4>
+                    <h4 class="text-dark-medium font-medium">{{$detail->nome_funcionario}}</h4>
                    
                 </div>
                
@@ -46,17 +47,17 @@
                         <tbody>
                            
                             <tr>
-                                <td>Sexo:</td>
-                                <td class="font-medium text-dark-medium">{{$detail->sexo}}</td>
+                                <td>Funcionario:</td>
+                                <td class="font-medium text-dark-medium">{{$detail->categoria}}</td>
                             </tr>
                            
                             <tr>
-                                <td>Nivel Educacão:</td>
-                                <td class="font-medium text-dark-medium">{{$detail->nivel_educacao}}</td>
+                                <td>Numero Contacto:</td>
+                                <td class="font-medium text-dark-medium">{{$detail->no_contacto}}</td>
                             </tr>
                             <tr>
-                                <td>Estatuto (P/IP/C):</td>
-                                <td class="font-medium text-dark-medium">{{$detail->categoria_estatuto}}</td>
+                                <td>E-mail:</td>
+                                <td class="font-medium text-dark-medium">{{$detail->email}}</td>
                             </tr>
                         </tbody>
                     </table>

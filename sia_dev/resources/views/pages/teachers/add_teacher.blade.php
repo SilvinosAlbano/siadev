@@ -89,22 +89,18 @@
                             <option selected disabled value="">Escolha *</option>
                         </select>                
                                         
-                    </div>
+                    </div>              
                 
-                
-
-                    </div>
-
-                
+                 </div>                
 
                     <div class="row">
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Aldeia *</label>
-                            <select class="select2" name="id_aldeia">
+                            <select class="select2" name="id_aldeias">
                                 <option selected disabled value="">Escolha *</option>
                             </select>
                         </div>
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                      <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Nacionalidade *</label>
                             <input type="text" name="nacionalidade" placeholder="" class="form-control border">
                         </div>
@@ -133,7 +129,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
                             <label>Estatuto (P/IP/C) *</label>
                             <select class="select2" name="id_estatuto">
                                 <option selected disabled value="">Escolha *</option>
@@ -144,9 +140,20 @@
                         </div>
 
                       
-                        <div class="col-xl-4 col-lg-6 col-12 form-group">
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
                             <label>Ano Inicio</label>
                             <input type="date" name="ano_inicio" placeholder="" class="form-control">
+
+                        </div>
+
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                            <label>Numero de Contacto</label>
+                            <input type="text" name="no_contacto" placeholder="" class="form-control border">
+
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                            <label>E-mail</label>
+                            <input type="email" name="email" placeholder="" class="form-control border">
 
                         </div>
                     </div>
@@ -196,7 +203,8 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
 <script>
     $(document).ready(function() {
@@ -247,10 +255,10 @@
                     type: "GET",
                     dataType: "json",
                     success: function(data) {
-                        $('select[name="id_aldeia"]').empty();
-                        $('select[name="id_aldeia"]').append('<option selected disabled>Escolha *</option>');
+                        $('select[name="id_aldeias"]').empty();
+                        $('select[name="id_aldeias"]').append('<option selected disabled>Escolha *</option>');
                         $.each(data, function(key, value) {
-                            $('select[name="id_aldeia"]').append('<option value="' + value.id_aldeias + '">' + value.aldeias + '</option>');
+                            $('select[name="id_aldeias"]').append('<option value="' + value.id_aldeias + '">' + value.aldeias + '</option>');
                         });
                     }
                 });

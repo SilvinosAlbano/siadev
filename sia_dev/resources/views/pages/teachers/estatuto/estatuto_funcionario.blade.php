@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-@section('title', 'Habilitacao')
+@section('title', 'Estatuto')
 @section('content') 
     <!-- Identificao Content -->
      @include('pages.teachers.header_teacher')
@@ -15,14 +15,14 @@
                     <div class="card-body">
                         <div class="heading-layout1">
                             <div class="item-title">
-                                <h3>Habilitacao Funcionario</h3>
+                                <h3>Estatuto Funcionario</h3>
                             </div>
                           
                         </div>
                         <form class="mg-b-20">
                             <div class="row gutters-8">
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group ms-auto text-end">
-                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_habilitacao', $detail->id_funcionario) }}"> Inserir Novo </a>
+                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}"> Inserir  </a>
                                 </div>
                             </div>
 
@@ -52,19 +52,19 @@
                                 <thead>
                                     <tr>
                                  
-                                        <th>Nome Habilitação</th>
-                                        <th>Area Especialidade</th>
-                                        <th>Universidade Origem</th>
+                                        <th>Estatuto Funcionario</th>
+                                        <th>Data Inicio</th>
+                                        <th>Data Fim</th>
                                         <th>Asaun</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($habilitacoes as $habilitacao)
+                                    @foreach ($estatuto as $data)
                                         <tr>
-                                            <td>{{ $habilitacao->habilitacao }}</td>
-                                            <td>{{ $habilitacao->area_especialidade }}</td>
-                                            <td>{{ $habilitacao->universidade_origem }}</td>
+                                            <td>{{ $data->estatuto_funcionario }}</td>
+                                            <td>{{ $data->data_inicio }}</td>
+                                            <td>{{ $data->data_fim }}</td>
                                            
                                             <td>
                                                 <div class="dropdown">
@@ -73,7 +73,7 @@
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <!-- Edit button -->
-                                                        <a class="dropdown-item" href="{{ route('alterar_habilitacao.index', $habilitacao->id_habilitacao) }}">
+                                                        <a class="dropdown-item" href="{{ route('alterar_estatuto.index', $data->id_estatuto_funcionario) }}">
                                                             <i class="fas fa-edit text-dark-pastel-green"></i> Edit
                                                         </a>
 
@@ -83,7 +83,7 @@
 
 
                                                       <!-- Delete Form -->
-                                                      <form method="POST" action="{{ route('destroy_habilitacao', $habilitacao->id_habilitacao) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                      <form method="POST" action="{{ route('estatuto.destroy', $data->id_estatuto_funcionario) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit">

@@ -3,10 +3,10 @@
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Docente</h3>
+        <h3>Funcionarios</h3>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li>Dados Docentes</li>
+            <li>Dados Funcionarios</li>
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
@@ -16,7 +16,7 @@
         <div class="card-header shadow bg-white">
             <div class="card-title">
                 
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_docente"> Aumenta Foun <i class="fas fa-plus text-orange-peel"></i></a>
+            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_docente"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
                 
             </div>
         </div>
@@ -93,8 +93,7 @@
                         <th>No.</th>
                         <th>Nome</th>
                         <th>Sexo</th>
-                        <th>Data Moris</th>
-                        <th>Nivel Educacao</th>
+                        <th>Data Moris</th>                      
                         <th>Ano Inicio</th>
                         <th>Categoria</th>
                         <th>Estado</th>
@@ -109,8 +108,7 @@
 
                             <td>{{ $data->nome_funcionario }}</td>
                             <td>{{ $data->sexo }}</td>
-                            <td>{{ $data->data_moris }}</td>
-                            <td>{{ $data->nivel_educacao }}</td>
+                            <td>{{ $data->data_moris }}</td>                          
                             <td>{{ $data->ano_inicio }}</td>
                             <td>{{ $data->categoria }}</td>
 
@@ -133,7 +131,7 @@
                                     <a class="dropdown-item" href="{{ route('editar', $data->id_funcionario) }}">
                                         <i class="fas fa-edit text-dark-pastel-green"></i> Edit
                                     </a>
-                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_docente }}').submit();">
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_funcionario }}').submit();">
                                         <i class="fas fa-trash text-orange-peel"></i> Delete
                                     </a>
                                 </div>

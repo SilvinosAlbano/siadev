@@ -29,8 +29,18 @@
                         <a class="nav-link {{ request()->routeIs('horario') ? 'active' : '' }}" href="{{ route('horario', $detail->id_funcionario) }}">Horario Ensinar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('pagamento') ? 'active' : '' }}" href="{{ route('pagamento', $detail->id_funcionario) }}">Pagamento</a>
+                        <a class="nav-link {{ request()->routeIs('estatuto') ? 'active' : '' }}" href="{{ route('estatuto', $detail->id_funcionario) }}">Estatuto</a>
                     </li>
+                    @if (request()->routeIs('inserir_estatuto'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('inserir_estatuto') ? 'active' : '' }}" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}">Inserir Estatuto</a>
+                    </li>
+                    @endif
+                    @if (request()->routeIs('alterar_estatuto.index'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('alterar_estatuto.index') ? 'active' : '' }}" href="{{ route('alterar_estatuto.index', $detail->id_funcionario) }}">Alterar Estatuto</a>
+                    </li>
+                    @endif
 
                 </ul>
             </div>

@@ -16,69 +16,60 @@
                           
                           
                         </div>
+
                         <div class="single-info-details">
                             
                             <div class="item-content">                              
-                               
+                               <div class="item-content">
+                                <div class="header-inline item-header">
+                                    <div class="header-elements">
+                                        <ul>
+                                            <li><a href="#"><i class="far fa-edit"></i></a></li>
+                                            <li><a href="#"><i class="fas fa-print"></i></a></li>
+                                            <li><a href="#"><i class="fas fa-download"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="info-table table-responsive">
                                     <table class="table text-nowrap">
                                         <tbody>
                                             <tr>
-                                                <td>Name:</td>
-                                                <td class="font-medium text-dark-medium">Jessia Rose</td>
+                                                <td>Nome Funcionario:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->nome_funcionario}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Gender:</td>
-                                                <td class="font-medium text-dark-medium">Female</td>
+                                                <td>Sexo:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->sexo}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Father Name:</td>
-                                                <td class="font-medium text-dark-medium">Steve Jones</td>
+                                                <td>Data Nascimento:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->data_moris}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Mother Name:</td>
-                                                <td class="font-medium text-dark-medium">Naomi Rose</td>
+                                                <td>Municipio:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->municipio}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Date Of Birth:</td>
-                                                <td class="font-medium text-dark-medium">07.08.2016</td>
+                                                <td>Municipio:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->posto_administrativo}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Religion:</td>
-                                                <td class="font-medium text-dark-medium">Islam</td>
+                                                <td>Suco:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->sucos}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Father Occupation:</td>
-                                                <td class="font-medium text-dark-medium">Graphic Designer</td>
+                                                <td>Aldeias:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->aldeias}}</td>
                                             </tr>
                                             <tr>
-                                                <td>E-mail:</td>
-                                                <td class="font-medium text-dark-medium">jessiarose@gmail.com</td>
+                                                <td>Nascionalidade:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->nacionalidade}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Admission Date:</td>
-                                                <td class="font-medium text-dark-medium">07.08.2019</td>
+                                                <td>Tipo Funcionario:</td>
+                                                <td class="font-medium text-dark-medium">{{$detail->categoria}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>Class:</td>
-                                                <td class="font-medium text-dark-medium">2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Section:</td>
-                                                <td class="font-medium text-dark-medium">Pink</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Roll:</td>
-                                                <td class="font-medium text-dark-medium">10005</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Address:</td>
-                                                <td class="font-medium text-dark-medium">House #10, Road #6, Australia</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Phone:</td>
-                                                <td class="font-medium text-dark-medium">+ 88 98568888418</td>
-                                            </tr>
+                                           
                                         </tbody>
                                     </table>
                                 </div>

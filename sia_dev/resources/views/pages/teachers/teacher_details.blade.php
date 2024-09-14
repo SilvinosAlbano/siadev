@@ -20,7 +20,7 @@
                     {{-- Header Title --}}
                 </div>
             </div>
-            <div class="single-info-details">
+            <!-- <div class="single-info-details">
                 <div class="item-img">
                     @if (is_null($detail->controlo_estado))
                         <div class="ribbon bg-primary">
@@ -46,18 +46,18 @@
                                 </tr>
                                 <tr>
                                     <td>Nivel Educacão:</td>
-                                    <td class="font-medium text-dark-medium">{{$detail->nivel_educacao}}</td>
+                                    <td class="font-medium text-dark-medium"></td>
                                 </tr>
                                 <tr>
                                     <td>Estatuto (P/IP/C):</td>
-                                    <td class="font-medium text-dark-medium">{{$detail->categoria_estatuto}}</td>
+                                    <td class="font-medium text-dark-medium"></td>
                                 </tr>
                                 
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="card ui-tab-card mt-4">

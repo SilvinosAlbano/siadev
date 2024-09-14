@@ -28,6 +28,8 @@ class CreateDocentesTable extends Migration
             $table->uuid('id_tipo_categoria')->nullable();
             $table->uuid('id_estatuto');          
             $table->text('observacao')->nullable();
+            $table->text('no_contacto')->nullable();
+            $table->text('email')->nullable();
             $table->string('photo_docente')->nullable();
             $table->string('controlo_estado')->nullable();
             
