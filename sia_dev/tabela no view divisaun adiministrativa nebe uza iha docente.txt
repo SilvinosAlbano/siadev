@@ -1,0 +1,215 @@
+dadus divisaun administrativa:
+=======================TABELAS==========================
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_municipio
+(
+    id_municipio uuid NOT NULL DEFAULT gen_random_uuid(),
+    municipio character varying COLLATE pg_catalog."default",
+    codigo_municipio character varying COLLATE pg_catalog."default",
+    codigo_financa character varying COLLATE pg_catalog."default",
+    gdam_inserido_por text COLLATE pg_catalog."default",
+    gdam_inserido_em character varying COLLATE pg_catalog."default",
+    gdam_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdam_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdam_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdam_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    id_municipio_ktl character varying(36) COLLATE pg_catalog."default",
+    data_inicio_municipio date,
+    data_fim_municipio date,
+    CONSTRAINT gdivisao_administrativa_municipio_pkey PRIMARY KEY (id_municipio)
+)
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_posto_administrativo
+(
+    id_posto_administrativo uuid NOT NULL DEFAULT gen_random_uuid(),
+    posto_administrativo character varying COLLATE pg_catalog."default",
+    codigo_posto_administrativo character varying COLLATE pg_catalog."default",
+    codigo_financa character varying COLLATE pg_catalog."default",
+    gdap_inserido_por character varying COLLATE pg_catalog."default",
+    gdap_inserido_em character varying COLLATE pg_catalog."default",
+    gdap_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdap_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdap_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdap_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT gdivisao_administrativo_posto_administrativo_pkey PRIMARY KEY (id_posto_administrativo)
+)
+
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_sucos
+(
+    id_sucos uuid NOT NULL DEFAULT gen_random_uuid(),
+    sucos character varying COLLATE pg_catalog."default",
+    codigo_sucos character varying COLLATE pg_catalog."default",
+    gdas_inserido_por character varying COLLATE pg_catalog."default",
+    gdas_inserido_em character varying COLLATE pg_catalog."default",
+    gdas_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdas_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdas_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdas_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT gdivisao_administrativo_sucos1_pkey PRIMARY KEY (id_sucos)
+)
+
+
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_aldeias
+(
+    id_aldeias uuid NOT NULL DEFAULT gen_random_uuid(),
+    aldeias character varying COLLATE pg_catalog."default",
+    codigo_aldeias character varying COLLATE pg_catalog."default",
+    gdal_inserido_por text COLLATE pg_catalog."default",
+    gdal_inserido_em character varying COLLATE pg_catalog."default",
+    gdal_ultima_alteracao_por text COLLATE pg_catalog."default",
+    gdal_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdal_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdal_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT gdivisao_administrativo_aldeias_pkey PRIMARY KEY (id_aldeias)
+)
+
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_controlo_municipio_posto
+(
+    id_contolo_municipio_posto uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_posto_administrativo uuid,
+    id_municipio uuid,
+    data_inicio date,
+    data_fim date,
+    controlo_ativo character varying COLLATE pg_catalog."default",
+    gdamp_inserido_por text COLLATE pg_catalog."default",
+    gdamp_inserido_em character varying COLLATE pg_catalog."default",
+    gdamp_ultima_alteracao_por text COLLATE pg_catalog."default",
+    gdamp_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdamp_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdamp_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT id_contolo_municipio PRIMARY KEY (id_contolo_municipio_posto),
+    CONSTRAINT "FK-GDA001" FOREIGN KEY (id_municipio)
+        REFERENCES public.gdivisao_administrativa_municipio (id_municipio) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK-GDA002" FOREIGN KEY (id_posto_administrativo)
+        REFERENCES public.gdivisao_administrativa_posto_administrativo (id_posto_administrativo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_controlo_posto_administrativos_sucos
+(
+    id_contolo_posto_administrativo uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_sucos uuid,
+    id_posto_administrativo uuid,
+    data_inicio date,
+    data_fim date,
+    controlo_ativo character varying COLLATE pg_catalog."default",
+    gdaps_inserido_por character varying COLLATE pg_catalog."default",
+    gdaps_inserido_em character varying COLLATE pg_catalog."default",
+    gdaps_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdaps_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdaps_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdaps_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT id_contolo_posto_administrativo PRIMARY KEY (id_contolo_posto_administrativo),
+    CONSTRAINT "FK-GD004" FOREIGN KEY (id_posto_administrativo)
+        REFERENCES public.gdivisao_administrativa_posto_administrativo (id_posto_administrativo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK-GDA003" FOREIGN KEY (id_sucos)
+        REFERENCES public.gdivisao_administrativa_sucos (id_sucos) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_controlo_sucos_aldeias
+(
+    id_contolo_sucos_aldeias uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_aldeias uuid,
+    id_sucos uuid,
+    data_inicio date,
+    data_fim date,
+    controlo_ativo character varying COLLATE pg_catalog."default",
+    gdals_inserido_por character varying COLLATE pg_catalog."default",
+    gdals_inserido_em character varying COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdals_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT gdivisao_administrativo_controlo_sucos_aldeias1 PRIMARY KEY (id_contolo_sucos_aldeias),
+    CONSTRAINT "FK-GDA005" FOREIGN KEY (id_aldeias)
+        REFERENCES public.gdivisao_administrativa_aldeias (id_aldeias) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK-GDA006" FOREIGN KEY (id_sucos)
+        REFERENCES public.gdivisao_administrativa_sucos (id_sucos) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+==========================views=====================================================
+CREATE TABLE IF NOT EXISTS public.gdivisao_administrativa_controlo_sucos_aldeias
+(
+    id_contolo_sucos_aldeias uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_aldeias uuid,
+    id_sucos uuid,
+    data_inicio date,
+    data_fim date,
+    controlo_ativo character varying COLLATE pg_catalog."default",
+    gdals_inserido_por character varying COLLATE pg_catalog."default",
+    gdals_inserido_em character varying COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_por character varying COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_em character varying COLLATE pg_catalog."default",
+    gdals_inserido_em_msql character varying(40) COLLATE pg_catalog."default",
+    gdals_ultima_alteracao_em_msql character varying(40) COLLATE pg_catalog."default",
+    descricao text COLLATE pg_catalog."default",
+    CONSTRAINT gdivisao_administrativo_controlo_sucos_aldeias1 PRIMARY KEY (id_contolo_sucos_aldeias),
+    CONSTRAINT "FK-GDA005" FOREIGN KEY (id_aldeias)
+        REFERENCES public.gdivisao_administrativa_aldeias (id_aldeias) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK-GDA006" FOREIGN KEY (id_sucos)
+        REFERENCES public.gdivisao_administrativa_sucos (id_sucos) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+CREATE OR REPLACE VIEW public.view_gdivisao_administrativa_posto_suco
+ AS
+ SELECT p.id_posto_administrativo,
+    p.posto_administrativo,
+    p.codigo_posto_administrativo,
+    s.id_sucos,
+    s.sucos,
+    s.codigo_sucos,
+    ps.id_contolo_posto_administrativo,
+    ps.data_inicio AS data_inicio_ps,
+    ps.data_fim AS data_fim_ps,
+        CASE
+            WHEN ps.data_fim IS NULL THEN 'Ativo'::text
+            ELSE NULL::text
+        END AS estado
+   FROM gdivisao_administrativa_sucos s
+     JOIN gdivisao_administrativa_controlo_posto_administrativos_sucos ps ON ps.id_sucos = s.id_sucos
+     JOIN gdivisao_administrativa_posto_administrativo p ON p.id_posto_administrativo = ps.id_posto_administrativo
+  ORDER BY p.codigo_posto_administrativo, s.codigo_sucos;
+
+
+
+CREATE OR REPLACE VIEW public.view_gdivisao_administrativa_suco_aldeia
+ AS
+ SELECT s.id_sucos,
+    s.sucos,
+    s.codigo_sucos,
+    a.id_aldeias,
+    a.aldeias,
+    a.codigo_aldeias,
+    sa.id_contolo_sucos_aldeias,
+    sa.data_inicio AS data_inicio_sa,
+    sa.data_fim AS data_fim_sa,
+    a.gdal_inserido_por,
+    a.gdal_inserido_em,
+    a.gdal_ultima_alteracao_por,
+    a.gdal_ultima_alteracao_em,
+        CASE
+            WHEN sa.data_fim IS NULL THEN 'Ativo'::text
+            ELSE NULL::text
+        END AS estado
+   FROM gdivisao_administrativa_aldeias a
+     JOIN gdivisao_administrativa_controlo_sucos_aldeias sa ON sa.id_aldeias = a.id_aldeias
+     JOIN gdivisao_administrativa_sucos s ON s.id_sucos = sa.id_sucos
+  ORDER BY s.codigo_sucos, a.codigo_aldeias;
