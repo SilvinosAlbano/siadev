@@ -8,16 +8,16 @@
             <li>
                 <a href="/home">Home</a>
             </li>
-            <li>Formulário de Submissão Docentes</li>
+            <li>Formulário de Submissão Funcionario ICS</li>
         </ul>
     </div>
     <!-- Breadcubs Area End Here -->
     <!-- Add New Teacher Area Start Here -->
     <div class="card height-auto mb-8">
-        <div class="card-body mb-4">
+        <div class="card-body mb-4 border">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>Adicionar Novo Docentes</h3>
+                    <h3>Adicionar Novo Funcionario</h3>
                 </div>
 
             </div>
@@ -41,8 +41,8 @@
                     @csrf
                     <div class="row">
                         <div class="col-xl-6 col-lg-6 col-12 form-group">
-                            <label>Nome Docente *</label>
-                            <input type="text" name="nome_docente" placeholder="" required class="form-control border">
+                            <label>Nome Funcionario *</label>
+                            <input type="text" name="nome_funcionario" placeholder="" required class="form-control border">
                             <!-- <input type="hidden" name="id_docente"> -->
                         </div>
                         <div class="col-xl-3 col-lg-6 col-12 form-group">
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="col-xl-3 col-lg-6 col-12 form-group">
-                            <label>Data Moris *</label>
+                            <label>Data Nascimento *</label>
                             <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
                                 class="border form-control">
                             <!-- <i class="far fa-calendar-alt"></i> -->
@@ -140,22 +140,10 @@
                                 @foreach ($estatuto as $est)
                                     <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
                                 @endforeach
-
-
                             </select>
                         </div>
 
-
-
-                        <div class="col-xl-4 col-lg-6 col-12 form-group">
-                            <label>Departamento *</label>
-                            <select class="select2" name="id_departamento">
-                                <option selected disabled value="">Escolha *</option>
-                                @foreach ($departamento as $dep)
-                                    <option value="{{ $dep->id_departamento }}">{{ $dep->departamento }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                      
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Ano Inicio</label>
                             <input type="date" name="ano_inicio" placeholder="" class="form-control">
