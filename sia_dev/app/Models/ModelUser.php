@@ -7,17 +7,18 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
-class User extends Authenticatable
+class ModelUser extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'users';
     protected $primaryKey = 'user_id';
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['user_id', 'username', 'email', 'password', 'docente_student_id', 'tipo_usuario'];
+    protected $fillable = ['user_id', 'username', 'email', 'password', 'docente_id_student', 'tipo_usuario'];
     protected $hidden = ['password', 'remember_token'];
 
     protected static function boot()
@@ -32,19 +33,19 @@ class User extends Authenticatable
     // Relationship with Student
     public function student(): BelongsTo
     {
-        return $this->belongsTo(Student::class, 'docente_student_id');
+        return $this->belongsTo(ModelStudent::class, 'docente_id_student');
     }
 
     // Relationship with Docente
     public function docente(): BelongsTo
     {
-        return $this->belongsTo(ModelDocente::class, 'docente_student_id');
+        return $this->belongsTo(ModelDocente::class, 'docente_id_student');
     }
 
     // Role relationship in User model
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'student_modules_roles', 'user_id', 'role_id')
+        return $this->belongsToMany(ModelRole::class, 'student_modules_roles', 'user_id', 'role_id')
             ->withPivot('module_id', 'expired_date')
             ->withTimestamps();
     }
@@ -52,7 +53,7 @@ class User extends Authenticatable
     // Module relationship in User model
     public function modules(): BelongsToMany
     {
-        return $this->belongsToMany(Module::class, 'student_modules_roles', 'user_id', 'module_id')
+        return $this->belongsToMany(ModelModule::class, 'student_modules_roles', 'user_id', 'module_id')
             ->withPivot('role_id', 'expired_date')
             ->withTimestamps();
     }

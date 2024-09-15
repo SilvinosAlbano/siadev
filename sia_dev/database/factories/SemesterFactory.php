@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Semester;
+use App\Models\ModelSemestre;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

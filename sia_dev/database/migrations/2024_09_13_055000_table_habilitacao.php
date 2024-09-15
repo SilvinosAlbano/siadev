@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('habilitacao', function (Blueprint $table) {
-            $table->uuid('id_habilitacao')->primary(); // Set as primary key and UUID type
+            $table->uuid('id_habilitacao')->primary()->default(DB::raw('gen_random_uuid()')); // Set as primary key and UUID type
             $table->uuid('id_funcionario');     
             $table->string('habilitacao')->nullable(); 
             $table->string('universidade_origem')->nullable();    

@@ -6,9 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModelDepartamento extends Model
 {
-    protected $table = 'departamento'; // Make sure this matches your table name
-    protected $primaryKey = 'id_departamento'; // Adjust if necessary
-    public $incrementing = false; // If using UUIDs
-    protected $keyType = 'string'; // If using UUIDs
-    protected $fillable = ['id_departamento', 'departamento', 'faculdade'];
+    protected $table = 'departamento';
+    protected $primaryKey = 'id_departamento';
+    public $incrementing = false;
+    protected $keyType = 'uuid';
+    protected $fillable = ['nome_departamento', 'id_faculdade'];
+
+    // Relationships
+    public function faculdade()
+    {
+        return $this->belongsTo(ModelFaculdade::class, 'id_faculdade', 'id_faculdade');
+    }
+
+    public function programasEstudo()
+    {
+        return $this->hasMany(ModelProgramaEstudo::class, 'id_departamento', 'id_departamento');
+    }
 }

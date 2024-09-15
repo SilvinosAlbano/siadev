@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Semester;
+use App\Models\ModelSemestre;
 
 class SemesterController extends Controller
 {
     public function index()
     {
-        $semesters = Semester::all();
+        $semesters = ModelSemestre::all();
         return view('semesters.index', compact('semesters'));
     }
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\Semester;
+use App\Models\ModelStudent;
+use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
+use App\Models\ModelUser;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,20 +15,26 @@ class StudentController extends Controller
 {
     public function index()
     {
-        
-        $semesters = Semester::all();
-        $modelDepartamentos = ModelDepartamento::all();
-        $students = Student::with(['departamento', 'semester'])->paginate(10); // Use with for eager loading and paginate
-        
-        return view('pages.students.all_students', compact('students', 'semesters', 'modelDepartamentos'));
+        // Fetch all students with relationships
+        $students = ModelStudent::with([
+            'curriculoEstudante.semestre',
+            'curriculoEstudante.programaEstudo.departamento'
+        ])->paginate(10);
+
+        // Fetch all semesters
+        $semestres = ModelSemestre::all();
+
+        // Return view with variables
+        return view('pages.students.all_students', compact('students', 'semestres'));
     }
-    
+
+
 
     public function create()
     {
-        $semesters = Semester::all();
+        $semesters = ModelSemestre::all();
         $modelDepartamentos = ModelDepartamento::all();
-        return view('pages.students.admission_form_student', compact('semesters', 'modelDepartamentos'));
+        return view('pages.students.admission_form_student', compact('semestre', 'modelDepartamentos'));
     }
 
     public function store(Request $request)
@@ -40,8 +46,8 @@ class StudentController extends Controller
             'date_of_birth' => 'required|date_format:d/m/Y',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
-            'departamento_id' => 'required|string|max:255', // Ensure this matches the form field
-            'semester_id' => 'required|string|max:255', // Ensure this matches the form field
+            'id_departamento' => 'required|integer', // Ensure this matches the form field
+            'semester_id' => 'required|integer', // Ensure this matches the form field
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'observation' => 'nullable|string',
             'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -54,101 +60,103 @@ class StudentController extends Controller
             $validatedData['student_image'] = $student_image;
         }
 
-         // Create the student
-         $student = Student::create([
-            'student_id' => (string) Str::uuid(),
+        // Create the student
+        $student = ModelStudent::create([
+            'id_student' => (string) Str::uuid(),
             'complete_name' => $validatedData['complete_name'],
             'gender' => $validatedData['gender'],
             'place_of_birth' => $validatedData['place_of_birth'],
             'date_of_birth' => $validatedData['date_of_birth'],
             'nre' => $validatedData['nre'],
-            'departamento_id' => $validatedData['departamento_id'],
+            'id_departamento' => $validatedData['id_departamento'],
             'semester_id' => $validatedData['semester_id'],
             'start_year' => $validatedData['start_year'],
             'student_image' => $request->file('student_image') ? $request->file('student_image')->store('students') : null,
             'observation' => $validatedData['observation'],
         ]);
 
-         // Create the associated user - Apeu hare Tau iha nemos iha Docentes nian
-         User::create([
+        // Create the associated user
+        ModelUser::create([
             'user_id' => (string) Str::uuid(),
             'username' => $student->nre,
             'email' => null, // Set email to null or receive it from request
             'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
-            'docente_student_id' => $student->student_id,
-            'tipo_usuario' => 'Estudante', // Assuming 'Estudante' is a valid type for 'tipo_usuario'
+            'docente_id_student' => $student->id_student,
+            'tipo_usuario' => 'Estudante',
         ]);
 
         return redirect()->route('students.index')->with('success', 'Student created successfully!');
     }
 
-    public function show($student_id)
+    public function show($id_student)
     {
-        $student = Student::with(['departamento', 'semester'])->findOrFail($student_id);
-        $semesters = Semester::all();
+        // Retrieve the specific student with related data
+        $student = ModelStudent::with([
+            'curriculoEstudante.semestre',
+            'curriculoEstudante.programaEstudo.departamento'
+        ])->findOrFail($id_student);
+
+        // Fetch all semesters and departments for possible dropdowns or additional information
+        $semestres = ModelSemestre::all();
         $modelDepartamentos = ModelDepartamento::all();
-        return view('pages.students.student_details', compact('student', 'semesters', 'modelDepartamentos'));
+
+        // Return the view with the student and related data
+        return view('pages.students.student_details', compact('student', 'semestres', 'modelDepartamentos'));
     }
 
-    public function edit(Student $student)
+
+    public function edit(ModelStudent $student)
     {
         return view('pages.students.edit_estudent', compact('student'));
     }
 
-    public function update(Request $request, $student_id)
+    public function update(Request $request, $id_student)
     {
-        // Validate the input
         $request->validate([
             'complete_name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
             'place_of_birth' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'nre' => 'required|string|max:50',
-            'departamento_id' => 'required|exists:departamento,id_departamento',
-            'semester_id' => 'required|exists:semesters,semester_id',
+            'id_departamento' => 'required|exists:departamentos,id_departamento',
+            'semester_id' => 'required|exists:semesters,id_semester',
             'start_year' => 'required|integer',
             'observation' => 'nullable|string',
             'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Find the student by ID
-        $student = Student::findOrFail($student_id);
+        $student = ModelStudent::findOrFail($id_student);
 
-        // Handle image upload if provided
+
         if ($request->hasFile('student_image')) {
-            // Delete the old image if exists
             if ($student->student_image) {
                 Storage::delete('public/asset/posts/' . $student->student_image);
             }
 
-            // Store the new image
             $image = $request->file('student_image');
-            $student_image = $image->hashName(); // Generate a unique name for the image
-            $image->storeAs('public/asset/posts', $student_image); // Store the image
+            $student_image = $image->hashName();
+            $image->storeAs('public/asset/posts', $student_image);
             $student->student_image = $student_image;
         }
 
-        // Update the student record
         $student->complete_name = $request->complete_name;
         $student->gender = $request->gender;
         $student->place_of_birth = $request->place_of_birth;
         $student->date_of_birth = $request->date_of_birth;
         $student->nre = $request->nre;
-        $student->departamento_id = $request->departamento_id;
+        $student->id_departamento = $request->id_departamento;
         $student->semester_id = $request->semester_id;
         $student->start_year = $request->start_year;
         $student->observation = $request->observation;
         $student->save();
 
-        // Redirect back with success message
-        return redirect()->route('students.show', ['student_id' => $student_id])->with('success', 'Student updated successfully!');
+        return redirect()->route('students.show', ['id_student' => $id_student])->with('success', 'Student updated successfully!');
     }
 
-
-    public function destroy(Student $student)
+    public function destroy(ModelStudent $student)
     {
         if ($student->student_image) {
-            Storage::delete($student->student_image);
+            Storage::delete('public/asset/posts/' . $student->student_image);
         }
 
         $student->delete();

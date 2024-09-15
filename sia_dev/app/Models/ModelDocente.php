@@ -16,9 +16,9 @@ class ModelDocente extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $table = 'funcionario';
-   
+
     // use SoftDeletes; // Enables soft deletes
-    
+
     // Other model code...
 
     protected $dates = ['deleted_at'];
@@ -44,7 +44,7 @@ class ModelDocente extends Model
         'photo_docente'
     ];
 
-    public function getAllData() 
+    public function getAllData()
     {
         return DB::table('tipo_categoria_admin')
             ->select('*')
@@ -52,7 +52,7 @@ class ModelDocente extends Model
             ->get();
     }
 
-    public function getviwFuncionario() 
+    public function getviwFuncionario()
     {
         return DB::table('view_gfuncionario')
             ->select('*')

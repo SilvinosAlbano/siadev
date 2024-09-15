@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\ModelUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = ModelUser::query();
 
         // Search by username or type
         if ($search = $request->input('search')) {
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function show($user_id)
     {
-        $user = User::with(['student', 'docente', 'roles', 'modules'])
+        $user = ModelUser::with(['student', 'docente', 'roles', 'modules'])
             ->findOrFail($user_id);
 
         return view('pages.users.user_details', compact('user'));
@@ -36,7 +36,7 @@ class UserController extends Controller
 
     public function edit($user_id)
     {
-        $user = User::findOrFail($user_id);
+        $user = ModelUser::findOrFail($user_id);
         return view('pages.users.edit_user', compact('user'));
     }
 
@@ -49,7 +49,7 @@ class UserController extends Controller
             'tipo_usuario' => 'required|string',
         ]);
 
-        $user = User::findOrFail($user_id);
+        $user = ModelUser::findOrFail($user_id);
 
         $user->username = $request->input('username');
         $user->email = $request->input('email');

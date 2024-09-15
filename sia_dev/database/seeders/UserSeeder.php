@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Student;
+use App\Models\ModelUser;
+use App\Models\ModelStudent;
 use App\Models\ModelDocente;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -13,29 +13,29 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $students = Student::all();
+        $students = ModelStudent::all();
         $docentes = ModelDocente::all();
 
         foreach ($students as $student) {
-            if (!User::where('username', $student->nre)->exists()) {
-                User::create([
+            if (!ModelUser::where('username', $student->nre)->exists()) {
+                ModelUser::create([
                     'user_id' => (string) Str::uuid(),
                     'username' => $student->nre,
                     'password' => Hash::make('password'),
-                    'docente_student_id' => $student->student_id,
-                    'tipo_usuario'=>'Estudante',
+                    'docente_id_student' => $student->id_student,
+                    'tipo_usuario' => 'Estudante',
                 ]);
             }
         }
 
         foreach ($docentes as $docente) {
-            if (!User::where('username', $docente->nome_docente)->exists()) {
-                User::create([
+            if (!ModelUser::where('username', $docente->nome_docente)->exists()) {
+                ModelUser::create([
                     'user_id' => (string) Str::uuid(),
                     'username' => $student->nome_docente,
                     'password' => Hash::make('password'),
-                    'docente_student_id' => $docente->id_docente,
-                    'tipo_usuario'=>'Funcionario',
+                    'docente_id_student' => $docente->id_docente,
+                    'tipo_usuario' => 'Funcionario',
                 ]);
             }
         }

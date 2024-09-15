@@ -9,7 +9,7 @@ class CreateSessionsTable extends Migration
     public function up()
     {
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary(); // Session ID
+            $table->string('id')->primary()->default(DB::raw('gen_random_uuid()')); // Session ID
             $table->uuid('user_id')->nullable(); // Optional user ID
             $table->text('payload'); // Session payload
             $table->integer('last_activity'); // Last activity timestamp

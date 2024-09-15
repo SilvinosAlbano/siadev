@@ -77,7 +77,7 @@
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Departamento *</label>
-                        <select class="form-control select2" name="departamento_id" required>
+                        <select class="form-control select2" name="id_departamento" required>
                             @foreach ($modelDepartamentos as $department)
                                 <option value="{{ $department->id_departamento }}">
                                     {{ $department->departamento }}</option>

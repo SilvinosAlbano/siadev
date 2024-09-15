@@ -41,7 +41,7 @@
             <div class="col-md-6 mx-auto">
                 <div class="card shadow-lg">
                     <div class="card-body p-5">
-                        <div class="item-logo ">
+                        <div class="item-logo d-flex justify-content-center mb-4">
                             <img src="img/logo1.png" alt="ics_logo" width="15%" class="align-center">
                         </div>
                         <h2 class="text-center mb-4">Bem-vindo ao SIA-ICS</h2>

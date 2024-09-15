@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Module;
+use App\Models\ModelUser;
+use App\Models\ModelRole;
+use App\Models\ModelModule;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
@@ -12,11 +12,11 @@ class UserRoleController extends Controller
     // Display the assign roles form for a specific user
     public function assignRolesForm($user)
     {
-        $user = User::findOrFail($user);
+        $user = ModelUser::findOrFail($user);
 
         // Fetch roles and modules
-        $roles = Role::all();
-        $modules = Module::all();
+        $roles = ModelRole::all();
+        $modules = ModelModule::all();
         $userRoles = $user->roles()->withPivot('module_id', 'expired_date')->get(); // Get roles of the specific user
 
         // Prepare a list of module-role assignments for the user
@@ -28,7 +28,7 @@ class UserRoleController extends Controller
 
 
     // Assign roles to a specific user
-    public function assignRoles(Request $request, User $user)
+    public function assignRoles(Request $request, ModelUser $user)
     {
         $request->validate([
             'roles' => 'required|array',

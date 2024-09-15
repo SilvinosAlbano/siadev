@@ -10,41 +10,40 @@
     <div class="sidebar">
         <div class="sidebar-menu-content">
             <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-                @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students'))
-                    <li class="nav-item sidebar-nav-item">
-                        <a href="#" class="nav-link"><i
-                                class="flaticon-classmates"></i><span>Estudantes</span></a>
-                        <ul class="nav sub-group-menu">
-                            @if ($user->canAccess('read', 'students'))
-                                <li class="nav-item">
-                                    <a href="{{ route('students.index') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Todos os Estudantes</a>
-                                </li>
-                            @endif
+                {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}}
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Estudantes</span></a>
+                    <ul class="nav sub-group-menu">
+                        {{-- @if ($user->canAccess('read', 'students')) --}}
+                        <li class="nav-item">
+                            <a href="{{ route('students.index') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Todos os Estudantes</a>
+                        </li>
+                        {{-- @endif --}}
 
-                            @if ($user->canAccess('read', 'students'))
-                                <li class="nav-item">
-                                    <a href="/student_details" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Detalhes de Estudante</a>
-                                </li>
-                            @endif
+                        {{-- @if ($user->canAccess('read', 'students')) --}}
+                        <li class="nav-item">
+                            <a href="/student_details" class="nav-link"><i class="fas fa-angle-right"></i>Detalhes de
+                                Estudante</a>
+                        </li>
+                        {{-- @endif --}}
 
-                            @if ($user->canAccess('read', 'students'))
-                                <li class="nav-item">
-                                    <a href="/student_promotion" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Promoção de Estudante</a>
-                                </li>
-                            @endif
+                        {{-- @if ($user->canAccess('read', 'students')) --}}
+                        <li class="nav-item">
+                            <a href="/student_promotion" class="nav-link"><i class="fas fa-angle-right"></i>Promoção de
+                                Estudante</a>
+                        </li>
+                        {{-- @endif --}}
 
-                            @if ($user->canAccess('create', 'admission_form_student'))
-                                <li class="nav-item">
-                                    <a href="/admission_form_student" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Formulário de Admissão</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </li>
-                @endif
+                        {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
+                        <li class="nav-item">
+                            <a href="/admission_form_student" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Formulário de Admissão</a>
+                        </li>
+                        {{-- @endif --}}
+                    </ul>
+                </li>
+                {{-- @endif --}}
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
@@ -62,7 +61,7 @@
                                 de
                                 Funcionarios</a>
                         </li>
-                      
+
                     </ul>
                 </li>
                 <li class="nav-item sidebar-nav-item">

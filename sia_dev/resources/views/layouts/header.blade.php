@@ -52,7 +52,7 @@
                                 alt="student" class="image-fluid" width="35">
                         @else
                             <!-- Display a default image if no student image is available -->
-                            <img src="{{ asset('img/pessoa_neutra.png') }}" width="35" alt="estudante">
+                            <img src="{{ asset('img/pessoa_neutra.png') }}" width="35" alt="student">
                         @endif
                     </div>
                 </a>

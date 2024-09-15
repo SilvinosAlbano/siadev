@@ -14,7 +14,7 @@ class CreateDocentesTable extends Migration
     public function up(): void
     {
         Schema::create('funcionario', function (Blueprint $table) {
-            $table->uuid('id_funcionario')->primary(); // Set as primary key and UUID type
+            $table->uuid('id_funcionario')->primary()->default(DB::raw('gen_random_uuid()')); // Set as primary key and UUID type
             $table->string('nome_funcionario');
             $table->string('sexo');
             $table->uuid('id_aldeia');

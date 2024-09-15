@@ -9,7 +9,7 @@ class ModuleController extends Controller
 {
     public function index()
     {
-        $modules = Module::all();
+        $modules = ModeModuleall();
         return view('modules.index', compact('modules'));
     }
 
@@ -24,7 +24,7 @@ class ModuleController extends Controller
             'module_name' => 'required|string|max:255',
         ]);
 
-        Module::create($request->all());
+        ModeModulecreate($request->all());
 
         return redirect()->route('modules.index')
                          ->with('success', 'Module created successfully.');
