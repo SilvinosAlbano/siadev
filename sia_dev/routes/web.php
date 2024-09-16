@@ -72,6 +72,12 @@ Route::middleware('check.access')->group(function () {
     Route::get('/alterar_estatuto/{id}', [DocenteController::class, 'editEstatuto'])->name('alterar_estatuto.index'); // Handle the update request
     Route::put('/update_estatuto/{id}', [DocenteController::class, 'updateEstatuto'])->name('estatuto.update');
     Route::delete('/estatuto/{id}', [DocenteController::class, 'destroyEstatuto'])->name('estatuto.destroy');
+    #end
+    #departamento
+    Route::get('/funcionario/departamento/{id}', [DocenteController::class, 'showDepartamento'])->name('departamento');
+    #end
+    //#materia docente
+    Route::get('/funcionario/nateria/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
 
     #end
     Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
@@ -79,7 +85,7 @@ Route::middleware('check.access')->group(function () {
 
     Route::get('/docentes/data', [DocenteController::class, 'getDocentesData'])->name('docentes.data');
     Route::get('/editar/{id}', [DocenteController::class, 'edit'])->name('editar');
-    Route::put('/docentes/{id_docente}', [DocenteController::class, 'update'])->name('docentes.update');
+    Route::put('/funcionario/{id_funcionario}', [DocenteController::class, 'update'])->name('funcionario.update');
     Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
 
     Route::put('/docentes/restore/{id}', [DocenteController::class, 'restore'])->name('docentes.restore');
