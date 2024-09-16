@@ -23,8 +23,13 @@
                     </li>
                     @endif
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('habilitacao_funcionario', $detail->id_funcionario) }}">Departamento</a>
+                        <a class="nav-link {{ request()->routeIs('departamento') ? 'active' : '' }}" href="{{ route('departamento', $detail->id_funcionario) }}">Departamento</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('materia_docente') ? 'active' : '' }}" href="{{ route('materia_docente', $detail->id_funcionario) }}">Materia</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('horario') ? 'active' : '' }}" href="{{ route('horario', $detail->id_funcionario) }}">Horario Ensinar</a>
                     </li>
@@ -41,6 +46,8 @@
                         <a class="nav-link active {{ request()->routeIs('alterar_estatuto.index') ? 'active' : '' }}" href="{{ route('alterar_estatuto.index', $detail->id_funcionario) }}">Alterar Estatuto</a>
                     </li>
                     @endif
+
+                  
 
                 </ul>
             </div>
