@@ -48,7 +48,7 @@
                     </div>
                     @endif
                         <div class="table-responsive">
-                            <table class="table display data-table text-nowrap">
+                            <table class="table display table-striped table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>
                                  
@@ -82,18 +82,18 @@
                                                         
 
 
-                                                      <!-- Delete Form -->
-                                                      <form method="POST" action="{{ route('destroy_habilitacao', $habilitacao->id_habilitacao) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit">
+                                                      
+
+                                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $habilitacao->id_habilitacao }}').submit();">
                                                         <i class="fas fa-trash text-orange-peel"></i> Delete
-                                                        </button>
-                                                    </form>
-
-
+                                                    </a>
 
                                                     </div>
+
+                                                    <form id="delete-form-{{ $habilitacao->id_habilitacao }}" action="{{ route('destroy_habilitacao', $habilitacao->id_habilitacao) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this habilitacao?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                                 </div>
                                             </td>
                                         </tr>
