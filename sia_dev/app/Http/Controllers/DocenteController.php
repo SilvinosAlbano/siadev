@@ -6,6 +6,8 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\ModelDocente;
 use App\Models\ViewMunicipioPosto;
+use App\Models\ViewPostoSuco;
+use App\Models\ViewSucoAldeia;
 use App\Models\ModelUser;
 use App\Models\ModelDepartamento;
 use App\Models\ModelEstatuto;
@@ -132,7 +134,13 @@ class DocenteController extends Controller
                 // Logic for 'horario'
                 $content = view('pages.teachers.estatuto.estatuto_alterar');
                 break;
-            default:
+            case 'departamento':
+                // Logic for 'horario'
+                $content = view('pages.teachers.departamento.departamento');
+                break;
+
+
+            default:            
                 // Default content if 'tab' is not set or does not match any case
                 $content = view('pages.teachers.identificacao');
                 break;
@@ -308,7 +316,34 @@ class DocenteController extends Controller
         }
     }
 
-    #end estatutpo
+    #end estatuto
+
+    #start departamento
+    public function showDepartamento($id)
+    {
+        // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
+        $detail = ModelDocente::findOrFail($id);
+        $depfun = DB::table('view_departamento_funcionario')
+            ->where('id_funcionario', $id)
+            ->paginate(10);
+        return view('pages.teachers.departamento.departamento', compact('depfun', 'detail'));
+    }
+
+    #end departamento
+
+
+    #materia
+    public function showMateria($id)
+    {
+        // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
+        $detail = ModelDocente::findOrFail($id);
+        $depfun = DB::table('view_departamento_funcionario')
+            ->where('id_funcionario', $id)
+            ->paginate(10);
+        return view('pages.teachers.materia.materia_docente', compact('depfun', 'detail'));
+    }
+    #end
+
 
 
     # Start Funcionario adicionar
@@ -407,7 +442,23 @@ class DocenteController extends Controller
         $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
         $estatuto = ModelEstatuto::all();
         $editar = ModelDocente::findOrFail($id);
-        return view('pages.teachers.edit_teacher', compact('editar', 'departamento', 'estatuto'));
+        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+        ->distinct()
+        ->get();
+        $postos = ViewPostoSuco::select('id_posto_administrativo', 'posto_administrativo')
+        ->distinct()
+        ->get();
+
+        $sucos = ViewSucoAldeia::select('id_sucos', 'sucos')
+        ->distinct()
+        ->get();
+
+        $aldeias = ViewSucoAldeia::select('id_sucos', 'sucos')
+        ->distinct()
+        ->get();
+        $tipo_admin = (new ModelDocente())->getAllData();
+
+        return view('pages.teachers.edit_teacher', compact('tipo_admin','aldeias','sucos','postos','municipios','editar', 'departamento', 'estatuto'));
     }
 
     public function update(Request $request, $id): RedirectResponse
@@ -424,8 +475,7 @@ class DocenteController extends Controller
             'id_suco' => 'required|string|max:255',
             'id_posto_administrativo' => 'required|string|max:255',
             'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',
-            'id_estatuto' => 'required|string|max:255',
+            'nacionalidade' => 'nullable|string|max:255',            
             'ano_inicio' => 'nullable|date',
             'observacao' => 'nullable|string',
         ]);
@@ -456,8 +506,7 @@ class DocenteController extends Controller
             'id_suco' => $validated['id_suco'],
             'id_posto_administrativo' => $validated['id_posto_administrativo'],
             'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],
-            'id_estatuto' => $validated['id_estatuto'],
+            'nacionalidade' => $validated['nacionalidade'],           
             'ano_inicio' => $validated['ano_inicio'],
             'observacao' => $validated['observacao']
         ]);
