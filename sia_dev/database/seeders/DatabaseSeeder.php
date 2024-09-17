@@ -13,13 +13,16 @@ class DatabaseSeeder extends Seeder
             DepartamentoSeeder::class,
             ProgramaEstudoSeeder::class,
             SemestreSeeder::class,
-            UnidadeCurricularSeeder::class,
             StudentSeeder::class,
             UserSeeder::class,
             RolesTableSeeder::class,
             ModulesTableSeeder::class,
             StudentModulesRolesSeeder::class,
-            CurriculoEstudanteSeeder::class,
+            MateriaSeeder::class,
+            DocentesSeeder::class,
+            MatriculaSeeder::class,
+            MateriaSemestreSeeder::class,
+            DocenteMateriaSeeder::class,
         ]);
     }
 }

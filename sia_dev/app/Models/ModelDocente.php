@@ -59,4 +59,10 @@ class ModelDocente extends Model
             ->orderBy('id_funcionario', 'asc')
             ->get();
     }
+
+    // Relacionamento com DocenteDaMateria
+    public function docenteMaterias()
+    {
+        return $this->hasMany(ModelDocenteDaMateria::class, 'id_docente', 'id_docente');
+    }
 }

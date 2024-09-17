@@ -14,12 +14,9 @@ return new class extends Migration
     {
         Schema::create('semestre', function (Blueprint $table) {
             $table->uuid('id_semestre')->primary()->default(DB::raw('gen_random_uuid()'));
-            $table->integer('numero_semestre');
+            $table->integer('periodo');
             $table->integer('ano_academico');
-            $table->uuid('id_programa_estudo');
-            $table->foreign('id_programa_estudo')->references('id_programa_estudo')->on('programa_estudo');
             $table->timestamps();
-    
         });
     }
 
