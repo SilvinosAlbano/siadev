@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-@section('title', 'Estatuto')
+@section('title', 'Departamento')
 @section('content') 
     <!-- Identificao Content -->
      @include('pages.teachers.header_teacher')          
@@ -19,7 +19,7 @@
                         <form class="mg-b-20">
                             <div class="row gutters-8">
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group ms-auto text-end">
-                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}"> Inserir  </a>
+                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_departamento', $detail->id_funcionario) }}"> Inserir  </a>
                                 </div>
                             </div>
 
@@ -45,10 +45,10 @@
                     </div>
                     @endif
                         <div class="table-responsive">
-                        <table class="table display table-striped table-box-wrap text-nowrap">
+                        <table class="table display table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>
-                                 
+                                       <th>Faculdade</th>   
                                         <th>Departamento</th>                                      
                                         <th>Asaun</th>
                                        
@@ -57,6 +57,7 @@
                                 <tbody>
                                     @foreach ($depfun as $data)
                                         <tr>
+                                        <td>{{ $data->nome_faculdade }}</td>
                                             <td>{{ $data->departamento }}</td>
                                            
                                            
@@ -67,27 +68,20 @@
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <!-- Edit button -->
-                                                        <a class="dropdown-item" href="{{ route('alterar_estatuto.index', $data->id_departamento_funcionario) }}">
+                                                        <a class="dropdown-item" href="{{ route('alterar_departamento.index', $data->id_departamento_funcionario) }}">
                                                             <i class="fas fa-edit text-dark-pastel-green"></i> Edit
-                                                        </a>
+                                                        </a>      
 
-
-                                                        <!-- Optionally, you can add a delete button -->
-                                                        
-
-
-                                                      <!-- Delete Form -->
-                                                      <form method="POST" action="{{ route('estatuto.destroy', $data->id_departamento_funcionario) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit">
+                                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_departamento_funcionario }}').submit();">
                                                         <i class="fas fa-trash text-orange-peel"></i> Delete
-                                                        </button>
-                                                    </form>
-
-
+                                                    </a>
 
                                                     </div>
+
+                                                    <form id="delete-form-{{ $data->id_departamento_funcionario }}" action="{{ route('departamento.destroy', $data->id_departamento_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this habilitacao?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                                 </div>
                                             </td>
                                         </tr>
