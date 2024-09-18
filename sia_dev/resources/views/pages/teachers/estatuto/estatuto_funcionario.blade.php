@@ -48,7 +48,8 @@
                     </div>
                     @endif
                         <div class="table-responsive">
-                            <table class="table display data-table text-nowrap">
+                          <table class="table display table-striped table-bordered table-box-wrap text-nowrap">
+
                                 <thead>
                                     <tr>
                                  
@@ -56,7 +57,7 @@
                                         <th>Data Inicio</th>
                                         <th>Data Fim</th>
                                         <th>Asaun</th>
-                                        <th></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -83,17 +84,16 @@
 
 
                                                       <!-- Delete Form -->
-                                                      <form method="POST" action="{{ route('estatuto.destroy', $data->id_estatuto_funcionario) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit">
+                                                     
+                                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_estatuto_funcionario }}').submit();">
                                                         <i class="fas fa-trash text-orange-peel"></i> Delete
-                                                        </button>
-                                                    </form>
-
-
+                                                    </a>
 
                                                     </div>
+                                                    <form id="delete-form-{{ $data->id_estatuto_funcionario }}" action="{{ route('estatuto.destroy', $data->id_estatuto_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this habilitacao?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                                 </div>
                                             </td>
                                         </tr>

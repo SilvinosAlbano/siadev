@@ -3,6 +3,12 @@
 @section('title', 'Estatuto Inserir')
 @section('content') 
     <!-- Identificao Content -->
+
+
+
+
+
+    
      @include('pages.teachers.header_teacher')
 
 
