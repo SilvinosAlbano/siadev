@@ -13,51 +13,52 @@
             <div class="item-title">
                 {{-- <h3>Sobre</h3> --}}
             </div>
-           
+
         </div>
         <div class="single-info-details">
             <div class="item-img border">
-               
+
 
                 @if (is_null($detail->controlo_estado))
-                        <div class="ribbon  bg-primary border">
-                                <span class="text-white text-center">
-                                Ativo
-                            </span>
-                        </div>
-                        @elseif ($detail->controlo_estado == 'deleted')
-                        <div class="ribbon  bg-danger border">
-                            <span class="text-white text-center">
+                    <div class="ribbon  bg-primary border">
+                        <span class="text-white text-center">
+                            Ativo
+                        </span>
+                    </div>
+                @elseif ($detail->controlo_estado == 'deleted')
+                    <div class="ribbon  bg-danger border">
+                        <span class="text-white text-center">
                             Nao Ativo
                         </span>
-                            </div>
-                        @endif
-                <img class="border rounded-circle" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
-               
+                    </div>
+                @endif
+                <img class="border rounded-circle" src="{{ asset('img/pessoa_neutra.png') }}" width="200"
+                    height="250" alt="docent">
+
             </div>
-          
+
             <div class="item-content">
                 <div class="header-inline item-header">
-                    <h4 class="text-dark-medium font-medium">{{$detail->nome_funcionario}}</h4>
-                   
+                    <h4 class="text-dark-medium font-medium">{{ $detail->nome_funcionario }}</h4>
+
                 </div>
-               
+
                 <div class="info-table table-responsive">
                     <table class="table text-nowrap">
                         <tbody>
-                           
+
                             <tr>
                                 <td>Funcionario:</td>
-                                <td class="font-medium text-dark-medium">{{$detail->categoria}}</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->categoria }}</td>
                             </tr>
-                           
+
                             <tr>
                                 <td>Numero Contacto:</td>
-                                <td class="font-medium text-dark-medium">{{$detail->no_contacto}}</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->no_contacto }}</td>
                             </tr>
                             <tr>
                                 <td>E-mail:</td>
-                                <td class="font-medium text-dark-medium">{{$detail->email}}</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->email }}</td>
                             </tr>
                         </tbody>
                     </table>

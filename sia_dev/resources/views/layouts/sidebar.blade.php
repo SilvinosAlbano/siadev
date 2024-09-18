@@ -49,7 +49,7 @@
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/docentes" class="nav-link"><i class="fas fa-angle-right"></i>Todos
+                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Todos
                                 Funcionarios</a>
                         </li>
                         <li class="nav-item">
