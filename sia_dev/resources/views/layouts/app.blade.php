@@ -20,8 +20,10 @@
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
     <script src="{{ asset('js/modernizr-3.6.0.min.js') }}"></script>
-
-
+    <link rel="stylesheet" href="../../../fonts/flaticon.css">
+    <link rel="stylesheet" href="../../../css/select2.min.css">  
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../../css/style.css">
 
 </head>
 
@@ -81,7 +83,7 @@
     <script src="{{ asset('js/jquery.scrollUp.min.js') }}"></script>
     <script src="{{ asset('js/datepicker.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-
+    
 
 </body>
 
