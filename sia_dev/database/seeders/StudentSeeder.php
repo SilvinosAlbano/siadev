@@ -35,7 +35,7 @@ class StudentSeeder extends Seeder
                 'observation' => null,
             ],
             [
-                'id_student' => (string) Str::uuid(),
+                'id_student' => '3e5b9619-cfd3-4f4d-bdd9-e36e3ded1b15',
                 'complete_name' => 'Pedro Modolay',
                 'gender' => 'Male',
                 'place_of_birth' => 'New York',
@@ -46,7 +46,7 @@ class StudentSeeder extends Seeder
                 'observation' => null,
             ],
             [
-                'id_student' => (string) Str::uuid(),
+                'id_student' => 'd7accbc8-c784-4c30-acc4-7e27ebf61f35',
                 'complete_name' => 'Afonso Coolay',
                 'gender' => 'Female',
                 'place_of_birth' => 'Los Angeles',

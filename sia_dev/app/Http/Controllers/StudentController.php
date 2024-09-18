@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ModelStudent;
 use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
+use App\Models\ModelMatricula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
@@ -15,26 +16,15 @@ class StudentController extends Controller
 {
     public function index()
     {
-        // Fetch all students with relationships
-        $students = ModelStudent::with([
-            'curriculoEstudante.semestre',
-            'curriculoEstudante.programaEstudo.departamento'
-        ])->paginate(10);
-
-        // Fetch all semesters
-        $semestres = ModelSemestre::all();
-
-        // Return view with variables
-        return view('pages.students.all_students', compact('students', 'semestres'));
+        $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])->paginate(10);
+        // $students = ModelStudent::all();
+        return view('pages.students.all_students', compact('students'));
     }
-
-
-
     public function create()
     {
         $semesters = ModelSemestre::all();
-        $modelDepartamentos = ModelDepartamento::all();
-        return view('pages.students.admission_form_student', compact('semestre', 'modelDepartamentos'));
+        $modelDepartamentos = ModelDepartamento::all(); // Ajustei o nome da variável
+        return view('pages.students.admission_form_student', compact('semesters', 'modelDepartamentos'));
     }
 
     public function store(Request $request)
@@ -90,24 +80,27 @@ class StudentController extends Controller
 
     public function show($id_student)
     {
-        // Retrieve the specific student with related data
-        $student = ModelStudent::with([
-            'curriculoEstudante.semestre',
-            'curriculoEstudante.programaEstudo.departamento'
-        ])->findOrFail($id_student);
+        $student = ModelStudent::with(['departamentos', 'semestre'])->findOrFail($id_student);
 
-        // Fetch all semesters and departments for possible dropdowns or additional information
-        $semestres = ModelSemestre::all();
-        $modelDepartamentos = ModelDepartamento::all();
+        // Se você usa relacionamentos diretos
+        $modelDepartamentos = $student->departamentos;
+        $semestre = $student->semestre;
 
-        // Return the view with the student and related data
-        return view('pages.students.student_details', compact('student', 'semestres', 'modelDepartamentos'));
+        return view('pages.students.student_details', compact('student', 'modelDepartamentos', 'semestre'));
     }
 
 
-    public function edit(ModelStudent $student)
+    public function edit($id_student)
     {
-        return view('pages.students.edit_estudent', compact('student'));
+        // Carregar o estudante com dados relacionados
+        $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id_student);
+
+        // Obter todos os departamentos e semestres disponíveis
+        $modelDepartamentos = ModelDepartamento::all();
+        $semesters = ModelSemestre::all();
+
+        // Passar o estudante, departamentos e semestres para a view
+        return view('pages.students.student_details', compact('student', 'modelDepartamentos', 'semesters'));
     }
 
     public function update(Request $request, $id_student)

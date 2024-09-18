@@ -31,7 +31,6 @@ class ModelStudent extends Model
     protected static function boot()
     {
         parent::boot();
-
         static::creating(function ($model) {
             if (empty($model->id_student)) {
                 $model->id_student = (string) Str::uuid();
@@ -39,43 +38,22 @@ class ModelStudent extends Model
         });
     }
 
-    public function curriculoEstudante()
+    // Relacionamento com Matricula
+    public function matriculas()
     {
-        return $this->hasOne(ModelCurriculoEstudante::class, 'id_student');
-    }
-    public function programasEstudo()
-    {
-        return $this->hasManyThrough(
-            ModelProgramaEstudo::class,
-            ModelCurriculoEstudante::class,
-            'id_student', // Foreign key on ModelCurriculoEstudante
-            'id_programa_estudo', // Foreign key on ModelProgramaEstudo
-            'id_student', // Local key on ModelStudent
-            'id_programa_estudo' // Local key on ModelCurriculoEstudante
-        );
+        return $this->hasMany(ModelMatricula::class, 'id_student', 'id_student');
     }
 
-    public function departamentos()
-    {
-        return $this->hasManyThrough(
-            ModelDepartamento::class,
-            ModelProgramaEstudo::class,
-            'id_programa_estudo', // Foreign key on ModelProgramaEstudo
-            'id_departamento', // Foreign key on ModelDepartamento
-            'id_student', // Local key on ModelStudent
-            'id_programa_estudo' // Local key on ModelProgramaEstudo
-        );
-    }
-
-    public function semestres()
+    // Relacionamento através de matricula para obter semestre
+    public function semestre()
     {
         return $this->hasManyThrough(
             ModelSemestre::class,
-            ModelProgramaEstudo::class,
-            'id_programa_estudo', // Foreign key on ModelProgramaEstudo
-            'id_semestre', // Foreign key on ModelSemestre
-            'id_student', // Local key on ModelStudent
-            'id_semestre' // Local key on ModelProgramaEstudo
+            ModelMatricula::class,
+            'id_student',
+            'id_semestre',
+            'id_student',
+            'id_semestre'
         );
     }
 }

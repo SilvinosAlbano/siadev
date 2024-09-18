@@ -17,6 +17,6 @@ class ModelProgramaEstudo extends Model
     // Relationships
     public function departamento()
     {
-        return $this->belongsTo(ModelDepartamento::class, 'id_departamento');
+        return $this->belongsTo(ModelDepartamento::class, 'id_departamento', 'id_departamento');
     }
 }

@@ -37,7 +37,6 @@
                 <table class="table display data-table text-nowrap">
                     <thead>
                         <tr>
-                            {{-- <th>ID</th> --}}
                             <th>Name</th>
                             <th>Gender</th>
                             <th>Place of Birth</th>
@@ -52,32 +51,33 @@
                     <tbody>
                         @foreach ($students as $student)
                             <tr>
-                                {{-- <td>{{ $student->id_student }}</td> --}}
-                                <td>{{ $student->complete_name }}</td>
-                                <td>{{ $student->gender }}</td>
-                                <td>{{ $student->place_of_birth }}</td>
-                                <td>{{ \Carbon\Carbon::parse($student->date_of_birth)->format('d/m/Y') }}</td>
-                                <td>{{ $student->nre }}</td>
-                                <td>{{ $student->curriculoEstudante->semestre->numero_semestre }}</td>
-                                <td>{{ $student->curriculoEstudante->programaEstudo->departamento->nome_departamento }}</td>
-                                <td>{{ $student->curriculoEstudante->programaEstudo->tipo_programa }}</td>
+                                <td>{{ $student->student->complete_name }}</td>
+                                <td>{{ $student->student->gender }}</td>
+                                <td>{{ $student->student->place_of_birth }}</td>
+                                <td>{{ $student->student->date_of_birth }}</td>
+                                <td>{{ $student->student->nre }}</td>
+                                <td>{{ $student->semestre->periodo ?? 'N/A' }}</td>
+                                <td>{{ $student->programaEstudo->nome_programa ?? 'N/A' }}</td>
+                                <td>{{ $student->programaEstudo->departamento->nome_departamento ?? 'N/A' }}</td>
                                 <td>
-                                    {{-- @if (Auth::user()->canAccess('edit', 'edit_estudent')) --}}
-                                    {{-- <a href="{{ route('students.edit', ['student' => $student->id_student]) }}" --}}
-                                    {{-- class="btn btn-primary btn-sm">Edit</a> --}}
+                                    {{-- @if (Auth::user()->canAccess('edit', 'student_details')) --}}
+                                    <a href="{{ route('students.edit', ['id_student' => $student->id_student]) }}"
+                                        class="btn btn-primary btn-lg">Edit</a>
                                     {{-- @endif --}}
                                     {{-- @if (Auth::user()->canAccess('delete', 'students')) --}}
-                                    {{-- <form action="{{ route('students.destroy', ['student' => $student->id_student]) }}"
+                                    <form action="{{ route('students.destroy', ['id_student' => $student->id_student]) }}"
                                         method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
+                                        <button type="submit" class="btn btn-danger btn-lg"
                                             onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form> --}}
+                                    </form>
                                     {{-- @endif --}}
                                 </td>
+
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>

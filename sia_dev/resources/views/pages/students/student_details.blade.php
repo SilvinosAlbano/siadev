@@ -88,10 +88,10 @@
                             <div class="col-md-6 form-group">
                                 <label for="id_departamento">Departamento:</label>
                                 <select name="id_departamento" id="id_departamento" class="form-control" disabled>
-                                    @foreach ($modelDepartamentos as $dept)
-                                        <option value="{{ $dept->id_departamento }}"
-                                            {{ optional($student->curriculoEstudante->programaEstudo->departamento)->id_departamento == $dept->id_departamento ? 'selected' : '' }}>
-                                            {{ $dept->departamento }}
+                                    @foreach ($modelDepartamentos as $departamento)
+                                        <option value="{{ $departamento->id_departamento }}"
+                                            {{ $student->id_departamento == $departamento->id_departamento ? 'selected' : '' }}>
+                                            {{ $departamento->nome_departamento }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -99,10 +99,10 @@
                             <div class="col-md-6 form-group">
                                 <label for="semester_id">Semestre:</label>
                                 <select name="semester_id" id="semester_id" class="form-control" disabled>
-                                    @foreach ($semestres as $sems)
-                                        <option value="{{ $sems->semester_id }}"
-                                            {{ optional($student->curriculoEstudante->semestre)->semester_id == $sems->semester_id ? 'selected' : '' }}>
-                                            {{ $sems->semester_name }}
+                                    @foreach ($semesters as $semester)
+                                        <option value="{{ $semester->id_semestre }}"
+                                            {{ $student->semester_id == $semester->id_semestre ? 'selected' : '' }}>
+                                            {{ $semester->ano_academico }} - Periodo {{ $semester->periodo }}
                                         </option>
                                     @endforeach
                                 </select>

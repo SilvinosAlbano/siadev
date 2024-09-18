@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateDocentesTable extends Migration
 {
@@ -23,24 +24,24 @@ class CreateDocentesTable extends Migration
             $table->uuid('id_municipio');
             $table->date('data_moris');
             $table->string('nacionalidade');
-            $table->string('categoria');          
+            $table->string('categoria');
             $table->date('ano_inicio')->nullable();
             $table->uuid('id_tipo_categoria')->nullable();
-            $table->uuid('id_estatuto');          
+            $table->uuid('id_estatuto');
             $table->text('observacao')->nullable();
             $table->text('no_contacto')->nullable();
             $table->text('email')->nullable();
             $table->string('photo_docente')->nullable();
             $table->string('controlo_estado')->nullable();
-            
+
             // Add timestamps (created_at, updated_at)
             $table->timestamps();
-    
+
             // Add soft deletes (deleted_at)
             $table->softDeletes();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.
