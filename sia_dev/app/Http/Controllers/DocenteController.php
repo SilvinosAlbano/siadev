@@ -13,6 +13,7 @@ use App\Models\ModelDepartamento;
 use App\Models\ModelEstatuto;
 use App\Models\HabilitacaoModel;
 use App\Models\FuncionarioEstatutoModel;
+use App\Models\ModelFuncionarioDepartamento;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +88,7 @@ class DocenteController extends Controller
             // Optionally, handle the case where no data was found
             return redirect()->back()->with('error', 'Details not found.');
         }
+        
 
         // Return the view with the detail data
         return view('pages.teachers.teacher_details', compact('detail'));
@@ -323,12 +325,108 @@ class DocenteController extends Controller
     {
         // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
         $detail = ModelDocente::findOrFail($id);
-        $depfun = DB::table('view_departamento_funcionario')
-            ->where('id_funcionario', $id)
-            ->paginate(10);
+        // $depfun = DB::table('view_departamento_funcionario')
+        //     ->where('id_funcionario', $id)
+        //     ->paginate(10);
+
+            
+            $depfun = DB::table('departamento_funcionario as a')
+            ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
+            ->leftJoin('faculdade as c', 'c.id_faculdade', '=', 'a.id_faculdade')
+            ->leftJoin('funcionario as d', 'd.id_funcionario', '=', 'a.id_funcionario')
+            ->select(
+                'a.id_departamento_funcionario',
+                'b.id_departamento',
+                'b.departamento',
+                'c.id_faculdade',
+                'c.nome_faculdade',
+                'd.id_funcionario',
+                'd.nome_funcionario',
+                'a.controlo_estado'
+            )
+            ->where('d.id_funcionario', $id)
+            ->whereNull('a.controlo_estado')
+            // ->get();
+            ->paginate(5);
+          
         return view('pages.teachers.departamento.departamento', compact('depfun', 'detail'));
     }
 
+
+    public function create_departamento($id)
+    {
+        $fac = DB::table('faculdade')->paginate(10);
+      
+        $dep = ModelDepartamento::all();
+        $detail = ModelDocente::findOrFail($id);
+        return view('pages.teachers.departamento.departamento_inserir', compact('detail', 'id', 'dep','fac'));
+    }
+
+    public function storeDepartamento(Request $request)
+    {
+        $request->validate([
+            'id_departamento' => 'required|string|max:255',
+            
+        ]);
+
+        $departamento = new ModelFuncionarioDepartamento();
+        $departamento->id_funcionario = $request->input('id_funcionario');
+        $departamento->id_faculdade = $request->input('id_faculdade');
+        $departamento->id_departamento = $request->input('id_departamento');
+        $departamento->save();
+
+        return redirect()->route('departamento', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Departamento Funcionarios inserida com sucesso.');
+    }
+
+
+
+    public function editDepartamento($id)
+    {
+        
+
+        $dep = ModelDepartamento::all();
+        $fac = DB::table('faculdade')->paginate(10);
+        $detail = ModelFuncionarioDepartamento::findOrFail($id);
+       
+        
+        return view('pages.teachers.departamento.departamento_alterar', compact('id', 'detail','fac','dep'));
+    }
+
+
+    public function updateDepartamento(Request $request, $id)
+    {
+        $request->validate([
+            'id_departamento' => 'required|string|max:255',
+            'id_faculdade' => 'required|string|max:255',
+
+        ]);
+
+        $departamento = ModelFuncionarioDepartamento::findOrFail($id); // Find the habilitacao to update
+        $departamento->id_departamento = $request->input('id_departamento');
+        $departamento->id_faculdade = $request->input('id_faculdade');
+        $departamento->id_funcionario = $request->input('id_funcionario');
+        $departamento->save(); // Save the updated habilitacao
+
+        // Redirect back to the habilitacao page with a success message
+        return redirect()->route('departamento', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Departamento Funcionarios Atualizar com sucesso.');
+    }
+
+    public function destroyDepartamento($id)
+    {
+        // Check if the record exists before attempting deletion
+        $estatuto = DB::table('departamento_funcionario')->where('id_departamento_funcionario', $id)->first();
+
+        if ($estatuto) {
+            // Perform the delete action
+            DB::table('departamento_funcionario')->where('id_departamento_funcionario', $id)->delete();
+
+            return redirect()->back()->with('success', 'Departamento funcionario apaga com sucesso.');
+        } else {
+            return redirect()->back()->with('error', 'Estatuto not found.');
+        }
+    }
     #end departamento
 
 
@@ -370,8 +468,7 @@ class DocenteController extends Controller
             'id_suco' => 'required|string|max:255',
             'id_posto_administrativo' => 'required|string|max:255',
             'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',
-            'id_estatuto' => 'required|string|max:255',
+            'nacionalidade' => 'nullable|string|max:255',            
             'id_tipo_categoria' => 'nullable|string|max:255', // This can be nullable
             'ano_inicio' => 'nullable|date',
             'observacao' => 'nullable|string',
@@ -402,8 +499,7 @@ class DocenteController extends Controller
             'id_suco' => $validated['id_suco'],
             'id_posto_administrativo' => $validated['id_posto_administrativo'],
             'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],
-            'id_estatuto' => $validated['id_estatuto'],
+            'nacionalidade' => $validated['nacionalidade'],           
             'id_tipo_categoria' => $id_tipo_categoria, // This will be null if not provided
             'ano_inicio' => $validated['ano_inicio'],
             'observacao' => $validated['observacao'],
@@ -418,14 +514,14 @@ class DocenteController extends Controller
             'username' => $funcionarios->nome_funcionario, // Assuming 'nre' is actually 'nome_funcionario' or handle it properly
             'email' => $request->email ?? null, // Set email to null or receive it from request
             'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
-            'docente_id_student' => $funcionarios->id_funcionario,
+            'docente_student_id' => $funcionarios->id_funcionario,
             'tipo_usuario' => $funcionarios->categoria,
         ]);
 
         // Check if the insertion was successful
         if ($funcionarios) {
             // Redirect with Success Message
-            return redirect()->route('docentes.index')->with(['success' => 'Dados com sucesso gravados']);
+            return redirect()->route('funcionarios.index')->with(['success' => 'Dados com sucesso gravados']);
         } else {
             // Return with an error message if insertion fails
             return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
@@ -512,7 +608,7 @@ class DocenteController extends Controller
         ]);
 
         // Redirect with Success Message
-        return redirect()->route('docentes')->with(['success' => 'Dados atualizados com sucesso']);
+        return redirect()->route('funcionarios.index')->with(['success' => 'Dados atualizados com sucesso']);
     }
 
 
@@ -527,7 +623,7 @@ class DocenteController extends Controller
         $docente->save();
 
         // Redirect back with success message
-        return redirect()->route('docentes.index')->with('success', 'Docente status  deleted successfully');
+        return redirect()->route('funcionarios.index')->with('success', 'Docente status  deleted successfully');
     }
 
     /*  public function restore($id)
