@@ -24,9 +24,8 @@
                                 <div class="header-inline item-header">
                                     <div class="header-elements">
                                         <ul>
-                                            <li><a href="#"><i class="far fa-edit"></i></a></li>
-                                            <li><a href="#"><i class="fas fa-print"></i></a></li>
-                                            <li><a href="#"><i class="fas fa-download"></i></a></li>
+                                            <li><a href="{{ route('editar', $detail->id_funcionario) }}"><i class="far fa-edit"></i></a></li>
+                                            
                                         </ul>
                                     </div>
                                 </div>
