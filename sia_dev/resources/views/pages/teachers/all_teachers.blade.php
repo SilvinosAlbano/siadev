@@ -35,7 +35,7 @@
             </div>
         @endif
 
-        <form class="mg-b-20" method="GET" action="{{ route('docentes.index') }}">
+        <form class="mg-b-20" method="GET" action="{{ route('funcionarios.index') }}">
             <div class="row gutters-8">
                 <!-- Search by nome_docente -->
                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
@@ -94,7 +94,7 @@
                         <th>Nome</th>
                         <th>Sexo</th>
                         <th>Data Moris</th>                      
-                        <th>Ano Inicio</th>
+                      
                         <th>Categoria</th>
                         <th>Estado</th>
                         <th>Action</th>
@@ -109,7 +109,7 @@
                             <td>{{ $data->nome_funcionario }}</td>
                             <td>{{ $data->sexo }}</td>
                             <td>{{ $data->data_moris }}</td>                          
-                            <td>{{ $data->ano_inicio }}</td>
+                          
                             <td>{{ $data->categoria }}</td>
 
                             <td> 
@@ -153,7 +153,7 @@
                     Feminino: {{ $totalFeminino }}
                 </div>
             </div>
-            {{ $docente->links() }}
+            <!-- {{ $docente->links() }} -->
         </div>
 
     </div>

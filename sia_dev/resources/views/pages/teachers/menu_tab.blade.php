@@ -7,7 +7,7 @@
             <div class="basic-tab">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('detailho') ? 'active' : '' }}" href="{{ route('detailho', $detail->id_funcionario) }}">Identificao</a>
+                        <a class="nav-link {{ request()->routeIs('detailho') ? 'active' : '' }}" href="{{ route('detailho', $detail->id_funcionario) }}">Identifição</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('habilitacao_funcionario') ? 'active' : '' }}" href="{{ route('habilitacao_funcionario', $detail->id_funcionario) }}">Habilitação</a>
@@ -25,7 +25,16 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('departamento') ? 'active' : '' }}" href="{{ route('departamento', $detail->id_funcionario) }}">Departamento</a>
                     </li>
-
+                    @if (request()->routeIs('inserir_departamento'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('inserir_departamento') ? 'active' : '' }}" href="{{ route('inserir_departamento', $detail->id_funcionario) }}">Inserir Departamento</a>
+                    </li>
+                    @endif
+                    @if (request()->routeIs('alterar_departamento.index'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('alterar_departamento.index') ? 'active' : '' }}" href="{{ route('alterar_departamento.index', $detail->id_funcionario) }}">Alterar Departamento</a>
+                    </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('materia_docente') ? 'active' : '' }}" href="{{ route('materia_docente', $detail->id_funcionario) }}">Materia</a>
                     </li>

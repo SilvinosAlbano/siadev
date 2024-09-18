@@ -53,7 +53,7 @@ Route::middleware('check.access')->group(function () {
 
     // route for teachers
     // Route for Menus of Teachers
-    Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
+    Route::get('/funcionarios', [DocenteController::class, 'index'])->name('funcionarios.index');
     Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
     Route::get('/habilitacao/{id}', [DocenteController::class, 'showHabilitacoes'])->name('habilitacao_funcionario');
     Route::get('/funcionario/horario/{id}', [DocenteController::class, 'horario'])->name('horario');
@@ -75,6 +75,11 @@ Route::middleware('check.access')->group(function () {
     #end
     #departamento
     Route::get('/funcionario/departamento/{id}', [DocenteController::class, 'showDepartamento'])->name('departamento');
+    Route::get('/funcionario/inserir_departamento/{id_funcionario}', [DocenteController::class, 'create_departamento'])->name('inserir_departamento');
+    Route::post('/funcionario/departamento/store', [DocenteController::class, 'storeDepartamento'])->name('store_departamento');
+    Route::get('/alterar_departamento/{id}', [DocenteController::class, 'editDepartamento'])->name('alterar_departamento.index'); // Handle the update request
+    Route::put('/update_departamento/{id}', [DocenteController::class, 'updateDepartamento'])->name('departamento.update');
+    Route::delete('/departamento/{id}', [DocenteController::class, 'destroyDepartamento'])->name('departamento.destroy');
     #end
     //#materia docente
     Route::get('/funcionario/nateria/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');

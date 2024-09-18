@@ -16,23 +16,23 @@
            
         </div>
         <div class="single-info-details">
-            <div class="item-img">
+            <div class="item-img border">
                
 
                 @if (is_null($detail->controlo_estado))
-                        <div class="ribbon  bg-primary">
+                        <div class="ribbon  bg-primary border">
                                 <span class="text-white text-center">
                                 Ativo
                             </span>
                         </div>
                         @elseif ($detail->controlo_estado == 'deleted')
-                        <div class="ribbon  bg-danger">
+                        <div class="ribbon  bg-danger border">
                             <span class="text-white text-center">
                             Nao Ativo
                         </span>
                             </div>
                         @endif
-                <img class="border" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
+                <img class="border rounded-circle" src="{{asset('img/pessoa_neutra.png')}}" width="200" height="250" alt="docent">
                
             </div>
           

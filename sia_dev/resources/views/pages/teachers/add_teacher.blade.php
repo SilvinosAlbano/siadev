@@ -128,30 +128,21 @@
                             </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-6 col-12 form-group">
-                            <label>Estatuto (P/IP/C) *</label>
-                            <select class="select2" name="id_estatuto">
-                                <option selected disabled value="">Escolha *</option>
-                                @foreach ($estatuto as $est)
-                                    <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                    <div class="row">                      
 
                       
-                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Ano Inicio</label>
                             <input type="date" name="ano_inicio" placeholder="" class="form-control">
 
                         </div>
 
-                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Numero de Contacto</label>
                             <input type="text" name="no_contacto" placeholder="" class="form-control border">
 
                         </div>
-                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>E-mail</label>
                             <input type="email" name="email" placeholder="" class="form-control border">
 

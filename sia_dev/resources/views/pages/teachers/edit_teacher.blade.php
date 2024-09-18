@@ -172,7 +172,7 @@
 
                 <div class="col-12 form-group mg-t-8">
                     <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Atualizar</button>
-                    <a href="{{ route('docentes.index') }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Cancelar</a>
+                    <a href="{{ route('funcionarios.index') }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Cancelar</a>
                 </div>
             </form>
         </div>
