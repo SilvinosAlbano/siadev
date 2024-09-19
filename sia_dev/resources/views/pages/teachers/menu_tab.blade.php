@@ -38,7 +38,17 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('materia_docente') ? 'active' : '' }}" href="{{ route('materia_docente', $detail->id_funcionario) }}">Materia</a>
                     </li>
+                    @if (request()->routeIs('inserir_materia_docente'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('inserir_materia_docente') ? 'active' : '' }}" href="{{ route('inserir_materia_docente', $detail->id_funcionario) }}">Inserir Materia</a>
+                    </li>
+                    @endif
 
+                    @if (request()->routeIs('alterar_docentemateria'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('alterar_docentemateria') ? 'active' : '' }}" href="{{ route('alterar_docentemateria', $detail->id_funcionario) }}">Alterar Materia</a>
+                    </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('horario') ? 'active' : '' }}" href="{{ route('horario', $detail->id_funcionario) }}">Horario Ensinar</a>
                     </li>

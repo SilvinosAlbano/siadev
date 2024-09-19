@@ -85,8 +85,12 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/departamento/{id}', [DocenteController::class, 'destroyDepartamento'])->name('departamento.destroy');
     #end
     //#materia docente
-    Route::get('/funcionario/nateria/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
-
+    Route::get('/funcionario/materia/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
+    Route::get('/funcionario/inserir_materia_docente/{id_funcionario}', [DocenteController::class, 'create_materiaDocente'])->name('inserir_materia_docente');
+    Route::post('/funcionario/docentemateria/store', [DocenteController::class, 'storeDocenteMateria'])->name('store_docentemateria');
+    Route::get('/alterar_docentemateria/{id}', [DocenteController::class, 'editDocentemateria'])->name('alterar_docentemateria');
+    Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria.update');
+    Route::delete('/docentemateria/{id}', [DocenteController::class, 'destroyDocentemateria'])->name('docentemateria.destroy');
     #end
     Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
@@ -108,6 +112,7 @@ Route::middleware('check.access')->group(function () {
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
 
 Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
+
 
     // end
 
