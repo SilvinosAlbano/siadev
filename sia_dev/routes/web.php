@@ -7,6 +7,7 @@ use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DivisaoAdministrativaController;
+use App\Http\Controllers\DisciplinasController;
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -87,7 +88,7 @@ Route::middleware('check.access')->group(function () {
     Route::get('/funcionario/nateria/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
 
     #end
-    Route::get('/adiciona_docente', [DocenteController::class, 'formDocente'])->name('adiciona_docente.index');
+    Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
 
     Route::get('/docentes/data', [DocenteController::class, 'getDocentesData'])->name('docentes.data');
@@ -99,6 +100,17 @@ Route::middleware('check.access')->group(function () {
     Route::get('/docente-report', [DocenteController::class, 'report'])->name('docentes.report');
     Route::get('/docente-export', [DocenteController::class, 'export'])->name('docentes.export');
     #end
+
+    // materia discplina start
+    Route::get('/disciplinas', [DisciplinasController::class, 'index'])->name('disciplinas.index');
+    Route::post('/materia/store', [DisciplinasController::class, 'store'])->name('materia.store');
+    Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
+    Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
+
+Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
+
+    // end
+
 
     // routes/web.php
     Route::get('/get-postos/{idMunicipio}', [DivisaoAdministrativaController::class, 'getPostos']);
