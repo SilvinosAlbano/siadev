@@ -13,9 +13,10 @@ class ModelMateria extends Model
     protected $keyType = 'uuid';
 
     protected $fillable = [
+        'id_materia',
         'materia',
         'codigo_materia',
-        'creditos'
+        'credito'
     ];
 
     // Relacionamento com MateriaSemestre

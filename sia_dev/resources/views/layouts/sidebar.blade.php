@@ -49,7 +49,7 @@
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/docentes" class="nav-link"><i class="fas fa-angle-right"></i>Todos
+                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Todos
                                 Funcionarios</a>
                         </li>
                         <li class="nav-item">
@@ -83,13 +83,36 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="/all_subject" class="nav-link"><i
+                    <a href="/disciplinas" class="nav-link"><i
                             class="flaticon-open-book"></i><span>Disciplinas</span></a>
                 </li>
                 <li class="nav-item">
                     <a href="/student_attendence" class="nav-link"><i
                             class="flaticon-checklist"></i><span>Atendimentos</span></a>
                 </li>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i
+                            class="flaticon-multiple-users-silhouette"></i><span>Parametro</span></a>
+                    <ul class="nav sub-group-menu">
+                        <li class="nav-item">
+                            <a href="/disciplina" class="nav-link"><i class="fas fa-angle-right"></i>
+                                 Teste</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
+                                Funcionarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/teacher_payment" class="nav-link"><i class="fas fa-angle-right"></i>Pagamento
+                                de
+                                Funcionarios</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
                 {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}} <!-- Comment lai tama sei uza atu dev -->
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
