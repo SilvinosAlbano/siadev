@@ -16,7 +16,7 @@
         <div class="card-header shadow bg-white">
             <div class="card-title">
                 
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_docente"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
+            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_funcionario"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
                 
             </div>
         </div>

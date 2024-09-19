@@ -567,7 +567,7 @@ class DocenteController extends Controller
             'nome_funcionario' => 'required|string|max:255',
             'sexo' => 'required|string|max:255',
             'data_moris' => 'required|date',
-            'id_aldeia' => 'required|string|max:255',
+            'id_aldeias' => 'required|string|max:255',
             'id_suco' => 'required|string|max:255',
             'id_posto_administrativo' => 'required|string|max:255',
             'id_municipio' => 'required|string|max:255',
@@ -598,7 +598,7 @@ class DocenteController extends Controller
             'nome_funcionario' => $validated['nome_funcionario'],
             'sexo' => $validated['sexo'],
             'data_moris' => $validated['data_moris'],
-            'id_aldeia' => $validated['id_aldeia'],
+            'id_aldeias' => $validated['id_aldeias'],
             'id_suco' => $validated['id_suco'],
             'id_posto_administrativo' => $validated['id_posto_administrativo'],
             'id_municipio' => $validated['id_municipio'],
@@ -608,7 +608,7 @@ class DocenteController extends Controller
         ]);
 
         // Redirect with Success Message
-        return redirect()->route('funcionarios.index')->with(['success' => 'Dados atualizados com sucesso']);
+        return redirect()->route('funcionarios.index')->with(['success' => 'Dados Funcionario atualizados com sucesso']);
     }
 
 
