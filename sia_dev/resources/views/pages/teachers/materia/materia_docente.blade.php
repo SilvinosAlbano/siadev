@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-@section('title', 'Estatuto')
+@section('title', 'Docente Materia')
 @section('content') 
     <!-- Identificao Content -->
      @include('pages.teachers.header_teacher')          
@@ -12,14 +12,14 @@
                     <div class="card-body">
                         <div class="heading-layout1">
                             <div class="item-title">
-                                <h3>Departamento Funcionario</h3>
+                                <h3>Docente Materia</h3>
                             </div>
                           
                         </div>
                         <form class="mg-b-20">
                             <div class="row gutters-8">
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group ms-auto text-end">
-                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}"> Inserir  </a>
+                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_materia_docente', $detail->id_funcionario) }}"> Inserir  </a>
                                 </div>
                             </div>
 
@@ -45,19 +45,23 @@
                     </div>
                     @endif
                         <div class="table-responsive">
-                        <table class="table display table-striped table-bordered table-box-wrap text-nowrap">
+                        <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>
                                  
-                                        <th>Departamento</th>                                      
+                                        <th>Materia Disciplina</th>    
+                                        <th>Data Inicio</th>  
+                                        <th>Data fim</th>                                     
                                         <th>Asaun</th>
                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($depfun as $data)
+                                    @foreach ($materiadocen as $data)
                                         <tr>
-                                            <td>{{ $data->departamento }}</td>
+                                            <td>{{ $data->materia }}</td>
+                                            <td>{{ $data->data_inicio }}</td>
+                                            <td>{{ $data->data_fim }}</td>
                                            
                                            
                                             <td>
@@ -67,7 +71,7 @@
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <!-- Edit button -->
-                                                        <a class="dropdown-item" href="{{ route('alterar_estatuto.index', $data->id_departamento_funcionario) }}">
+                                                        <a class="dropdown-item" href="{{ route('alterar_docentemateria', $data->id_docente_materia) }}">
                                                             <i class="fas fa-edit text-dark-pastel-green"></i> Edit
                                                         </a>
 
@@ -75,20 +79,16 @@
                                                         <!-- Optionally, you can add a delete button -->
                                                         
 
-
-                                                      <!-- Delete Form -->
-                                                      <form method="POST" action="{{ route('estatuto.destroy', $data->id_departamento_funcionario) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit">
+                                                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_docente_materia }}').submit();">
                                                         <i class="fas fa-trash text-orange-peel"></i> Delete
-                                                        </button>
-                                                    </form>
-
-
+                                                    </a>
 
                                                     </div>
-                                                </div>
+
+                                                    <form id="delete-form-{{ $data->id_docente_materia }}" action="{{ route('docentemateria.destroy', $data->id_docente_materia) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this  data?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
