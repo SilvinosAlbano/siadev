@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Yajra\DataTables\DataTables;
 use App\Models\ModelMateria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -14,6 +14,8 @@ class DisciplinasController extends Controller
         $materia= ModelMateria::all();
         return view('pages.disciplinas.materia_disciplinas', compact('materia'));
     }
+
+
 
 
     public function store(Request $request)
@@ -77,6 +79,8 @@ public function destroy($id)
         return redirect()->back()->with('error', 'Materia not found.');
     }
 }
+
+
 
 
 

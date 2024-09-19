@@ -52,7 +52,7 @@
 
                     <div class="row">
                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
-                            <label>Materia *</label>
+                            <label>Nome Materia*</label>
                             <input type="text" name="materia" value="{{ isset($mat) ? $mat->materia : old('materia') }}" class="form-control" required>
                         </div>
 
@@ -99,9 +99,9 @@
                                         <label class="form-check-label">Codigo Materia</label>
                                     </div>
                                 </th>
-                                <th>Materia</th>
+                                <th>Nome Materia</th>
                                 <th>Credito</th>
-                                <th>Actions</th>
+                                <th>Acao</th>
                             </tr>
                         </thead>
                         <tbody>

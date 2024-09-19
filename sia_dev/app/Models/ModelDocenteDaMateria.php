@@ -16,8 +16,8 @@ class ModelDocenteDaMateria extends Model
         'id_funcionario',
         'id_materia',
         'data_inicio',
-        'data_fim',
-        'status'
+        'data_fim',       
+        'observacao'
     ];
 
     // Relacionamento com Materia

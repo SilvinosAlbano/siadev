@@ -21,11 +21,13 @@ use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DocentesExport;
+use App\Models\ModelDocenteDaMateria;
 use Database\Seeders\FuncionarioEstatuto;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\ModelGdivisaoAdministrativaPostoAdministrativo; //Asesu ba View Divisao Administrativa nian
 use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisao Administrativa nian
+use App\Models\ModelMateria;
 
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
@@ -430,15 +432,101 @@ class DocenteController extends Controller
     #end departamento
 
 
-    #materia
+    #materia docente start
     public function showMateria($id)
     {
         // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
         $detail = ModelDocente::findOrFail($id);
-        $depfun = DB::table('view_departamento_funcionario')
-            ->where('id_funcionario', $id)
-            ->paginate(10);
-        return view('pages.teachers.materia.materia_docente', compact('depfun', 'detail'));
+        $materiadocen = DB::table('docente_materia as a')
+        ->leftJoin('materia as b', 'b.id_materia', '=', 'a.id_materia')
+      
+        ->leftJoin('funcionario as d', 'd.id_funcionario', '=', 'a.id_funcionario')
+        ->select(
+            'a.id_docente_materia',
+            'a.data_inicio',
+            'a.data_fim',
+            'b.id_materia',
+            'b.materia',            
+            'd.id_funcionario',
+            'd.nome_funcionario',
+            'a.controlo_estado'
+        )
+        ->where('d.id_funcionario', $id)
+        ->whereNull('a.controlo_estado')
+        // ->get();
+        ->paginate(5);
+        return view('pages.teachers.materia.materia_docente', compact('materiadocen', 'detail'));
+    }
+
+    public function create_materiaDocente($id)
+    {
+        $materia = ModelMateria::all();
+        $detail = ModelDocente::findOrFail($id);
+        return view('pages.teachers.materia.materia_docente_inserir', compact('detail', 'id', 'materia'));
+    }
+
+    public function storeDocenteMateria(Request $request)
+    {
+        $request->validate([
+            'id_materia' => 'required|string|max:255',            
+            
+        ]);
+ 
+        $materia_docente = new ModelDocenteDaMateria();
+        $materia_docente->id_funcionario = $request->input('id_funcionario');
+        $materia_docente->id_materia = $request->input('id_materia');
+        $materia_docente->data_inicio = $request->input('data_inicio');
+        $materia_docente->data_fim = $request->input('data_fim');
+        $materia_docente->observacao = $request->input('observacao');
+        $materia_docente->save();
+        return redirect()->route('materia_docente', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Materia Docentes inserida com sucesso.');
+    }
+
+    public function editDocentemateria($id)
+    {
+               
+        $materia = ModelMateria::all();
+      
+        $detail = ModelDocenteDaMateria::findOrFail($id);       
+        
+        return view('pages.teachers.materia.materia_docente_alterar', compact('id', 'detail','materia'));
+    }
+
+    public function updateDocentemateria(Request $request, $id)
+    {
+        $request->validate([
+            'id_materia' => 'required|string|max:255',
+            'id_funcionario' => 'required|string|max:255',
+
+        ]);
+
+        $docente = ModelDocenteDaMateria::findOrFail($id); // Find the habilitacao to update
+        $docente->id_materia = $request->input('id_materia');
+        $docente->data_inicio = $request->input('data_inicio');
+        $docente->data_fim = $request->input('data_fim');
+        $docente->id_funcionario = $request->input('id_funcionario');
+        $docente->observacao = $request->input('observacao');
+        $docente->save(); // Save the updated habilitacao
+
+        // Redirect back to the habilitacao page with a success message
+        return redirect()->route('materia_docente', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Materia Docente Atualizar com sucesso.');
+    }
+
+    public function destroyDocentemateria($id)
+    {
+        // Check if the record exists before attempting deletion
+        $estatuto = DB::table('docente_materia')->where('id_docente_materia', $id)->first();
+
+        if ($estatuto) {
+            // Perform the delete action
+            DB::table('docente_materia')->where('id_docente_materia', $id)->delete();
+
+            return redirect()->back()->with('success', 'Materia Docente apaga com sucesso.');
+        } else {
+            return redirect()->back()->with('error', 'Materia not found.');
+        }
     }
     #end
 
