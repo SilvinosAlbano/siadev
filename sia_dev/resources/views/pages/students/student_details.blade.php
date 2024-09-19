@@ -13,27 +13,30 @@
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
-
-    <!-- Student Details Area Start Here -->
+    <div class="card ui-tab-card mb-2">
+        @include('pages.students.header_students')
+        {{-- </div> --}}
+        <!-- Student Details Area Start Here -->
+        {{-- <div class="card ui-tab-card mt-4"> --}}
+        @include('pages.students.student_menu_tab')
+    </div>
     <div class="card height-auto">
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>Sobre o Estudante</h3>
+                    <h2>Dados detalhos de Estudante</h2>
                 </div>
-                @if (auth()->user()->hasRole('admin') ||
-                        auth()->user()->canAccess('create', 'students') ||
-                        auth()->user()->canAccess('update', 'students'))
-                    <a class="align-left btn btn-lg" href="#" id="editButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path
-                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                            <path fill-rule="evenodd"
-                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                        </svg> Editar
-                    </a>
-                @endif
+                {{-- @if (auth()->user()->hasRole('admin') || auth()->user()->canAccess('create', 'students') || auth()->user()->canAccess('update', 'students')) --}}
+                <a class="align-left btn btn-lg" href="#" id="editButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                        <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                    </svg> Editar
+                </a>
+                {{-- @endif --}}
             </div>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -45,20 +48,21 @@
                 </div>
             @endif
 
+
             <form action="{{ route('students.update', ['id_student' => $student->id_student]) }}" method="POST"
                 enctype="multipart/form-data" id="studentForm">
                 @csrf
                 @method('PUT')
 
                 <div class="single-info-details">
-                    <div class="item-img mb-4">
+                    {{-- <div class="item-img mb-4">
                         @if ($student->student_image)
                             <img src="{{ asset('storage/asset/posts/' . $student->student_image) }}" alt="Student Image"
                                 class="image-fluid" width="150">
                         @else
                             <img src="{{ asset('img/pessoa_neutra.png') }}" width="150" alt="Student Image">
                         @endif
-                    </div>
+                    </div> --}}
                     <div class="item-content">
                         <div class="row">
                             <div class="col-md-6 form-group">
