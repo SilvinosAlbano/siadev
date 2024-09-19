@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS public.materia
+(
+    id_materia uuid NOT NULL DEFAULT gen_random_uuid(),
+    materia character varying(250) COLLATE pg_catalog."default",
+    credito character varying(250) COLLATE pg_catalog."default",
+    codigo_materia character varying(250) COLLATE pg_catalog."default",
+    updated_at time without time zone,
+    deleted_at time without time zone,
+    created_at time without time zone,
+    CONSTRAINT materia_pkey PRIMARY KEY (id_materia)
+)
