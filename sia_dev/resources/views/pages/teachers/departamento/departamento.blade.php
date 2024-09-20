@@ -58,7 +58,7 @@
                                     @foreach ($depfun as $data)
                                         <tr>
                                         <td>{{ $data->nome_faculdade }}</td>
-                                            <td>{{ $data->departamento }}</td>
+                                            <td>{{ $data->nome_departamento }}</td>
                                            
                                            
                                             <td>

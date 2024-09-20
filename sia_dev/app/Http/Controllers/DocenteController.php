@@ -339,7 +339,7 @@ class DocenteController extends Controller
             ->select(
                 'a.id_departamento_funcionario',
                 'b.id_departamento',
-                'b.departamento',
+                'b.nome_departamento',
                 'c.id_faculdade',
                 'c.nome_faculdade',
                 'd.id_funcionario',

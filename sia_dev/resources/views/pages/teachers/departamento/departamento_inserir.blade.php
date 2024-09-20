@@ -42,7 +42,7 @@
                                         <select class="select2" name="id_departamento">
                                             <option selected disabled value="">Escolha *</option>
                                             @foreach ($dep as $data)
-                                                <option value="{{ $data->id_departamento }}">{{ $data->departamento }}</option>
+                                                <option value="{{ $data->id_departamento }}">{{ $data->nome_departamento }}</option>
                                             @endforeach
                                         </select>
                                     </div>
