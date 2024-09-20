@@ -26,13 +26,13 @@
                         </span>
                     </div>
                 @elseif ($detail->controlo_estado == 'deleted')
-                    <div class="ribbon  bg-danger border">
+                    <div class="ribbon  bg-danger">
                         <span class="text-white text-center">
                             Nao Ativo
                         </span>
                     </div>
                 @endif
-                <img class="border rounded-circle" src="{{ asset('img/pessoa_neutra.png') }}" width="200"
+                <img class="border" src="{{ asset('img/pessoa_neutra.png') }}" width="200"
                     height="250" alt="docent">
 
             </div>

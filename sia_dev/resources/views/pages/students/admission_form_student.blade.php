@@ -76,20 +76,20 @@
                         <input type="text" name="faculty" class="form-control" value="CIÊNCIA DA SAÚDE" readonly>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label>Departamento *</label>
-                        <select class="form-control select2" name="id_departamento" required>
-                            @foreach ($modelDepartamentos as $department)
-                                <option value="{{ $department->id_departamento }}">
-                                    {{ $department->departamento }}</option>
+                        <label>Programa Estudo *</label>
+                        <select class="form-control select2" name="id_programa_estudo" required>
+                            @foreach ($programaEstudo as $data)
+                                <option value="{{ $data->id_programa_estudo }}">
+                                    {{ $data->nome_programa }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Semestre *</label>
-                        <select class="form-control select2" name="semester_id" required>
-                            @foreach ($semesters as $semester)
-                                <option value="{{ $semester->semester_id }}">
-                                    {{ $semester->semester_name }}</option>
+                        <select class="form-control select2" name="id_semestre" required>
+                            @foreach ($semestre as $data)
+                                <option value="{{ $data->id_semestre }}">
+                                    {{$data->numero_semestre}}</option>
                             @endforeach
                         </select>
                     </div>

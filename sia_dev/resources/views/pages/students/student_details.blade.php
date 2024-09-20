@@ -127,10 +127,10 @@
                             </div>
                         </div>
                         <div class="form-group mt-3">
+                            <button type="submit" class="btn-fill-lg btn-gradient-yellow" id="saveButton"
+                                disabled>Salvar Alterações</button>
                             @if (Auth::user()->canAccess('create', 'admission_form_student') ||
                                     Auth::user()->canAccess('admin', 'admission_form_student'))
-                                <button type="submit" class="btn-fill-lg btn-gradient-yellow" id="saveButton"
-                                    disabled>Salvar Alterações</button>
                             @else
                                 <a href="{{ route('students.index') }}"
                                     class="btn-fill-md radius-4 text-light bg-orange-red">Voltar à Lista</a>
