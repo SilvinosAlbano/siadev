@@ -47,8 +47,7 @@
                         <div class="table-responsive">
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
-                                    <tr>
-                                 
+                                    <tr>                                
                                         <th>Materia Disciplina</th>    
                                         <th>Data Inicio</th>  
                                         <th>Data fim</th>                                     

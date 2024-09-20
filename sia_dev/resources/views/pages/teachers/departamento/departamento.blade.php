@@ -45,7 +45,7 @@
                     </div>
                     @endif
                         <div class="table-responsive">
-                        <table class="table display table-striped table-bordered table-box-wrap text-nowrap">
+                        <table class="table data-table display table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>
                                        <th>Faculdade</th>   

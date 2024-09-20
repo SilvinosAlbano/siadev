@@ -58,7 +58,7 @@
 
                                     <div class="col-xl-4 col-lg-6 col-12 form-group">
                                         <label>Data Fim *</label>
-                                        <input type="date" name="data_fim" placeholder="" required class="form-control border">
+                                        <input type="date" name="data_fim" placeholder=""  class="form-control border">
                                         <!-- <input type="hidden" name="id_docente"> -->
                                     </div>
                                                                      
