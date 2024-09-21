@@ -96,8 +96,8 @@
                             class="flaticon-multiple-users-silhouette"></i><span>Parametro</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/disciplina" class="nav-link"><i class="fas fa-angle-right"></i>
-                                 Teste</a>
+                            <a href="/salas" class="nav-link"><i class="fas fa-angle-right"></i>
+                                 Sala Aulas</a>
                         </li>
                         <li class="nav-item">
                             <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento

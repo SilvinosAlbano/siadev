@@ -106,15 +106,15 @@
                         <!-- <td>{{ $loop->iteration }}</td> -->
                         <td>{{ ($docente->currentPage() - 1) * $docente->perPage() + $loop->iteration }}</td>
 
-                            <td>{{ $data->nome_funcionario }}</td>
-                            <td>{{ $data->sexo }}</td>
-                            <td>{{ $data->data_moris }}</td>                          
+                            <td class=""> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->nome_funcionario }}</a> </td>
+                            <td> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->sexo }}</a> </td>
+                            <td> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->data_moris }}</a></td>                          
                           
-                            <td>{{ $data->categoria }}</td>
+                            <td><a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->categoria }}</a> </td>
 
                             <td> 
                             @if (is_null($data->controlo_estado))
-                                <span class="text-success">Ativo</span>
+                                <span class="text-primary">Ativo</span>
                             @elseif ($data->controlo_estado == 'deleted')
                                 <span class="text-danger">Nao Ativo</span>
                             @endif

@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
+use App\Http\Controllers\salasController;
+
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -110,12 +112,17 @@ Route::middleware('check.access')->group(function () {
     Route::post('/materia/store', [DisciplinasController::class, 'store'])->name('materia.store');
     Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
-
-Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
-
-
+    Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
     // end
 
+    // sala aulas start
+    Route::get('/salas', [SalasController::class, 'index'])->name('sala.index');
+    Route::post('/salas/store', [SalasController::class, 'store'])->name('salas.store');
+    Route::put('/salas/update/{id}', [SalasController::class, 'update'])->name('salas.update');
+    Route::get('/salas/{id}/edit', [SalasController::class, 'edit'])->name('salas.edit');
+    Route::delete('/salas/{id}', [SalasController::class, 'destroy'])->name('salas.destroy');
+ 
+    #end
 
     // routes/web.php
     Route::get('/get-postos/{idMunicipio}', [DivisaoAdministrativaController::class, 'getPostos']);
