@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-4-xxxl col-12">
         <div class="card height-auto">
-            <div class="card-body">
+            <div class="card-body border">
                 <div class="heading-layout1">
                     <div class="item-title">
                         <h3>Formulario Submissão Sala de Aulas</h3>
@@ -80,7 +80,7 @@
     <!-- Table Displaying All Subjects -->
     <div class="col-8-xxxl col-12">
         <div class="card height-auto">
-            <div class="card-body">
+            <div class="card-body border">
                 <div class="heading-layout1">
                     <div class="item-title">
                         <h3>Todos Salas</h3>
