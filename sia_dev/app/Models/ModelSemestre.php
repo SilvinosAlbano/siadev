@@ -16,7 +16,7 @@ class ModelSemestre extends Model
 
     protected $fillable = [
         'id_semestre',
-        'periodo',
+        'numero_semestre',
         'ano_academico',
         'id_programa_estudo',
     ];
