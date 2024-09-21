@@ -6,12 +6,13 @@ use App\Models\ModelStudent;
 use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
 use App\Models\ModelMatricula;
+use App\Models\ModelProgramaEstudo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\DB;
 class StudentController extends Controller
 {
     public function index()
@@ -22,9 +23,10 @@ class StudentController extends Controller
     }
     public function create()
     {
-        $semesters = ModelSemestre::all();
-        $modelDepartamentos = ModelDepartamento::all(); // Ajustei o nome da variável
-        return view('pages.students.admission_form_student', compact('semesters', 'modelDepartamentos'));
+        $semestre = ModelSemestre::all();
+      
+        $programaEstudo = ModelProgramaEstudo::all(); // Ajustei o nome da variável
+        return view('pages.students.admission_form_student', compact('semestre', 'programaEstudo'));
     }
 
     public function store(Request $request)
@@ -36,8 +38,8 @@ class StudentController extends Controller
             'date_of_birth' => 'required|date_format:d/m/Y',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
-            'id_departamento' => 'required|integer', // Ensure this matches the form field
-            'semester_id' => 'required|integer', // Ensure this matches the form field
+            'id_programa_estudo' => 'required|string', // Ensure this matches the form field
+            'id_semestre' => 'required|string', // Ensure this matches the form field
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'observation' => 'nullable|string',
             'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -58,9 +60,8 @@ class StudentController extends Controller
             'place_of_birth' => $validatedData['place_of_birth'],
             'date_of_birth' => $validatedData['date_of_birth'],
             'nre' => $validatedData['nre'],
-            'id_departamento' => $validatedData['id_departamento'],
-            'semester_id' => $validatedData['semester_id'],
-            'start_year' => $validatedData['start_year'],
+            'id_programa_estudo' => $validatedData['id_programa_estudo'],
+           
             'student_image' => $request->file('student_image') ? $request->file('student_image')->store('students') : null,
             'observation' => $validatedData['observation'],
         ]);
@@ -75,19 +76,18 @@ class StudentController extends Controller
             'tipo_usuario' => 'Estudante',
         ]);
 
+
+        ModelMatricula::create([
+            'id_matricula' => (string) Str::uuid(),
+            'id_student' => $student->id_student,
+            'id_programa_estudo' => $validatedData['id_programa_estudo'],
+            'id_semestre' => $validatedData['id_semestre'],
+        ]);
+
         return redirect()->route('students.index')->with('success', 'Student created successfully!');
     }
 
-    public function show($id_student)
-    {
-        $student = ModelStudent::with(['departamentos', 'semestre'])->findOrFail($id_student);
-
-        // Se você usa relacionamentos diretos
-        $modelDepartamentos = $student->departamentos;
-        $semestre = $student->semestre;
-
-        return view('pages.students.student_details', compact('student', 'modelDepartamentos', 'semestre'));
-    }
+   
 
 
     public function edit($id_student)
@@ -111,8 +111,8 @@ class StudentController extends Controller
             'place_of_birth' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'nre' => 'required|string|max:50',
-            'id_departamento' => 'required|exists:departamentos,id_departamento',
-            'semester_id' => 'required|exists:semesters,id_semester',
+            'id_departamento' => 'required|exists:departamento,id_departamento',
+            'semester_id' => 'required|exists:semestre,id_semestre',
             'start_year' => 'required|integer',
             'observation' => 'nullable|string',
             'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -137,8 +137,8 @@ class StudentController extends Controller
         $student->place_of_birth = $request->place_of_birth;
         $student->date_of_birth = $request->date_of_birth;
         $student->nre = $request->nre;
-        $student->id_departamento = $request->id_departamento;
-        $student->semester_id = $request->semester_id;
+        $student->id_programa_estudo = $request->id_programa_estudo;
+        $student->id_semestre = $request->id_semestre;
         $student->start_year = $request->start_year;
         $student->observation = $request->observation;
         $student->save();
