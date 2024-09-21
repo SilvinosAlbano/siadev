@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS public.salas
+(
+    id_sala uuid NOT NULL DEFAULT gen_random_uuid(),
+    nome_sala character varying(250) COLLATE pg_catalog."default",
+    updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    observacao text COLLATE pg_catalog."default",
+    CONSTRAINT salas_pkey PRIMARY KEY (id_sala)
+)
