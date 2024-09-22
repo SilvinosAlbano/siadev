@@ -10,7 +10,7 @@ class ModelDepartamento extends Model
     protected $primaryKey = 'id_departamento';
     public $incrementing = false;
     protected $keyType = 'uuid';
-    protected $fillable = ['nome_departamento', 'id_faculdade','data_inicio','data_fim'];
+    protected $fillable = ['nome_departamento', 'id_faculdade'];
 
     // Relationships
     public function faculdade()
