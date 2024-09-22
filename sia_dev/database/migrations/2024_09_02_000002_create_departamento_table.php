@@ -14,6 +14,8 @@ class CreateDepartamentoTable extends Migration
         Schema::create('departamento', function (Blueprint $table) {
             $table->uuid('id_departamento')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->string('nome_departamento', 255);
+            $table->date('data_inicio', 255);
+            $table->date('data_fim', 255);
             $table->uuid('id_faculdade');
             $table->foreign('id_faculdade')->references('id_faculdade')->on('faculdade');
 
