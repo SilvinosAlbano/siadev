@@ -49,6 +49,21 @@
                                     
                                  
                                 </div>
+
+
+                                <div class="row">
+                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                        <label>Data inicio*</label>
+                                        <input type="date" name="data_inicio" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                        <label>Data Fim</label>
+                                        <input type="date" name="data_fim" class="form-control">
+                                    </div>
+                                    
+                                 
+                                </div>
                             
 
                                 <div class="col-12 form-group mg-t-8">

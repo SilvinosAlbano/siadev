@@ -19,7 +19,9 @@ class ModelFuncionarioDepartamento extends Model
     protected $fillable = [
         'id_departamento_funcionario',
         'id_departamento',
-        'id_funcionario',      
+        'id_funcionario',   
+        'data_inicio',    
+        'data_fim', 
         
     ];
 }

@@ -49,7 +49,10 @@
                                 <thead>
                                     <tr>
                                        <th>Faculdade</th>   
-                                        <th>Departamento</th>                                      
+                                        <th>Departamento</th>  
+                                        <th>Data Inicio</th>  
+                                        <th>Data Fim</th>    
+                                        <th>Estado</th>                                      
                                         <th>Asaun</th>
                                        
                                     </tr>
@@ -59,7 +62,18 @@
                                         <tr>
                                         <td>{{ $data->nome_faculdade }}</td>
                                             <td>{{ $data->nome_departamento }}</td>
+                                            <td>{{ $data->data_inicio }}</td>
+                                            <td>{{ $data->data_fim }}</td>
+                                            <td>
+
                                            
+                                            @if (is_null($data->data_fim))
+                                                <span class="text-primary">Ativo</span>
+                                            @elseif (!empty($data->data_fim))
+                                                <span class="text-danger">Nao Ativo</span>
+                                            @endif
+                           
+                                            </td>
                                            
                                             <td>
                                                 <div class="dropdown">

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('departamento_funcionario', function (Blueprint $table) {
             $table->uuid('id_departamento_funcionario')->primary()->default(DB::raw('gen_random_uuid()')); // Set as primary key and UUID type
             $table->uuid('id_funcionario'); 
-            $table->uuid('id_departamento');                       
+            $table->uuid('id_departamento');  
+            $table->date('data_inicio')->nullable();
+            $table->date('data_fim')->nullable();                     
             $table->string('controlo_estado')->nullable();
             
             // Add timestamps (created_at, updated_at)

@@ -344,11 +344,13 @@ class DocenteController extends Controller
                 'c.nome_faculdade',
                 'd.id_funcionario',
                 'd.nome_funcionario',
+                'a.data_inicio',
+                'a.data_fim',
                 'a.controlo_estado'
             )
             ->where('d.id_funcionario', $id)
             ->whereNull('a.controlo_estado')
-            // ->get();
+            ->orderBy('a.data_inicio','DESC')
             ->paginate(5);
           
         return view('pages.teachers.departamento.departamento', compact('depfun', 'detail'));
@@ -375,6 +377,8 @@ class DocenteController extends Controller
         $departamento->id_funcionario = $request->input('id_funcionario');
         $departamento->id_faculdade = $request->input('id_faculdade');
         $departamento->id_departamento = $request->input('id_departamento');
+        $departamento->data_inicio = $request->input('data_inicio');
+        $departamento->data_fim = $request->input('data_fim');
         $departamento->save();
 
         return redirect()->route('departamento', ['id' => $request->input('id_funcionario')])
@@ -408,6 +412,8 @@ class DocenteController extends Controller
         $departamento->id_departamento = $request->input('id_departamento');
         $departamento->id_faculdade = $request->input('id_faculdade');
         $departamento->id_funcionario = $request->input('id_funcionario');
+        $departamento->data_inicio = $request->input('data_inicio');
+        $departamento->data_fim = $request->input('data_fim');
         $departamento->save(); // Save the updated habilitacao
 
         // Redirect back to the habilitacao page with a success message
