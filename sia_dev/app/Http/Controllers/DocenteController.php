@@ -27,6 +27,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\ModelGdivisaoAdministrativaPostoAdministrativo; //Asesu ba View Divisao Administrativa nian
 use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisao Administrativa nian
+use App\Models\ModelHorario;
 use App\Models\ModelMateria;
 
 // Atu View karik bele bolu hanesan ne
@@ -234,7 +235,8 @@ class DocenteController extends Controller
     public function horario($id)
     {
         $detail = ModelDocente::findOrFail($id);
-        return view('pages.teachers.horario', compact('detail'));
+        $horario = ModelHorario::all();
+        return view('pages.teachers.horario.horario_ensinar', compact('detail','horario'));
     }
     #end horario
 
@@ -541,6 +543,12 @@ class DocenteController extends Controller
     # Start Funcionario adicionar
     public function formDocente()
     {
+       
+        $materia = ModelMateria::all();
+        $fac = DB::table('faculdade')->paginate(10); 
+        $departament = DB::table('departamento')->paginate(10);      
+        $estatuto = ModelEstatuto::all();
+        $dep = HabilitacaoModel::all();
         $tipo_admin = (new ModelDocente())->getAllData();
         $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
         $estatuto = ModelEstatuto::all();
@@ -548,13 +556,13 @@ class DocenteController extends Controller
         $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
             ->distinct()
             ->get();
-        return view('pages.teachers.add_teacher', compact('docente', 'departamento', 'estatuto', 'tipo_admin', 'municipios'));
+        return view('pages.teachers.add_teacher', compact('docente', 'departamento', 'estatuto', 'tipo_admin', 'municipios','fac','departament','materia'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         // Validation Rules
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'nome_funcionario' => 'required|string|max:255',
             'sexo' => 'required|string|max:255',
             'data_moris' => 'required|date',
@@ -562,15 +570,23 @@ class DocenteController extends Controller
             'id_suco' => 'required|string|max:255',
             'id_posto_administrativo' => 'required|string|max:255',
             'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',            
-            'id_tipo_categoria' => 'nullable|string|max:255', // This can be nullable
+            'nacionalidade' => 'nullable|string|max:255',
+            'id_tipo_categoria' => 'nullable|string|max:255', // Nullable
             'ano_inicio' => 'nullable|date',
             'observacao' => 'nullable|string',
-            'no_contacto' => 'nullable|string',
-            'email' => 'nullable|string',
             'categoria' => 'required|string|max:255',
+            'no_contacto' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'id_faculdade' => 'required|string|max:255',
+            'id_departamento' => 'required|string|max:255',
+            'habilitacao' => 'required|string|max:255',
+            'area_especialidade' => 'required|string|max:255',
+            'universidade_origem' => 'required|string|max:255',
+            'id_estatuto' => 'required|string|max:255',
+            'data_inicio' => 'required|date',
+            'data_fim' => 'nullable|date', // Nullable end date
         ]);
-
+    
         // Handle File Upload if an image is provided
         $photo_docente = null; // Default value if no image is uploaded
         if ($request->hasFile('photo_docente')) {
@@ -578,50 +594,78 @@ class DocenteController extends Controller
             $photo_docente = $image->hashName(); // Generate a unique name for the image
             $image->storeAs('public/asset/posts', $photo_docente); // Store the image
         }
-
+    
         // Explicitly check if 'id_tipo_categoria' exists in the request
-        $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validated['id_tipo_categoria'] : null;
-
-        // Create a new record in the database
+        $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validatedData['id_tipo_categoria'] : null;
+    
+        // Create a new record in the 'funcionarios' table
         $funcionarios = ModelDocente::create([
             'id_funcionario' => (string) Str::uuid(),
             'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
-            'nome_funcionario' => $validated['nome_funcionario'],
-            'sexo' => $validated['sexo'],
-            'data_moris' => $validated['data_moris'],
-            'id_aldeias' => $validated['id_aldeias'],
-            'id_suco' => $validated['id_suco'],
-            'id_posto_administrativo' => $validated['id_posto_administrativo'],
-            'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],           
-            'id_tipo_categoria' => $id_tipo_categoria, // This will be null if not provided
-            'ano_inicio' => $validated['ano_inicio'],
-            'observacao' => $validated['observacao'],
-            'no_contacto' => $validated['no_contacto'],
-            'email' => $validated['email'],
-            'categoria' => $validated['categoria']
+            'nome_funcionario' => $validatedData['nome_funcionario'],
+            'sexo' => $validatedData['sexo'],
+            'data_moris' => $validatedData['data_moris'],
+            'id_aldeias' => $validatedData['id_aldeias'],
+            'id_suco' => $validatedData['id_suco'],
+            'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
+            'id_municipio' => $validatedData['id_municipio'],
+            'nacionalidade' => $validatedData['nacionalidade'],
+            'id_tipo_categoria' => $id_tipo_categoria,
+            'ano_inicio' => $validatedData['ano_inicio'],
+            'observacao' => $validatedData['observacao'],
+            'no_contacto' => $validatedData['no_contacto'],
+            'email' => $validatedData['email'],
+            'categoria' => $validatedData['categoria']
         ]);
-
-        # Create user
+    
+        // Create associated user record
         ModelUser::create([
             'user_id' => (string) Str::uuid(),
-            'username' => $funcionarios->nome_funcionario, // Assuming 'nre' is actually 'nome_funcionario' or handle it properly
-            'email' => $request->email ?? null, // Set email to null or receive it from request
-            'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
+            'username' => $funcionarios->nome_funcionario, // Assuming 'nre' refers to 'nome_funcionario'
+            'email' => $request->email ?? null,
+            'password' => Hash::make('defaultpassword'), // Default password, replace with logic to generate a secure password
             'docente_student_id' => $funcionarios->id_funcionario,
             'tipo_usuario' => $funcionarios->categoria,
         ]);
-
-        // Check if the insertion was successful
+    
+        // Create a new entry in the 'funcionario_departamento' table
+        ModelFuncionarioDepartamento::create([
+            'id_departamento_funcionario' => (string) Str::uuid(),
+            'id_funcionario' => $funcionarios->id_funcionario,
+            'id_faculdade' => $validatedData['id_faculdade'],
+            'id_departamento' => $validatedData['id_departamento'],
+            'data_inicio' => $validatedData['data_inicio'],
+            'data_fim' => $validatedData['data_fim'],
+        ]);
+    
+        // Create a new entry in the 'habilitacao' table
+        HabilitacaoModel::create([
+            'id_habilitacao' => (string) Str::uuid(),
+            'id_funcionario' => $funcionarios->id_funcionario,
+            'habilitacao' => $validatedData['habilitacao'],
+            'area_especialidade' => $validatedData['area_especialidade'],
+            'universidade_origem' => $validatedData['universidade_origem'],
+        ]);
+    
+        // Create a new entry in the 'estatuto' table
+        FuncionarioEstatutoModel::create([
+            'id_estatuto_funcionario' => (string) Str::uuid(),
+            'id_funcionario' => $funcionarios->id_funcionario,
+            'id_estatuto' => $validatedData['id_estatuto'],
+            'data_inicio' => $validatedData['data_inicio'],
+            'data_fim' => $validatedData['data_fim'],
+        ]);
+    
+        // Redirect with success or error message
         if ($funcionarios) {
-            // Redirect with Success Message
             return redirect()->route('funcionarios.index')->with(['success' => 'Dados com sucesso gravados']);
         } else {
-            // Return with an error message if insertion fails
             return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
         }
     }
-
+    
+    
+    
 
 
 
@@ -632,6 +676,10 @@ class DocenteController extends Controller
         $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
         $estatuto = ModelEstatuto::all();
         $editar = ModelDocente::findOrFail($id);
+        // $funcionario = DB::table('view_gfuncionario')
+        // ->whereIn('id', $id) // Assuming 'id' is the column name for filtering
+        // ->get();
+
         $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
         ->distinct()
         ->get();
