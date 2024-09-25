@@ -100,14 +100,10 @@
                                  Sala Aulas</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
-                                Funcionarios</a>
+                            <a href="/datas" class="nav-link"><i class="fas fa-angle-right"></i>
+                               Configurar de  Datas</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/teacher_payment" class="nav-link"><i class="fas fa-angle-right"></i>Pagamento
-                                de
-                                Funcionarios</a>
-                        </li>
+                      
 
                     </ul>
                 </li>

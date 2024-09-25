@@ -9,7 +9,7 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
 use App\Http\Controllers\salasController;
-
+use App\Http\Controllers\Datascontroller;
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -48,6 +48,11 @@ Route::middleware('check.access')->group(function () {
     Route::put('/students/{id_student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id_student}', [StudentController::class, 'destroy'])->name('students.destroy');
 
+        #start materia estudante
+        Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
+
+        #end
+    // end student
 
     // Existing routes for users and roles management
     Route::get('/all_users', [UserController::class, 'index'])->name('users.index');
@@ -121,9 +126,14 @@ Route::middleware('check.access')->group(function () {
     Route::put('/salas/update/{id}', [SalasController::class, 'update'])->name('salas.update');
     Route::get('/salas/{id}/edit', [SalasController::class, 'edit'])->name('salas.edit');
     Route::delete('/salas/{id}', [SalasController::class, 'destroy'])->name('salas.destroy');
- 
     #end
-
+    // start datas
+    Route::get('/datas', [DatasController::class, 'index'])->name('data.index');
+    Route::post('/datas/store', [DatasController::class, 'store'])->name('datas.store');
+    Route::put('/datas/update/{id}', [DatasController::class, 'update'])->name('datas.update');
+    Route::get('/datas/{id}/edit', [DatasController::class, 'edit'])->name('datas.edit');
+    Route::delete('/datas/{id}', [DatasController::class, 'destroy'])->name('datas.destroy');
+    #end
     // routes/web.php
     Route::get('/get-postos/{idMunicipio}', [DivisaoAdministrativaController::class, 'getPostos']);
     Route::get('/get-sucos/{idPosto}', [DivisaoAdministrativaController::class, 'getSucos']);

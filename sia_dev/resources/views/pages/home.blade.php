@@ -28,7 +28,7 @@
                     <div class="col-6">
                         <div class="item-content">
                             <div class="item-title">Students</div>
-                            <div class="item-number"><span class="counter" data-num="150000">1,50,000</span>
+                            <div class="item-number"><span class="counter" data-num="150000">50,000</span>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="col-6">
                         <div class="item-content">
                             <div class="item-title">Teachers</div>
-                            <div class="item-number"><span class="counter" data-num="2250">2,250</span>
+                            <div class="item-number"><span class="counter" data-num="2250">250</span>
                             </div>
                         </div>
                     </div>
