@@ -16,10 +16,12 @@ class ModelHorario extends Model
 
     protected $fillable = [
         'id_horario_de_ensino',
-        'id_docente_da_materia',
+        'id_docente_materia',
         'id_horas',
         'id_sala',
         'id_data',
+        'controlo_estado',
+        'observacao'
     ];
 
     // Relacionamento com DocenteDaMateria

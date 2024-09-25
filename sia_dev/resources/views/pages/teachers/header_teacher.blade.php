@@ -2,7 +2,7 @@
     <h3>Funcionario</h3>
     <ul>
         <li>
-            <a href="/docentes">Tabela</a>
+            <a href="/funcionarios">Tabela</a>
         </li>
         <li>Funcionario Detalho</li>
     </ul>
