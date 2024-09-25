@@ -30,15 +30,15 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
-                                    <input type="hidden" name="id_funcionario" value="{{ $id }}">
-                                    <label>Estatuto (P/IP/C) *</label>
-                                    <select class="select2" name="id_estatuto">
-                                        <option selected disabled value="">Escolha *</option>
-                                        @foreach ($estatuto as $est)
-                                            <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                        <input type="hidden" name="id_funcionario" value="{{ $id }}">
+                                        <label>Estatuto (P/IP/C) *</label>
+                                        <select class="select2" name="id_estatuto">
+                                            <option selected disabled value="">Escolha *</option>
+                                            @foreach ($estatuto as $est)
+                                                <option value="{{ $est->id_estatuto }}">{{ $est->estatuto }}</option>
+                                            @endforeach
+                                        </select>
+                                   </div>
                                     <div class="col-xl-4 col-lg-6 col-12 form-group">
                                         <label>Data Inicio *</label>
                                         <input type="date" name="data_inicio" placeholder="" required class="form-control border">

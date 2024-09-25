@@ -10,7 +10,11 @@
             <a class="nav-link active" href="#">Identifição</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Matérias</a>
+            <a class="nav-link{{ request()->routeIs('materia_estudante') ? 'active' : '' }}" href="{{ route('materia_estudante', $student->id_student) }}">Matérias</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link{{ request()->routeIs('habilitacao_funcionario') ? 'active' : '' }}" href="{{ route('materia_estudante', $student->id_student) }}">Programas</a>
         </li>
 
         <li class="nav-item">
