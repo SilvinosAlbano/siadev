@@ -58,7 +58,7 @@ Version: 1.0
 /*=======================================================================
 [01] TYPOGRAPHY
 =========================================================================*/
-@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900);
+/* @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900); */
 
 html {
     height: 100%;
@@ -1594,7 +1594,7 @@ h6 {
 }
 
 #preloader {
-    background: #ffffff url('img/preloader.gif') no-repeat scroll center center;
+    /* background: #ffffff url('img/preloader.gif') no-repeat scroll center center; */
     height: 100%;
     left: 0;
     overflow: visible;
