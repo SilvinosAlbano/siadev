@@ -156,4 +156,13 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
     }
+
+    #start student materia
+    public function MateriaEstudante($id)
+    {
+        $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id);
+      
+        return view('pages.students.estudante_materia.materia_estudante', compact('student'));
+    }
+    #end
 }
