@@ -19,6 +19,7 @@ class HabilitacaoModel extends Model
     protected $fillable = [
         'id_habilitacao',
         'habilitacao',
+        'id_funcionario',
         'area_especialidade',
         'universidade_origem'
         
