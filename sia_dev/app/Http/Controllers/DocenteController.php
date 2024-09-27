@@ -59,8 +59,8 @@ class DocenteController extends Controller
         }
 
         // Filter by id_estatuto
-        if ($request->filled('id_estatuto')) {
-            $query->where('id_estatuto', $request->id_estatuto);
+        if ($request->filled('categoria')) {
+            $query->where('categoria', $request->categoria);
         }
         $docente = DB::table('view_gfuncionario')->paginate(10);
 
@@ -73,6 +73,7 @@ class DocenteController extends Controller
             return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
                 ->with('error', 'No data found for the search criteria.');
         }
+        
 
         return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'));
     }
@@ -91,7 +92,7 @@ class DocenteController extends Controller
             // Optionally, handle the case where no data was found
             return redirect()->back()->with('error', 'Details not found.');
         }
-        
+       
 
         // Return the view with the detail data
         return view('pages.teachers.teacher_details', compact('detail'));
@@ -100,60 +101,60 @@ class DocenteController extends Controller
 
 
 
-    public function show($id, Request $request)
-    {
-        // Get the 'tab' query parameter
-        $tab = $request->query('tab');
+    // public function show($id, Request $request)
+    // {
+    //     // Get the 'tab' query parameter
+    //     $tab = $request->query('tab');
 
-        // Determine which content to show based on the 'tab' parameter
-        switch ($tab) {
-            case 'habilitacao_funcionario':
-                // Logic for 'habilitacao_docente'
-                $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
-                break;
+    //     // Determine which content to show based on the 'tab' parameter
+    //     switch ($tab) {
+    //         case 'habilitacao_funcionario':
+    //             // Logic for 'habilitacao_docente'
+    //             $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
+    //             break;
 
-            case 'horario':
-                // Logic for 'horario'
-                $content = view('pages.teachers.horario');
-                break;
+    //         case 'horario':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.horario');
+    //             break;
 
-            case 'inserir_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_inserir');
-                break;
-            case 'edit_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_alterar');
-                break;
+    //         case 'inserir_habilitacao':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.habilitacao.habilitacao_inserir');
+    //             break;
+    //         case 'edit_habilitacao':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.habilitacao.habilitacao_alterar');
+    //             break;
 
-            case 'estatuto':
-                // Logic for 'pagamento'
-                $content = view('pages.teachers.estatuto.estatuto');
-                break;
-            case 'inserir_estatuto':
-                // Logic for 'horario'
-                $content = view('pages.teachers.estatuto.estatuto_inserir');
-                break;
+    //         case 'estatuto':
+    //             // Logic for 'pagamento'
+    //             $content = view('pages.teachers.estatuto.estatuto');
+    //             break;
+    //         case 'inserir_estatuto':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.estatuto.estatuto_inserir');
+    //             break;
 
-            case 'edit_estatuto':
-                // Logic for 'horario'
-                $content = view('pages.teachers.estatuto.estatuto_alterar');
-                break;
-            case 'departamento':
-                // Logic for 'horario'
-                $content = view('pages.teachers.departamento.departamento');
-                break;
+    //         case 'edit_estatuto':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.estatuto.estatuto_alterar');
+    //             break;
+    //         case 'departamento':
+    //             // Logic for 'horario'
+    //             $content = view('pages.teachers.departamento.departamento');
+    //             break;
 
 
-            default:            
-                // Default content if 'tab' is not set or does not match any case
-                $content = view('pages.teachers.identificacao');
-                break;
-        }
+    //         default:            
+    //             // Default content if 'tab' is not set or does not match any case
+    //             $content = view('pages.teachers.identificacao');
+    //             break;
+    //     }
 
-        // Return the main view with dynamic content
-        return view('detailho', ['content' => $content, 'id' => $id]);
-    }
+    //     // Return the main view with dynamic content
+    //     return view('detailho', ['content' => $content, 'id' => $id]);
+    // }
 
 
 
@@ -782,34 +783,34 @@ class DocenteController extends Controller
         }
  */
 
-    //  public function report(Request $request)
-    //     {
-    //         $query = ModelDocente::query();
+     public function report(Request $request)
+        {
+            $query = ModelDocente::query();
 
-    //         // Apply filters
-    //         if ($request->filled('nome_funcionario')) {
-    //             $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
-    //         }
-    //         if ($request->filled('sexo')) {
-    //             $query->where('sexo', $request->sexo);
-    //         }
-    //         if ($request->filled('id_estatuto')) {
-    //             $query->where('id_estatuto', $request->id_estatuto);
-    //         }
-    //         if ($request->filled('nivel_educacao')) {
-    //             $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
-    //         }
-    //         if ($request->filled('controlo_estado')) {
-    //             $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
-    //             $query->where('controlo_estado', $controlo_estado);
-    //         }
+            // Apply filters
+            if ($request->filled('nome_funcionario')) {
+                $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
+            }
+            if ($request->filled('sexo')) {
+                $query->where('sexo', $request->sexo);
+            }
+            if ($request->filled('id_estatuto')) {
+                $query->where('id_estatuto', $request->id_estatuto);
+            }
+            if ($request->filled('nivel_educacao')) {
+                $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
+            }
+            if ($request->filled('controlo_estado')) {
+                $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
+                $query->where('controlo_estado', $controlo_estado);
+            }
 
-    //         $docentes = $query->paginate(10);
+            $docentes = DB::table('view_monitoramento_funcionario')->paginate(10);
 
-    //         $estatutos = ModelEstatuto::all();
+            $estatutos = ModelEstatuto::all();
 
-    //         return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
-    //     }
+            return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
+        }
 
     public function export(Request $request)
     {

@@ -14,7 +14,7 @@
         <form method="GET" action="{{ route('docentes.report') }}">
             <div class="row gutters-8">
                 <div class="col-xl-3 col-lg-3 col-12 form-group">
-                    <input type="text" name="nome_docente" value="{{ request('nome_docente') }}" placeholder="Search by Nome Docente" class="form-control">
+                    <input type="text" name="nome_funcionario" value="{{ request('nome_funcionario') }}" placeholder="Search by Nome Docente" class="form-control">
                 </div>
                 <div class="col-xl-2 col-lg-3 col-12 form-group">
                     <select class="select2" name="sexo">
@@ -69,13 +69,14 @@
 
         <!-- Display Filtered Data -->
         <div class="table-responsive">
-            <table class="table display data-table text-nowrap">
+            <table class="table display text-nowrap">
                 <thead>
                     <tr>
                         <th>Nome</th>
                         <th>Sexo</th>
                         <th>Data Moris</th>
-                        <th>Nivel Educacao</th>
+                        <th>Estatuto</th>
+                        <th>Categoria</th>
                         <th>Area Especialidade</th>
                         <th>Ano Inicio</th>
                         <th>Status</th>
@@ -84,10 +85,11 @@
                 <tbody>
                     @foreach ($docentes as $docente)
                         <tr>
-                            <td>{{ $docente->nome_docente }}</td>
+                            <td>{{ $docente->nome_funcionario }}</td>
                             <td>{{ $docente->sexo }}</td>
                             <td>{{ $docente->data_moris }}</td>
-                            <td>{{ $docente->nivel_educacao }}</td>
+                            <td>{{ $docente->estatuto }}</td>
+                            <td>{{ $docente->categoria }}</td>
                             <td>{{ $docente->area_especialidade }}</td>
                             <td>{{ $docente->ano_inicio }}</td>
                             <td>{{ $docente->controlo_estado ? 'Deleted' : 'Active' }}</td>

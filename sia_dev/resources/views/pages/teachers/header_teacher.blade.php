@@ -60,6 +60,7 @@
                                 <td>E-mail:</td>
                                 <td class="font-medium text-dark-medium">{{ $detail->email }}</td>
                             </tr>
+                            
                         </tbody>
                     </table>
                 </div>

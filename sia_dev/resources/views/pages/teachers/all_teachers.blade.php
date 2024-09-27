@@ -39,8 +39,9 @@
             <div class="row gutters-8">
                 <!-- Search by nome_docente -->
                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                    <input type="text" name="nome_docente" value="{{ request('nome_docente') }}" placeholder="Search by nome_docente..." class="form-control">
+                    <input type="text" name="nome_funcionario" value="{{ request('nome_funcionario') }}" placeholder="Search by nome_docente..." class="form-control">
                 </div>
+
 
                 <!-- Search by sexo -->
                 <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
@@ -53,13 +54,13 @@
 
                 <!-- Search by id_estatuto -->
                 <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                    <select name="id_estatuto" class="form-control">
-                        <option value="" selected disabled>Select Estatuto</option>
-                        @foreach($estatutoOptions as $estatuto)
-                            <option value="{{ $estatuto->id_estatutu }}" {{ request('id_estatuto') == $estatuto->id_estatutu ? 'selected' : '' }}>
-                                {{ $estatuto->estatuto }}
-                            </option>
-                        @endforeach
+                    <select name="categoria" class="form-control">
+                        <option value="" selected disabled>Select Categoria</option>
+                       
+                          
+                           
+                            <option value="Docente">Docente</option>
+                            <option value="Admin">Administrasi</option>
                     </select>
                 </div>
 
@@ -87,13 +88,13 @@
         @endif
 
         <div class="table-responsive">
-            <table id="docentes" class="table display data-table text-nowrap">
+            <table id="buscar_versaun" class="table display text-nowrap">
                 <thead>
                     <tr>
                         <th>No.</th>
                         <th>Nome</th>
                         <th>Sexo</th>
-                        <th>Data Moris</th>                      
+                        <th>Data Moris</th>                    
                       
                         <th>Categoria</th>
                         <th>Estado</th>
@@ -153,11 +154,11 @@
                     Feminino: {{ $totalFeminino }}
                 </div>
             </div>
-            <!-- {{ $docente->links() }} -->
+            {{ $docente->links() }}
         </div>
 
     </div>
 </div>
-
+<script src="{{ asset('js/dataTables_geral.js') }}"></script>
     <!-- Teacher Table Area End Here -->
 @endsection
