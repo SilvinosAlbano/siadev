@@ -20,6 +20,7 @@ class CreateStudentsTable extends Migration
             $table->integer('start_year');
             $table->string('student_image')->nullable();
             $table->text('observation')->nullable();
+            $table->text('controlo_estado')->nullable();
             $table->timestamps();
         });
     }
