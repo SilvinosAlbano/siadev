@@ -87,6 +87,9 @@ class DocenteController extends Controller
             ->where('id_funcionario', $id)
             ->first();
 
+            $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->first();
         // Check if the data was found
         if (!$detail) {
             // Optionally, handle the case where no data was found

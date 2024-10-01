@@ -41,8 +41,8 @@ class StudentController extends Controller
             'id_programa_estudo' => 'required|string', // Ensure this matches the form field
             'id_semestre' => 'required|string', // Ensure this matches the form field
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
-            'observation' => 'nullable|string',
-            'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'observation' => 'nullable|string',
+            // 'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('student_image')) {
@@ -61,9 +61,9 @@ class StudentController extends Controller
             'date_of_birth' => $validatedData['date_of_birth'],
             'nre' => $validatedData['nre'],
             'id_programa_estudo' => $validatedData['id_programa_estudo'],
-           
+           'start_year' => $validatedData['start_year'],
             'student_image' => $request->file('student_image') ? $request->file('student_image')->store('students') : null,
-            'observation' => $validatedData['observation'],
+            // 'observation' => $validatedData['observation']
         ]);
 
         // Create the associated user

@@ -51,6 +51,10 @@
                                 <td>Funcionario:</td>
                                 <td class="font-medium text-dark-medium">{{ $detail->categoria }}</td>
                             </tr>
+                            <tr>
+                                <td>Estatuto:</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->estatuto }}</td>
+                            </tr>
 
                             <tr>
                                 <td>Numero Contacto:</td>

@@ -44,9 +44,9 @@
                     </div>
 
                     <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Update</button>
-                        <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
-                    </div>
+                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Atualizar</button>
+                        <a href="{{ route('estatuto', $detail->id_funcionario) }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Cancelar</a>
+                     </div>
                 </form>
             </div>
         </div>

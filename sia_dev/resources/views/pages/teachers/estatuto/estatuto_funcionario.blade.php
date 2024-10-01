@@ -22,7 +22,7 @@
                         <form class="mg-b-20">
                             <div class="row gutters-8">
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group ms-auto text-end">
-                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}"> Inserir  </a>
+                                <a class="fw-btn-fill btn-primary fs-2 btn-sm" href="{{ route('inserir_estatuto', $detail->id_funcionario) }}">Inserir <i class="fas fa-plus-circle"></i> </a>
                                 </div>
                             </div>
 
@@ -62,10 +62,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($estatuto as $data)
-                                        <tr>
+                                        <tr class="fs-2" style="font-size: medium;">
                                             <td>{{ $data->estatuto_funcionario }}</td>
                                             <td>{{ $data->data_inicio }}</td>
-                                            <td>{{ $data->data_fim }}</td>
+                                            <td class="text-danger">{{ $data->data_fim }}</td>
                                            
                                             <td>
                                                 <div class="dropdown">
