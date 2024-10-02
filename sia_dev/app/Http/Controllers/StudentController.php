@@ -13,14 +13,25 @@ use App\Models\ModelUser;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 class StudentController extends Controller
 {
+    // public function index()
+    // {
+    //     $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])->paginate(10);
+    //     // $students = ModelStudent::all();
+    //     return view('pages.students.all_students', compact('students'));
+    // }
+
     public function index()
     {
-        $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])->paginate(10);
-        // $students = ModelStudent::all();
+        $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])
+            ->whereHas('student')  // Ensures only students with related data are fetched
+            ->paginate(10);
+
         return view('pages.students.all_students', compact('students'));
     }
+
     public function create()
     {
         $semestre = ModelSemestre::all();
@@ -31,11 +42,13 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        // $dateOfBirth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
         $validatedData = $request->validate([
             'complete_name' => 'required|string|max:255',
             'gender' => 'required|string|in:Male,Female',
             'place_of_birth' => 'required|string|max:255',
-            'date_of_birth' => 'required|date_format:d/m/Y',
+            // 'date_of_birth' => 'required|date_format:d/m/Y',
+            'date_of_birth' => 'required|date',
             'nre' => 'required|string|max:50',
             'faculty' => 'required|string|max:255',
             'id_programa_estudo' => 'required|string', // Ensure this matches the form field
@@ -165,4 +178,53 @@ class StudentController extends Controller
         return view('pages.students.estudante_materia.materia_estudante', compact('student'));
     }
     #end
+
+
+
+     #start function departamento estudante
+     public function Departamentoestudante($id_estudent) 
+     {
+        $student = ModelStudent::findOrFail($id_estudent);
+        $prodi = DB::table('view_programa_estudo_estudante')
+        ->where('id_student', $id_estudent)
+        ->paginate(10);
+        $estudanteDepartamento = DB::select("
+        SELECT 
+            a.id_departamento_estudante,
+            a.id_student,
+            c.id_faculdade,
+            c.nome_faculdade,
+            b.id_departamento,
+            a.controlo_estado,
+            b.nome_departamento
+        FROM estudante_departamento a
+        LEFT JOIN departamento b ON b.id_departamento = a.id_departamento
+        LEFT JOIN faculdade c ON c.id_faculdade = b.id_faculdade
+        WHERE a.id_student = ?
+    ", [$id_estudent]);
+
+        return view('pages.students.estudante_departamento.departamentoEstudante',compact('student','estudanteDepartamento','prodi'));
+        
+     }
+
+     #end
+
+
+
+       #start function Programa estudo estudante
+       public function ProgramaEstudo($id_estudent) 
+       {
+          $student = ModelStudent::findOrFail($id_estudent);
+          $prodi = DB::table('view_programa_estudo_estudante')
+          ->where('id_student', $id_estudent)
+          ->paginate(10);
+         
+  
+          return view('pages.students.estudante_programa_estudo.programa_estudo',compact('student','prodi'));
+          
+       }
+  
+       #end
+
+
 }
