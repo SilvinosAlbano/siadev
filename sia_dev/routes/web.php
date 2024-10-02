@@ -10,6 +10,8 @@ use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
 use App\Http\Controllers\salasController;
 use App\Http\Controllers\Datascontroller;
+use App\Http\Controllers\HomeController;
+
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -37,6 +39,8 @@ Route::middleware('check.access')->group(function () {
         return view('pages.home');
     });
 
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
     // Students Routes
     Route::resource('students', StudentController::class);
 
@@ -50,8 +54,23 @@ Route::middleware('check.access')->group(function () {
 
         #start materia estudante
         Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
-
         #end
+
+         #start Departamento estudante
+         Route::get('/estudante/departamento/{id}', [StudentController::class, 'DepartamentoEstudante'])->name('departamento_estudante');
+         #end
+
+          #start Matricula estudante
+          Route::get('/estudante/matricula/{id}', [StudentController::class, 'MatriculaEstudante'])->name('matricula_estudante');
+          #end
+
+         #start pagamento estudante
+         Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
+         #end
+
+         #programa estudo start
+         Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
+
     // end student
 
     // Existing routes for users and roles management
