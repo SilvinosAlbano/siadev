@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentImport;
+
 class StudentController extends Controller
 {
     // public function index()
@@ -169,6 +172,22 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
     }
+
+   
+
+    public function import_excel_post(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+    
+        // Import the Excel file
+        Excel::import(new StudentImport, $request->file('excel_file'));
+
+        
+        return redirect()->route('students.index')->with('success', 'Student created successfully!');
+    }
+    
 
     #start student materia
     public function MateriaEstudante($id)

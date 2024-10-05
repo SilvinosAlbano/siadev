@@ -71,6 +71,9 @@ Route::middleware('check.access')->group(function () {
          #programa estudo start
          Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
 
+
+         Route::post('/import-excel', [StudentController::class, 'import_excel_post'])->name('import-excel');
+
     // end student
 
     // Existing routes for users and roles management

@@ -17,9 +17,21 @@
     <div class="card height-auto">
           <div class="card-header shadow bg-white">
             <div class="card-title">
-                
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
-                
+                <span>
+
+                    <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
+                </span>     
+                        
+                <span>
+                    <form action="/import-excel" method="POST" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <div class="from-group">
+                            <label for="file">file</label>
+                            <input type="file" class="form-control-file" name="excel_file" id="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary"> Upload</button>
+                    </form>
+                </span>
             </div>
         </div>
         <div class="card-body">
