@@ -17,6 +17,14 @@ class StudentImport implements ToModel
         if (is_null($gender)) {
             return null;
         }
+
+        // return new ModelStudent([
+        //     'complete_name'   => $row[0],
+        //     'gender'          => $gender,
+        //     'place_of_birth'  => $row[2],
+        //     'date_of_v birth'   => $this->formatDate($row[3]),
+        //     'nre'             => $row[4],
+        // ]);
     
         $student = ModelStudent::create([
             'id_student'      => (string) Str::uuid(),
@@ -37,6 +45,7 @@ class StudentImport implements ToModel
             'docente_id_student' => $student->id_student, // Link to student
             'tipo_usuario'    => 'Estudante', // User type as 'Estudante'
         ]);
+        
 
     }
     
