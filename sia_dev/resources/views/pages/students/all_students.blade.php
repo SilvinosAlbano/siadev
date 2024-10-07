@@ -19,19 +19,34 @@
             <div class="card-title">
                 <span>
 
-                    <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
                 </span>     
                         
                 <span>
-                    <form action="/import-excel" method="POST" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <div class="from-group">
-                            <label for="file">file</label>
-                            <input type="file" class="form-control-file" name="excel_file" id="file">
-                        </div>
-                        <button type="submit" class="btn btn-primary"> Upload</button>
-                    </form>
+                  
                 </span>
+
+
+                <div class="ui-btn-wrap">
+                            <ul>
+                                <li>
+                                 <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
+
+                                </li>
+
+                                <li>
+                                     <div class="col-lg-12 col-12 form-group mg-t-30">
+                                        <form action="/import-excel" method="POST" enctype="multipart/form-data">
+                                            {{ csrf_field() }}
+                                            <div class="from-group">
+                                                <label for="file">Submete Lista estudante com formato (xlsx,xls,csv)</label>
+                                                <input type="file" class="form-control-file" name="excel_file" id="file">
+                                            </div>
+                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel"></i> Upload</button>
+                                        </form>
+                                    </div>
+                                 </li>
+                            </ul>
+                 </div>
             </div>
         </div>
         <div class="card-body">
