@@ -97,6 +97,8 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/habilitacao/{id}', [DocenteController::class, 'destroyHabilitacao'])->name('destroy_habilitacao');
 
     Route::put('/update_habilitacao/{id}', [DocenteController::class, 'updateHabilitacao'])->name('habilitacao.update');
+
+    Route::get('get-funcionario', [DocenteController::class, 'getFuncionario'])->name('get.funcionario');
     #estatuto
     Route::get('/funcionario/estatuto/{id}', [DocenteController::class, 'estatuto'])->name('estatuto');
     Route::get('/funcionario/inserir_estatuto/{id_funcionario}', [DocenteController::class, 'create_estatuto'])->name('inserir_estatuto');
@@ -140,6 +142,8 @@ Route::middleware('check.access')->group(function () {
     Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
     Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
+ 
+    Route::get('get-materia', [DisciplinasController::class, 'getMateria'])->name('get.materia');
     // end
 
     // sala aulas start

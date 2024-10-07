@@ -41,41 +41,77 @@ class DocenteController extends Controller
 
     public function index(Request $request)
     {
-        // Fetching estatuto options from ModelEstatuto
-        $estatutoOptions = ModelEstatuto::all();
+        // // Fetching estatuto options from ModelEstatuto
+        // $estatutoOptions = ModelEstatuto::all();
 
-        // Base query for searching funcionario
-        $query = ModelDocente::query();
+        // // Base query for searching funcionario
+        // $query = ModelDocente::query();
 
 
-        // Filter by nome_funcionario
-        if ($request->filled('nome_funcionario')) {
-            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
-        }
+        // // Filter by nome_funcionario
+        // if ($request->filled('nome_funcionario')) {
+        //     $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
+        // }
 
-        // Filter by sexo
-        if ($request->filled('sexo')) {
-            $query->where('sexo', $request->sexo);
-        }
+        // // Filter by sexo
+        // if ($request->filled('sexo')) {
+        //     $query->where('sexo', $request->sexo);
+        // }
 
-        // Filter by id_estatuto
-        if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
-        }
-        $docente = DB::table('view_gfuncionario')->paginate(10);
+        // // Filter by id_estatuto
+        // if ($request->filled('categoria')) {
+        //     $query->where('categoria', $request->categoria);
+        // }
+        // $docente = DB::table('view_gfuncionario')->paginate(10);
 
-        // Calculate total counts for Masculino and Feminino
-        $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
-        $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
+        // // Calculate total counts for Masculino and Feminino
+        // $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
+        // $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
 
-        // Check if no data found
-        if ($docente->isEmpty()) {
-            return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
-                ->with('error', 'No data found for the search criteria.');
-        }
+        // // Check if no data found
+        // if ($docente->isEmpty()) {
+        //     return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
+        //         ->with('error', 'No data found for the search criteria.');
+        // }
         
 
-        return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'));
+        return view('pages.teachers.all_teachers');
+    }
+
+
+    public function getFuncionario(Request $request)
+    {
+        if ($request->ajax()) {
+        
+            // Use DB query without pagination as DataTables will handle pagination
+            $data = DB::table('view_gfuncionario')->select('*');
+            
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $editUrl = route('editar', $row->id_funcionario);
+                    $detailUrl = route('detailho', $row->id_funcionario);
+                    $deleteUrl = route('docentes.destroy', $row->id_funcionario); // Delete route
+                    // Create Edit button
+                    $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    
+                    // Append Detail button
+                    $btn .= ' <a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+                    
+                    // Append Delete form
+                    // $btn .= ' <form action="' . route('docentes.destroy', $row->id_funcionario) . '" method="POST" style="display:inline;">
+                    //             ' . csrf_field() . '
+                    //             ' . method_field('DELETE') . '
+                    //             <button type="submit" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>
+                    //         </form>';
+
+                    $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>';
+                    
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
 
@@ -103,61 +139,6 @@ class DocenteController extends Controller
 
 
 
-
-    // public function show($id, Request $request)
-    // {
-    //     // Get the 'tab' query parameter
-    //     $tab = $request->query('tab');
-
-    //     // Determine which content to show based on the 'tab' parameter
-    //     switch ($tab) {
-    //         case 'habilitacao_funcionario':
-    //             // Logic for 'habilitacao_docente'
-    //             $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
-    //             break;
-
-    //         case 'horario':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.horario');
-    //             break;
-
-    //         case 'inserir_habilitacao':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.habilitacao.habilitacao_inserir');
-    //             break;
-    //         case 'edit_habilitacao':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.habilitacao.habilitacao_alterar');
-    //             break;
-
-    //         case 'estatuto':
-    //             // Logic for 'pagamento'
-    //             $content = view('pages.teachers.estatuto.estatuto');
-    //             break;
-    //         case 'inserir_estatuto':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.estatuto.estatuto_inserir');
-    //             break;
-
-    //         case 'edit_estatuto':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.estatuto.estatuto_alterar');
-    //             break;
-    //         case 'departamento':
-    //             // Logic for 'horario'
-    //             $content = view('pages.teachers.departamento.departamento');
-    //             break;
-
-
-    //         default:            
-    //             // Default content if 'tab' is not set or does not match any case
-    //             $content = view('pages.teachers.identificacao');
-    //             break;
-    //     }
-
-    //     // Return the main view with dynamic content
-    //     return view('detailho', ['content' => $content, 'id' => $id]);
-    // }
 
 
 

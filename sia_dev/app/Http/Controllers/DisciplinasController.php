@@ -8,12 +8,41 @@ use Illuminate\Http\Request;
 
 class DisciplinasController extends Controller
 {
-   public function index()
-    {
+//    public function index()
+//     {
         
-        $materia= ModelMateria::all();
-        return view('pages.disciplinas.materia_disciplinas', compact('materia'));
+//         $materia= ModelMateria::all();
+//         return view('pages.disciplinas.materia_disciplinas', compact('materia'));
+//     }
+
+public function index()
+{
+    
+    return view('pages.disciplinas.materia_disciplinas');
+}
+
+public function getMateria(Request $request)
+{
+    if ($request->ajax()) {
+        $data = ModelMateria::select('*');
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $editUrl = route('materia.edit', $row->id_materia);
+
+                $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                $btn .= ' <form action="' . route('materia.destroy', $row->id_materia) . '" method="POST" style="display:inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="delete btn btn-danger btn-sm" onclick="return confirm(\'Tem certeza de apagar este dados?\')">Delete</button>
+                          </form>';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
+}
 
 
 

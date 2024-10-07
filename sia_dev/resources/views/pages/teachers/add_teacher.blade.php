@@ -201,30 +201,37 @@
                         <fieldset class="border p-2">
                             
                             <legend class="w-auto"><h3>Habilitacao Literaria</h3></legend>
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                    <label>Nome Habilitação*</label>
-                                    <input type="text" name="habilitacao" placeholder="ex: licenciatura" required class="form-control border">
-                                    <!-- <input type="hidden" name="id_docente"> -->
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                    <label>Especialidade*</label>
-                                    <input type="text" name="area_especialidade" placeholder="ex: Parteira" required class="form-control border">
-                                    <!-- <input type="hidden" name="id_docente"> -->
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-12 col-md-12 form-group">
+                                        <label>Nome Habilitação*</label>
+                                        <input type="text" name="habilitacao" placeholder="ex: licenciatura" required class="form-control border">
+                                        <!-- <input type="hidden" name="id_docente"> -->
+                                    </div>
+
+                                    <div class="col-xl-6 col-lg-6 col-12 form-group">
+                                            <label>Area Especialidade*</label>
+                                            <input type="text" name="area_especialidade" placeholder="ex: Parteira" required class="form-control border">
+                                            <!-- <input type="hidden" name="id_docente"> -->
+                                    </div>
+                                    
                                 </div>
 
-                                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                        <label>Universidade*</label>
+                                <div class="row">
+                                    
+
+                                    <div class="col-xl-12 col-lg-6 col-12 form-group">
+                                        <label>Nome de Universidade*</label>
                                         <input type="text" name="universidade_origem" required class="form-control border">
                                         
                                     </div>
-                            </div>
+
+                                </div>
                         </fieldset>
 
                         <fieldset class="border p-2">
                             <legend class="w-auto"><h3>Estatuto -P/IP/C</h3></legend>
                             <div class="row">
-                                <div class="col-xl-4 col-lg-6 col-12 form-group">                                              
+                                <div class="col-xl-12 col-lg-6 col-12 form-group">                                              
                                     <label>Nome Estatuto *</label>
                                         <select class="select2" name="id_estatuto">
                                             <option selected disabled value="">Escolha *</option>
@@ -233,13 +240,17 @@
                                             @endforeach
                                         </select>
                                 </div>
-                                <div class="col-xl-4 col-lg-6 col-12 form-group">
+                               
+                            </div>
+
+                            <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-12 form-group">
                                     <label>Data Inicio *</label>
                                     <input type="date" name="data_inicio" placeholder="" required class="form-control border">
                                     <!-- <input type="hidden" name="id_docente"> -->
                                 </div>
 
-                                <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                <div class="col-xl-6 col-lg-6 col-12 form-group">
                                     <label>Data Fim </label>
                                     <input type="date" name="data_fim"  class="form-control border">
                                     
