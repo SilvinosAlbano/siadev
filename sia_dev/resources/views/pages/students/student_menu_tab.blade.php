@@ -28,9 +28,13 @@
                     </li>
 
                     <li class="nav-item">
-                         <a class="nav-link {{ request()->routeIs('pagamento_estudante') ? 'active' : '' }}" href="{{ route('pagamento_estudante', $student->id_student) }}">Pagamento</a>
+                         <a class="nav-link {{ request()->routeIs('pagamento_estudante') ? 'active' : '' }}" href="{{ route('pagamento_estudante', $student->id_student) }}">Pagamento Estudante</a>
                     </li>
-                   
+                    @if (request()->routeIs('inserir_pagamento'))
+                    <li class="nav-item">
+                         <a class="nav-link {{ request()->routeIs('inserir_pagamento') ? 'active' : '' }}" href="{{ route('inserir_pagamento', $student->id_student) }}">Inserir Pagamento</a>
+                    </li>
+                   @endif
                 </ul>
             </div>
 

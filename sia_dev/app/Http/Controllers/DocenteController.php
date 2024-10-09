@@ -29,7 +29,7 @@ use App\Models\ModelGdivisaoAdministrativaPostoAdministrativo; //Asesu ba View D
 use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisao Administrativa nian
 use App\Models\ModelHorario;
 use App\Models\ModelMateria;
-
+use TCPDF;
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
 #$sucosAldeiasData = ModelGdivisaoAdministrativaSucosAldeias::all();
@@ -41,40 +41,8 @@ class DocenteController extends Controller
 
     public function index(Request $request)
     {
-        // // Fetching estatuto options from ModelEstatuto
-        // $estatutoOptions = ModelEstatuto::all();
-
-        // // Base query for searching funcionario
-        // $query = ModelDocente::query();
-
-
-        // // Filter by nome_funcionario
-        // if ($request->filled('nome_funcionario')) {
-        //     $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
-        // }
-
-        // // Filter by sexo
-        // if ($request->filled('sexo')) {
-        //     $query->where('sexo', $request->sexo);
-        // }
-
-        // // Filter by id_estatuto
-        // if ($request->filled('categoria')) {
-        //     $query->where('categoria', $request->categoria);
-        // }
-        // $docente = DB::table('view_gfuncionario')->paginate(10);
-
-        // // Calculate total counts for Masculino and Feminino
-        // $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
-        // $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
-
-        // // Check if no data found
-        // if ($docente->isEmpty()) {
-        //     return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
-        //         ->with('error', 'No data found for the search criteria.');
-        // }
+     
         
-
         return view('pages.teachers.all_teachers');
     }
 
@@ -746,7 +714,7 @@ class DocenteController extends Controller
         $docente = ModelDocente::findOrFail($id);
 
         // Update the `controlo_estado` field to 'deleted'
-        $docente->controlo_estado = 'deleted';
+        $docente->controlo_estado = 'Nao Ativo';
         $docente->save();
 
         // Redirect back with success message
@@ -767,37 +735,120 @@ class DocenteController extends Controller
         }
  */
 
-     public function report(Request $request)
+         public function report(Request $request)
         {
-            $query = ModelDocente::query();
+            
 
-            // Apply filters
-            if ($request->filled('nome_funcionario')) {
-                $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
-            }
-            if ($request->filled('sexo')) {
-                $query->where('sexo', $request->sexo);
-            }
-            if ($request->filled('id_estatuto')) {
-                $query->where('id_estatuto', $request->id_estatuto);
-            }
-            if ($request->filled('nivel_educacao')) {
-                $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
-            }
-            if ($request->filled('controlo_estado')) {
-                $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
-                $query->where('controlo_estado', $controlo_estado);
-            }
-
-            $docentes = DB::table('view_monitoramento_funcionario')->paginate(10);
-
-            $estatutos = ModelEstatuto::all();
-
-            return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
+            return view('pages.teachers.report_teacher');
         }
 
-    public function export(Request $request)
-    {
-        return Excel::download(new DocentesExport($request->all()), 'docentes.xlsx');
+        public function getFuncionarioReport(Request $request)
+        {
+            if ($request->ajax()) {
+            
+                // Use DB query without pagination as DataTables will handle pagination
+                $data = DB::table('view_monitoramento_funcionario')->select('*');
+                
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                        $editUrl = route('editar', $row->id_funcionario);
+                        $detailUrl = route('detailho', $row->id_funcionario);
+                        $deleteUrl = route('docentes.destroy', $row->id_funcionario); // Delete route
+                        // Create Edit button
+                        $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                        
+                        // Append Detail button
+                        $btn .= ' <a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+                    
+
+                        // $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>';
+                        
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+        }
+
+    
+        public function exportPDF(Request $request)
+{
+    // Fetch filtered data based on request parameters
+    $query = Funcionario::query();
+
+    if ($request->sexo) {
+        $query->where('sexo', $request->sexo);
     }
+
+    if ($request->data_moris) {
+        $query->where('data_moris', $request->data_moris);
+    }
+
+    if ($request->categoria) {
+        $query->where('categoria', $request->categoria);
+    }
+
+    $funcionarios = $query->get();
+
+    // Initialize TCPDF
+    $pdf = new TCPDF();
+
+    // Set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Your Company');
+    $pdf->SetTitle('Relatório de Funcionários');
+    $pdf->SetSubject('Funcionários');
+
+    // Set header and footer
+    $pdf->setHeaderData('', 0, 'Relatório de Funcionários', 'Generated by Your Company');
+    $pdf->setFooterData();
+
+    // Set margins
+    $pdf->SetMargins(15, 27, 15);
+    $pdf->SetHeaderMargin(5);
+    $pdf->SetFooterMargin(10);
+
+    // Set auto page breaks
+    $pdf->SetAutoPageBreak(true, 25);
+
+    // Add a page
+    $pdf->AddPage();
+
+    // Create table header
+    $html = '
+    <h1>Funcionários Report</h1>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sexo</th>
+                <th>Data Moris</th>
+                <th>Categoria</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+    // Loop through the data and generate table rows
+    foreach ($funcionarios as $funcionario) {
+        $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
+        $html .= '
+            <tr>
+                <td>' . $funcionario->nome_funcionario . '</td>
+                <td>' . $funcionario->sexo . '</td>
+                <td>' . $funcionario->data_moris . '</td>
+                <td>' . $funcionario->categoria . '</td>
+                <td>' . $estado . '</td>
+            </tr>';
+    }
+
+    $html .= '</tbody></table>';
+
+    // Write the HTML content into the PDF
+    $pdf->writeHTML($html, true, false, true, false, '');
+
+    // Output the PDF
+    return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
+}
 }

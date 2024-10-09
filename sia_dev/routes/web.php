@@ -66,6 +66,8 @@ Route::middleware('check.access')->group(function () {
 
          #start pagamento estudante
          Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
+         Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
+
          #end
 
          #programa estudo start
@@ -99,6 +101,10 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_habilitacao/{id}', [DocenteController::class, 'updateHabilitacao'])->name('habilitacao.update');
 
     Route::get('get-funcionario', [DocenteController::class, 'getFuncionario'])->name('get.funcionario');
+    Route::get('get-funcionario-report', [DocenteController::class, 'getFuncionarioReport'])->name('get.funcionario.report');
+    Route::get('/funcionarios/export-pdf', [DocenteController::class, 'exportPDF'])->name('funcionarios.export.pdf');
+
+
     #estatuto
     Route::get('/funcionario/estatuto/{id}', [DocenteController::class, 'estatuto'])->name('estatuto');
     Route::get('/funcionario/inserir_estatuto/{id_funcionario}', [DocenteController::class, 'create_estatuto'])->name('inserir_estatuto');

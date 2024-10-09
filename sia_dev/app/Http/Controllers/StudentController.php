@@ -246,4 +246,35 @@ class StudentController extends Controller
        #end
 
 
+    #start student materia
+        public function PagamentoEstudante($id)
+        {
+            $student = ModelStudent::findOrFail($id);
+            $pagamento = DB::table('view_pagamento_estudante')
+            ->where('id_student', $id)
+            ->paginate(10);
+            return view('pages.students.estudante_pagamento.pagamento',compact('student','pagamento'));
+        }
+
+        public function create_pagamento($id)
+        {
+            $departamento = DB::table('controlo_departamento_pagamento as a')
+            ->select(
+                'a.id_controlo_departamento',
+                'b.id_departamento',
+                'b.nome_departamento',
+                'a.total_indice',
+                'a.ano_academico',
+                'a.estado'
+            )
+            ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
+            ->whereNull('a.estado')
+            ->get();
+
+            $student = ModelStudent::findOrFail($id);
+            $semestre = ModelSemestre::all();
+            return view('pages.students.estudante_pagamento.form_create_pagamento', compact('student','id','departamento','semestre'));
+        }
+    #end
+
 }
