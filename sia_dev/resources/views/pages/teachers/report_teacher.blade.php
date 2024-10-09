@@ -6,7 +6,7 @@
         <h3>Funcionarios</h3>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li>Dados Funcionarios</li>
+            <li>Monitoramento Dados Funcionarios</li>
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
@@ -16,7 +16,6 @@
         <div class="card-header shadow bg-white">
             <div class="card-title">
                 
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_funcionario"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
                 
             </div>
         </div>
@@ -51,83 +50,104 @@
         @endif
 
         <div class="table-responsive">
-    <table id="laravel_datatable" class="table display text-nowrap">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Sexo</th>
-                <th>Data Moris</th>
-                <th>Categoria</th>
-                <th>Estado</th>
-                <th>Action</th>
-            </tr>
-            <tr>
-                <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
-                <th>
-                    <select id="filter-sexo" class="form-control form-control-sm">
-                        <option value="">Select Sexo</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Feminino">Feminino</option>
-                    </select>
-                </th>
-                <th><input type="text" id="filter-data_moris" placeholder="Filter Data Moris" class="form-control form-control-sm"></th>
-                <th><input type="text" id="filter-categoria" placeholder="Filter Categoria" class="form-control form-control-sm"></th>
-                <th><input type="text" id="filter-estado" placeholder="Filter Estado" class="form-control form-control-sm"></th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
-</div>
+            <table id="laravel_datatable" class="table display text-nowrap">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>
+                            <select id="filterSexo">
+                                <option value="">Sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </th>
+                        <th><input type="text" id="filterDataMoris" placeholder="Filter by Date"></th>
+                        <th><input type="text" id="filterCategoria" placeholder="Filter by Category"></th>
+                        <th><input type="text" id="filterDepartamento" placeholder="Filter by Departamento"></th>
+                        <th>Estado</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
 
 
     </div>
 </div>
 
+
+
+
 <script type="text/javascript">
-     $(document).ready(function () {
-    var table = $('#laravel_datatable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('get.funcionario') }}",
-        columns: [
-            {data: 'nome_funcionario', name: 'nome_funcionario'},
-            {data: 'sexo', name: 'sexo'},
-            {data: 'data_moris', name: 'data_moris'},
-            {data: 'categoria', name: 'categoria'},
-            {
-                data: 'controlo_estado', 
-                name: 'controlo_estado',
-                render: function(data, type, row) {
-                    return data == null ? 'Ativo' : 'Nao Ativo';
+    $(document).ready(function () {
+        var table = $('#laravel_datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('get.funcionario.report') }}",
+                data: function(d) {
+                    d.sexo = $('#filterSexo').val();
+                    d.data_moris = $('#filterDataMoris').val();
+                    d.categoria = $('#filterCategoria').val();
+                    d.nome_departamento = $('#filterDepartamento').val();
                 }
             },
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-        ]
-    });
+            columns: [
+                {data: 'nome_funcionario', name: 'nome_funcionario'},
+                {data: 'sexo', name: 'sexo'},
+                {data: 'data_moris', name: 'data_moris'},
+                {data: 'categoria', name: 'categoria'},
+                {data: 'nome_departamento', name: 'nome_departamento'},
+                {
+                    data: 'controlo_estado',
+                    name: 'controlo_estado',
+                    render: function(data) {
+                        return data === null ? 'Ativo' : 'Nao Ativo';
+                    }
+                },
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export CSV',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4]
+                    }
+                },
+                {
+                    text: 'Export PDF',
+                    action: function (e, dt, node, config) {
+                        // Get the current filters
+                        var sexo = $('#filterSexo').val();
+                        var data_moris = $('#filterDataMoris').val();
+                        var categoria = $('#filterCategoria').val();
 
-    // Apply column-wise filters
-    $('#filter-nome_funcionario').on('keyup', function () {
-        table.column(0).search(this.value).draw();
-    });
+                        // Redirect to the PDF export route with filters
+                        var url = "{{ route('funcionarios.export.pdf') }}";
+                        window.location.href = url + '?sexo=' + sexo + '&data_moris=' + data_moris + '&categoria=' + categoria;
+                    }
+                }
+            ]
+        });
 
-    $('#filter-sexo').on('change', function () {
-        table.column(1).search(this.value).draw();
+        // Apply column filters on change
+        $('#filterSexo, #filterDataMoris, #filterCategoria').on('change keyup', function() {
+            table.draw();
+        });
     });
+</script>
 
-    $('#filter-data_moris').on('keyup', function () {
-        table.column(2).search(this.value).draw();
-    });
-
-    $('#filter-categoria').on('keyup', function () {
-        table.column(3).search(this.value).draw();
-    });
-
-    $('#filter-estado').on('keyup', function () {
-        table.column(4).search(this.value).draw();
-    });
-});
-
-   </script>
+</script>
 <script type="text/javascript">
     // SweetAlert delete confirmation
     function confirmDelete(deleteUrl) {
