@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS public.pagamento_estudante
+(
+    id_pagamento_estudante uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_student uuid NOT NULL,
+    id_controlo_departamento uuid NOT NULL,
+    id_semestre uuid NOT NULL,
+    data_selu date,
+    tipo_selu character varying(40) COLLATE pg_catalog."default",
+    selu_total bigint,
+    estado character varying(40) COLLATE pg_catalog."default",
+    observacao text COLLATE pg_catalog."default",
+    deleted_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    falta bigint,
+    created_at timestamp without time zone,
+    CONSTRAINT pagamento_estudante_pkey PRIMARY KEY (id_pagamento_estudante)
+)
+
+
+CREATE TABLE IF NOT EXISTS public.controlo_departamento_pagamento
+(
+    id_controlo_departamento uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_departamento uuid NOT NULL,
+    ano_academico integer,
+    observacao text COLLATE pg_catalog."default",
+    total_indice character varying(40) COLLATE pg_catalog."default",
+    updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
+    estado character varying(40) COLLATE pg_catalog."default",
+    CONSTRAINT controlo_departamento_pagamento_pkey PRIMARY KEY (id_controlo_departamento)
+)
