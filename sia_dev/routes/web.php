@@ -67,6 +67,8 @@ Route::middleware('check.access')->group(function () {
          #start pagamento estudante
          Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
          Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
+         Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
+
 
          #end
 

@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="heading-layout1">
                             <div class="item-title">
-                                <h3>Lista Propinas Estudante</h3>
+                                <h3 class="text-bold">Lista Propinas Estudante cada semestre : <u>{{$student->complete_name}} - nre: {{$student->nre}}</u> </h3>
                             </div>
                           
                         </div>
@@ -48,7 +48,8 @@
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>                                
-                                        <th>Departamento </th>    
+                                        <th>Departamento </th>   
+                                        <th>Idice Per Senestre </th>  
                                         <th>Semestre</th>  
                                         <th>Data Selu</th>                                     
                                         <th>Tipo Selu</th>
@@ -63,7 +64,8 @@
                                     @foreach ($pagamento as $data)
                                         <tr>
                                        
-                                            <td>{{ $data->nome_departamento }} - (Total:  $ {{ $data->total_indice }} - ano academico {{ $data->ano_academico }} )</td>                                           
+                                            <td>{{ $data->nome_departamento }} </td>                                           
+                                           <td>$.{{ $data->total_indice }} em {{ $data->ano_academico }}</td> 
                                             <td>{{ $data->numero_semestre }}</td>
                                             <td>{{ $data->data_selu }}</td>
                                            
