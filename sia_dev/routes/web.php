@@ -51,8 +51,9 @@ Route::middleware('check.access')->group(function () {
     Route::get('/students/{id_student}/edit', [StudentController::class, 'edit'])->name('students.edit');
     Route::put('/students/{id_student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id_student}', [StudentController::class, 'destroy'])->name('students.destroy');
-
-        #start materia estudante
+    Route::get('/lista_pagamento_estudante', [StudentController::class, 'listaPagamento'])->name('lista_pagamento_estudante');
+    Route::get('/get-payment-student', [StudentController::class, 'getPaymentStudent'])->name('get.payment_student');
+    #start materia estudante
         Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
         #end
 
@@ -69,6 +70,7 @@ Route::middleware('check.access')->group(function () {
          Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
          Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
 
+         Route::get('export-payments', [StudentController::class, 'exportPayments'])->name('export.payments');
 
          #end
 
@@ -131,6 +133,11 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria.update');
     Route::delete('/docentemateria/{id}', [DocenteController::class, 'destroyDocentemateria'])->name('docentemateria.destroy');
     #end
+    Route::get('/funcionario/posicao/{id}', [DocenteController::class, 'PosicaoFuncionario'])->name('posicao_funcionario');
+    #posicao funcionario
+
+    #end 
+    #create funcionario
     Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
 

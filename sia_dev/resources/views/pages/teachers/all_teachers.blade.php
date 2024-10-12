@@ -51,33 +51,33 @@
         @endif
 
         <div class="table-responsive">
-    <table id="laravel_datatable" class="table display text-nowrap">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Sexo</th>
-                <th>Data Moris</th>
-                <th>Categoria</th>
-                <th>Estado</th>
-                <th>Action</th>
-            </tr>
-            <tr>
-                <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
-                <th>
-                    <select id="filter-sexo" class="form-control form-control-sm">
-                        <option value="">Select Sexo</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Feminino">Feminino</option>
-                    </select>
-                </th>
-                <th><input type="text" id="filter-data_moris" placeholder="Filter Data Moris" class="form-control form-control-sm"></th>
-                <th><input type="text" id="filter-categoria" placeholder="Filter Categoria" class="form-control form-control-sm"></th>
-                <th><input type="text" id="filter-estado" placeholder="Filter Estado" class="form-control form-control-sm"></th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
-</div>
+            <table id="laravel_datatable" class="table display text-nowrap">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sexo</th>
+                        <th>Data Moris</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
+                        <th>
+                            <select id="filter-sexo" class="form-control form-control-sm">
+                                <option value="">Select Sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </th>
+                        <th><input type="text" id="filter-data_moris" placeholder="Filter Data Moris" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-categoria" placeholder="Filter Categoria" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-estado" placeholder="Filter Estado" class="form-control form-control-sm"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
 
 
     </div>
@@ -126,8 +126,7 @@
         table.column(4).search(this.value).draw();
     });
 });
-
-   </script>
+</script>
 <script type="text/javascript">
     // SweetAlert delete confirmation
     function confirmDelete(deleteUrl) {

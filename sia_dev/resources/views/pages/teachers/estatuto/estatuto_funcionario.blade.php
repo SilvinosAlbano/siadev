@@ -53,9 +53,9 @@
                                 <thead>
                                     <tr>
                                  
-                                        <th>Estatuto Funcionario</th>
-                                        <th>Data Inicio</th>
-                                        <th>Data Fim</th>
+                                        <th>Tipo Contrato</th>
+                                        <th>Data Inicio Contrato</th>
+                                        <th>Data Fim Contrato</th>
                                         <th>Asaun</th>
                                         
                                     </tr>

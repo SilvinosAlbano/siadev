@@ -14,7 +14,9 @@
                     <div class="card-body mb-4">
                         <div class="heading-layout1">
                           
-                          
+                        <div class="item-title">
+                                <h3> Pnformações Pessoais</h3>
+                            </div>
                         </div>
 
                         <div class="single-info-details">
@@ -24,7 +26,7 @@
                                 <div class="header-inline item-header">
                                     <div class="header-elements">
                                         <ul>
-                                            <li><a href="{{ route('editar', $detail->id_funcionario) }}"><i class="far fa-edit"></i></a></li>
+                                            <li><a href="{{ route('editar', $detail->id_funcionario) }}"><i class="far fa-edit text-primary" title="editar"></i></a></li>
                                             
                                         </ul>
                                     </div>

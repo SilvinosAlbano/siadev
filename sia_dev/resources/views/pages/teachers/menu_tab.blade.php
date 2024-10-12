@@ -66,7 +66,11 @@
                     </li>
                     @endif
 
-                  
+              
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('posicao_funcionario') ? 'active' : '' }}" href="{{ route('posicao_funcionario', $detail->id_funcionario) }}">Posição</a>
+                    </li>
 
                 </ul>
             </div>

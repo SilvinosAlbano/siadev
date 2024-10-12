@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Yajra\DataTables\DataTables;
 use App\Models\ModelStudent;
 use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentImport;
 use App\Models\ModelPagamentoStudante;
+use App\Exports\PaymentsExport;
 
 class StudentController extends Controller
 {
@@ -350,5 +351,92 @@ class StudentController extends Controller
 
 
       
+    public function listaPagamento()
+    {
+    
+        $departments = DB::table('view_monitoramento_pagamento_estudante')
+        ->select('nome_departamento')
+        ->distinct()
+        ->orderBy('nome_departamento', 'asc')
+        ->get();
+        return view('pages.students.monitora_pagamento_estudante.lista_pagamento_estudante', compact('departments'));
+    }
 
+    // public function getPaymentStudent(Request $request)
+    // {
+    //     if ($request->ajax()) {
+        
+    //         // Use DB query without pagination as DataTables will handle pagination
+    //         $data = DB::table('view_monitoramento_pagamento_estudante')->select('*');
+            
+    //         return DataTables::of($data)
+    //             ->addIndexColumn()
+    //             ->addColumn('action', function($row){
+    //                 $editUrl = route('pagamento_estudante', $row->id_student);
+                   
+    //                 // Create Edit button
+    //                 $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Detailho</a>';
+                    
+    //                 // Append Detail button
+                   
+    //                 return $btn;
+    //             })
+    //             ->rawColumns(['action'])
+    //             ->make(true);
+    //     }
+    // }
+    public function getPaymentStudent(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = DB::table('view_monitoramento_pagamento_estudante')->select('*');
+            
+            // Apply search filters if provided
+            if ($request->searchID) {
+                $query->where('nre', 'like', "%{$request->searchID}%");
+            }
+            
+            if ($request->searchName) {
+                $query->where('complete_name', 'like', "%{$request->searchName}%");
+            }
+            
+            if ($request->filterDepartment) {
+                $query->where('nome_departamento', $request->filterDepartment);
+            }
+    
+            if ($request->filterYear) {
+                $query->whereYear('data_selu', $request->filterYear);
+            }
+    
+            if ($request->filterMonth) {
+                $query->whereMonth('data_selu', $request->filterMonth);
+            }
+    
+            if ($request->filterPaymentStatus) {
+                $query->where('payment_status', $request->filterPaymentStatus);
+            }
+    
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('action', function($row) {
+                    $editUrl = route('students.edit', $row->id_student);
+                    return '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+
+    public function exportPayments(Request $request)
+    {
+        $filters = [
+            'department' => $request->get('filterDepartment'),
+            'year' => $request->get('filterYear'),
+            'month' => $request->get('filterMonth'),
+            'payment_status' => $request->get('filterPaymentStatus'),
+        ];
+    
+        return Excel::download(new PaymentsExport($filters), 'payments.xlsx');
+    }
+    
 }

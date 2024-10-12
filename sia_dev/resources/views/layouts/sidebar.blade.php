@@ -21,17 +21,11 @@
                         </li>
                         {{-- @endif --}}
 
-                        {{-- @if ($user->canAccess('read', 'students')) --}}
-                        <li class="nav-item">
-                            <a href="/student_details" class="nav-link"><i class="fas fa-angle-right"></i>Detalhes de
-                                Estudante</a>
-                        </li>
-                        {{-- @endif --}}
+                       
 
                         {{-- @if ($user->canAccess('read', 'students')) --}}
                         <li class="nav-item">
-                            <a href="/student_promotion" class="nav-link"><i class="fas fa-angle-right"></i>Promoção de
-                                Estudante</a>
+                            <a href="{{route('lista_pagamento_estudante')}}" class="nav-link"><i class="fas fa-angle-right"></i>Lista pagamento</a>
                         </li>
                         {{-- @endif --}}
 
