@@ -16,7 +16,11 @@
         <div class="card-header shadow bg-white">
             <div class="card-title">
                 
-                
+            <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                <a href="{{ route('funcionarios.export.pdf', request()->query()) }}" class="fw-btn-fill btn-gradient-yellow">
+                                    Export to PDF
+                                </a>
+                            </div>
             </div>
         </div>
     <div class="card-body">
