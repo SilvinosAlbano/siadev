@@ -71,7 +71,8 @@ Route::middleware('check.access')->group(function () {
          Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
 
          Route::get('export-payments', [StudentController::class, 'exportPayments'])->name('export.payments');
-
+         
+         Route::get('export-payments-csv', [StudentController::class, 'exportPaymentscsv'])->name('export.payments.csv');
          #end
 
          #programa estudo start
