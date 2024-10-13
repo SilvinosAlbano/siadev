@@ -5,7 +5,7 @@
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Students</h3>
+        <h3>Monitora Pagamento Estudante</h3>
         <ul>
             <li><a href="/home">Home</a></li>
             <li>Tabela Monitora Pagamento Estudante ICS</li>
@@ -33,7 +33,7 @@
                                 </div> -->
                                 <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <select id="filter-department" class="form-control">
-                                        <option value="">Select Department</option>
+                                        <option value="">Escolha Departamento</option>
                                         @foreach($departments as $department)
                                             <option value="{{ $department->nome_departamento }}">{{ $department->nome_departamento }}</option>
                                         @endforeach
@@ -42,7 +42,7 @@
 
                                 <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <select id="filter-year" class="form-control">
-                                        <option value="">Select Year</option>
+                                        <option value="">Escolha Tinan</option>
                                         @for ($year = date('Y'); $year >= 2000; $year--)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
@@ -50,16 +50,25 @@
                                 </div>
                                 <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <select id="filter-month" class="form-control">
-                                        <option value="">Select Month</option>
-                                        <option value="01">January</option>
-                                        <option value="02">February</option>
-                                        <option value="03">March</option>
+                                        <option value="">Escolha Fulan</option>
+                                        <option value="01">Janeiro</option>
+                                        <option value="02">Fevereiro</option>
+                                        <option value="03">Marco</option>
+                                        <option value="04">Abril</option>
+                                        <option value="05">Maio</option>
+                                        <option value="06">Junho</option>
+                                        <option value="07">Julho</option>
+                                        <option value="08">Agosto</option>
+                                        <option value="09">Setembro</option>
+                                        <option value="10">Outubro</option>
+                                        <option value="11">Novembro</option>
+                                        <option value="12">Dezembro</option>
                                         <!-- Add other months here -->
                                     </select>
                                 </div>
                                 <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <select id="filter-payment-status" class="form-control">
-                                        <option value="">Select Payment Status</option>
+                                        <option value="">Escolha Status Pagamento </option>
                                         <option value="Paid">Paid</option>
                                         <option value="Unpaid">Unpaid</option>
                                     </select>
@@ -67,11 +76,16 @@
                                 <div class="col-1-xxxl col-xl-1 col-lg-3 col-12 form-group">
                                     <button type="button" id="search-btn" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                                 </div>
+                                <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button type="button" id="export-excel-btn" class="fw-btn-fill btn-gradient-yellow mb-4"><i class="fas fa-file-excel"></i> Export to Excel</button>
+                                                                        
+                                </div>
                             </div>
 
                             <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
-                                <button type="button" id="export-excel-btn" class="fw-btn-fill btn-gradient-yellow mb-4">Export to Excel</button>
-                                <button type="button" id="export-csv-btn" class="fw-btn-fill btn-gradient-yellow">Export to CSV</button>
+                                <a href="{{ route('export.payments.csv', request()->query()) }}" class="fw-btn-fill btn-gradient-yellow">
+                                    Export to CSV
+                                </a>
                             </div>
 
                         </form>

@@ -10,7 +10,7 @@
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
         "spatie/laravel-permission": "*",
-        "tecnickcom/tcpdf": "*",
+        "tecnickcom/tcpdf": "^6.7",
         "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {

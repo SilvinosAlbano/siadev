@@ -418,8 +418,8 @@ class StudentController extends Controller
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
-                    $editUrl = route('students.edit', $row->id_student);
-                    return '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    $editUrl = route('pagamento_estudante', $row->id_student);
+                    return '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Detalho Data</a>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -438,5 +438,18 @@ class StudentController extends Controller
     
         return Excel::download(new PaymentsExport($filters), 'payments.xlsx');
     }
+
+            public function exportPaymentsCSV(Request $request)
+        {
+            $filters = [
+                'department' => $request->get('filterDepartment'),
+                'year' => $request->get('filterYear'),
+                'month' => $request->get('filterMonth'),
+                'payment_status' => $request->get('filterPaymentStatus'),
+            ];
+
+            // Export to CSV instead of Excel
+            return Excel::download(new PaymentsExport($filters), 'payments.csv', \Maatwebsite\Excel\Excel::CSV);
+        }
     
 }
