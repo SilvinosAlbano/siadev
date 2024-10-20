@@ -76,10 +76,21 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="/disciplinas" class="nav-link"><i
-                            class="flaticon-open-book"></i><span>Disciplinas</span></a>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i
+                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Curiculo Disciplinas</span></a>
+                    <ul class="nav sub-group-menu">
+                        <li class="nav-item">
+                            <a href="/disciplinas" class="nav-link"><i class="fas fa-angle-right"></i>silabos da Materia</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Curiculo Faculdade</a>
+                        </li>
+                       
+                    </ul>
                 </li>
+               
                 <li class="nav-item">
                     <a href="/student_attendence" class="nav-link"><i
                             class="flaticon-checklist"></i><span>Atendimentos</span></a>

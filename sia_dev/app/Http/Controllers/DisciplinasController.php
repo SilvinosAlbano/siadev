@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Yajra\DataTables\DataTables;
 use App\Models\ModelMateria;
+use App\Models\ModelSemestre;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,8 @@ class DisciplinasController extends Controller
 
 public function index()
 {
-    
-    return view('pages.disciplinas.materia_disciplinas');
+    $semesters = ModelSemestre::all();
+    return view('pages.disciplinas.materia_disciplinas', compact('semesters'));
 }
 
 public function getMateria(Request $request)
