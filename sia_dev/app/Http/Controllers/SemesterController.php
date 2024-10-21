@@ -14,7 +14,7 @@ class SemesterController extends Controller
 
     public function show($id)
     {
-        $semester = Semester::with('students')->findOrFail($id);
+        $semester = ModelSemestre::with('students')->findOrFail($id);
         return view('semesters.show', compact('semester'));
     }
 

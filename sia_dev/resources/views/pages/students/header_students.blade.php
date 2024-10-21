@@ -1,4 +1,12 @@
 {{-- <div class="card mb-2"> --}}
+<div class="breadcrumbs-area">
+        <h3>Dados detalhados de estudante <strong>{{ $student->complete_name }}</strong></h3>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="{{ route('students.index') }}">Lista Estudantes</a></li>
+            <li>Detalhes do Estudante</li>
+        </ul>
+    </div>
 <div class="card-body">
     <div class="heading-layout1">
         <div class="item-title">

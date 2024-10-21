@@ -1,0 +1,73 @@
+CREATE TABLE IF NOT EXISTS public.pagamento_estudante
+(
+    id_pagamento_estudante uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_student uuid NOT NULL,
+    id_controlo_departamento uuid NOT NULL,
+    id_semestre uuid NOT NULL,
+    data_selu date,
+    tipo_selu character varying(40) COLLATE pg_catalog."default",
+    selu_total bigint,
+    estado character varying(40) COLLATE pg_catalog."default",
+    observacao text COLLATE pg_catalog."default",
+    deleted_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    falta bigint,
+    created_at timestamp without time zone,
+    CONSTRAINT pagamento_estudante_pkey PRIMARY KEY (id_pagamento_estudante)
+)
+
+#table controlo
+
+CREATE TABLE IF NOT EXISTS public.controlo_departamento_pagamento
+(
+    id_controlo_departamento uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_departamento uuid NOT NULL,
+    ano_academico integer,
+    observacao text COLLATE pg_catalog."default",
+    total_indice character varying(40) COLLATE pg_catalog."default",
+    updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
+    estado character varying(40) COLLATE pg_catalog."default",
+    CONSTRAINT controlo_departamento_pagamento_pkey PRIMARY KEY (id_controlo_departamento)
+)
+
+#parte view 
+
+CREATE OR REPLACE VIEW public.view_pagamento_estudante
+ AS
+ WITH payment_summary AS (
+         SELECT a_1.id_student,
+            a_1.id_semestre,
+            sum(a_1.selu_total) AS total_paid,
+            b_1.total_indice AS total_required
+           FROM pagamento_estudante a_1
+             LEFT JOIN controlo_departamento_pagamento b_1 ON b_1.id_controlo_departamento = a_1.id_controlo_departamento
+          GROUP BY a_1.id_student, a_1.id_semestre, b_1.total_indice
+        )
+ SELECT a.id_pagamento_estudante,
+    d.id_student,
+    d.complete_name,
+    b.id_controlo_departamento,
+    b.ano_academico,
+    e.nome_departamento,
+    c.id_semestre,
+    c.numero_semestre,
+    a.data_selu,
+    a.tipo_selu,
+    b.total_indice,
+    a.selu_total,
+    a.falta,
+    a.estado,
+    a.observacao,
+    ps.total_paid,
+    ps.total_required::numeric - ps.total_paid AS remaining_balance,
+        CASE
+            WHEN ps.total_paid >= ps.total_required::numeric THEN 'Paid'::text
+            ELSE 'Unpaid'::text
+        END AS payment_status
+   FROM pagamento_estudante a
+     LEFT JOIN controlo_departamento_pagamento b ON b.id_controlo_departamento = a.id_controlo_departamento
+     LEFT JOIN semestre c ON c.id_semestre = a.id_semestre
+     LEFT JOIN students d ON d.id_student = a.id_student
+     LEFT JOIN departamento e ON e.id_departamento = b.id_departamento
+     LEFT JOIN payment_summary ps ON ps.id_student = a.id_student AND ps.id_semestre = a.id_semestre;

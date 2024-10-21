@@ -19,21 +19,30 @@
             <div class="item-img border">
 
 
-                @if (is_null($detail->controlo_estado))
-                    <div class="ribbon  bg-primary border">
-                        <span class="text-white text-center">
-                            Ativo
-                        </span>
+            @php
+                use Carbon\Carbon;
+                $currentDate = Carbon::now();
+                $dataFim = Carbon::parse($detail->fim_estatuto); // Mengonversi ke instance Carbon
+            @endphp
+
+            @if (is_null($detail->controlo_estado))
+                @if ($dataFim->lt($currentDate))  {{-- lt: kurang dari --}}
+                    <div class="ribbon bg-warning">
+                        <span class="text-white text-center"> &nbsp; Contrato Termina</span>
                     </div>
-                @elseif ($detail->controlo_estado == 'deleted')
-                    <div class="ribbon  bg-danger">
-                        <span class="text-white text-center">
-                            Nao Ativo
-                        </span>
+                @else  {{-- Jika dataFim >= currentDate --}}
+                    <div class="ribbon bg-success border">
+                        <span class="text-white text-center">&nbsp; Ativo</span>
                     </div>
                 @endif
+            @elseif ($detail->controlo_estado == 'Nao Ativo')
+                <div class="ribbon bg-danger">
+                    <span class="text-white text-center"> &nbsp; Nao Ativo</span>
+                </div>
+            @endif
+
                 <img class="border" src="{{ asset('img/pessoa_neutra.png') }}" width="200"
-                    height="250" alt="docent">
+                    height="250" alt="">
 
             </div>
 
@@ -51,6 +60,10 @@
                                 <td>Funcionario:</td>
                                 <td class="font-medium text-dark-medium">{{ $detail->categoria }}</td>
                             </tr>
+                            <tr>
+                                <td>Estatuto:</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->estatuto }}</td>
+                            </tr>
 
                             <tr>
                                 <td>Numero Contacto:</td>
@@ -60,6 +73,7 @@
                                 <td>E-mail:</td>
                                 <td class="font-medium text-dark-medium">{{ $detail->email }}</td>
                             </tr>
+                            
                         </tbody>
                     </table>
                 </div>

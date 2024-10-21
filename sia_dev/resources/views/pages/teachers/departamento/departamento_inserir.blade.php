@@ -52,12 +52,12 @@
 
 
                                 <div class="row">
-                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                    <div class="col-6-xxxl col-lg-6 col-12 form-group">
                                         <label>Data inicio*</label>
                                         <input type="date" name="data_inicio" class="form-control" required>
                                     </div>
 
-                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                    <div class="col-6-xxxl col-lg-6 col-12 form-group">
                                         <label>Data Fim</label>
                                         <input type="date" name="data_fim" class="form-control">
                                     </div>
@@ -68,7 +68,8 @@
 
                                 <div class="col-12 form-group mg-t-8">
                                     <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                                    <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
+                                    <a href="{{ route('departamento', $detail->id_funcionario) }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Cancelar</a>
+
                                 </div>
             
                             </form>

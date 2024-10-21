@@ -2,7 +2,7 @@
     <div class="nav-bar-header-one">
         <div class="header-logo">
             <a href="/home">
-                <img src="{{ asset('img/logo.png') }}" width="50px" alt="logo"> <span class="text-white h1">SIA</span>
+                <img src="{{ asset('img/logo.png') }}" width="50px" alt="logo"> <span class="text-white h1">SIA ICS-DILI</span>
             </a>
         </div>
         <div class="toggle-button sidebar-toggle">

@@ -29,7 +29,7 @@ use App\Models\ModelGdivisaoAdministrativaPostoAdministrativo; //Asesu ba View D
 use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisao Administrativa nian
 use App\Models\ModelHorario;
 use App\Models\ModelMateria;
-
+use TCPDF;
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
 #$sucosAldeiasData = ModelGdivisaoAdministrativaSucosAldeias::all();
@@ -41,57 +41,290 @@ class DocenteController extends Controller
 
     public function index(Request $request)
     {
-        // Fetching estatuto options from ModelEstatuto
-        $estatutoOptions = ModelEstatuto::all();
-
-        // Base query for searching funcionario
-        $query = ModelDocente::query();
-
-
-        // Filter by nome_funcionario
-        if ($request->filled('nome_funcionario')) {
-            $query->where('nome_funcionario', 'like', '%' . $request->nome_funcionario . '%');
-        }
-
-        // Filter by sexo
-        if ($request->filled('sexo')) {
-            $query->where('sexo', $request->sexo);
-        }
-
-        // Filter by id_estatuto
-        if ($request->filled('id_estatuto')) {
-            $query->where('id_estatuto', $request->id_estatuto);
-        }
-        $docente = DB::table('view_gfuncionario')->paginate(10);
-
-        // Calculate total counts for Masculino and Feminino
-        $totalMasculino = ModelDocente::where('sexo', 'Masculino')->count();
-        $totalFeminino = ModelDocente::where('sexo', 'Feminino')->count();
-
-        // Check if no data found
-        if ($docente->isEmpty()) {
-            return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'))
-                ->with('error', 'No data found for the search criteria.');
-        }
-
-        return view('pages.teachers.all_teachers', compact('docente', 'estatutoOptions', 'totalMasculino', 'totalFeminino'));
+     
+        
+        return view('pages.teachers.all_teachers');
     }
 
 
+    public function getFuncionario(Request $request)
+    {
+        if ($request->ajax()) {
+        
+            // Use DB query without pagination as DataTables will handle pagination
+            $data = DB::table('view_gfuncionario')->select('*');
+            
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $editUrl = route('editar', $row->id_funcionario);
+                    $detailUrl = route('detailho', $row->id_funcionario);
+                    $deleteUrl = route('docentes.destroy', $row->id_funcionario); // Delete route
+                    // Create Edit button
+                    $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    
+                    // Append Detail button
+                    $btn .= ' <a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+                    
+                    // Append Delete form
+                    // $btn .= ' <form action="' . route('docentes.destroy', $row->id_funcionario) . '" method="POST" style="display:inline;">
+                    //             ' . csrf_field() . '
+                    //             ' . method_field('DELETE') . '
+                    //             <button type="submit" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>
+                    //         </form>';
+
+                    $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>';
+                    
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+ # Start Funcionario adicionar
+ public function formDocente()
+ {
+    
+     $materia = ModelMateria::all();
+     $fac = DB::table('faculdade')->paginate(10); 
+     $departament = DB::table('departamento')->paginate(10);      
+     $estatuto = ModelEstatuto::all();
+     $dep = HabilitacaoModel::all();
+     $tipo_admin = (new ModelDocente())->getAllData();
+     $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
+     $estatuto = ModelEstatuto::all();
+     $docente = ModelDocente::paginate(10);
+     $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+         ->distinct()
+         ->get();
+     return view('pages.teachers.add_teacher', compact('docente', 'departamento', 'estatuto', 'tipo_admin', 'municipios','fac','departament','materia'));
+ }
+
+ public function store(Request $request): RedirectResponse
+ {
+     // Validation Rules
+     $validatedData = $request->validate([
+         'nome_funcionario' => 'required|string|max:255',
+         'sexo' => 'required|string|max:255',
+         'data_moris' => 'required|date',
+         'id_aldeias' => 'required|string|max:255',
+         'id_suco' => 'required|string|max:255',
+         'id_posto_administrativo' => 'required|string|max:255',
+         'id_municipio' => 'required|string|max:255',
+         'nacionalidade' => 'nullable|string|max:255',
+         'id_tipo_categoria' => 'nullable|string|max:255', // Nullable
+         'ano_inicio' => 'nullable|date',
+         'observacao' => 'nullable|string',
+         'categoria' => 'required|string|max:255',
+         'no_contacto' => 'nullable|string|max:255',
+         'email' => 'nullable|email|max:255',
+         'id_faculdade' => 'required|string|max:255',
+         'id_departamento' => 'required|string|max:255',
+         'habilitacao' => 'required|string|max:255',
+         'area_especialidade' => 'required|string|max:255',
+         'universidade_origem' => 'required|string|max:255',
+         'id_estatuto' => 'required|string|max:255',
+         'data_inicio' => 'required|date',
+         'data_fim' => 'nullable|date', // Nullable end date
+     ]);
+ 
+     // Handle File Upload if an image is provided
+     $photo_docente = null; // Default value if no image is uploaded
+     if ($request->hasFile('photo_docente')) {
+         $image = $request->file('photo_docente');
+         $photo_docente = $image->hashName(); // Generate a unique name for the image
+         $image->storeAs('public/asset/posts', $photo_docente); // Store the image
+     }
+ 
+     // Explicitly check if 'id_tipo_categoria' exists in the request
+     $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validatedData['id_tipo_categoria'] : null;
+ 
+     // Create a new record in the 'funcionarios' table
+     $funcionarios = ModelDocente::create([
+         'id_funcionario' => (string) Str::uuid(),
+         'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
+         'nome_funcionario' => $validatedData['nome_funcionario'],
+         'sexo' => $validatedData['sexo'],
+         'data_moris' => $validatedData['data_moris'],
+         'id_aldeias' => $validatedData['id_aldeias'],
+         'id_suco' => $validatedData['id_suco'],
+         'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
+         'id_municipio' => $validatedData['id_municipio'],
+         'nacionalidade' => $validatedData['nacionalidade'],
+         'id_tipo_categoria' => $id_tipo_categoria,
+         'ano_inicio' => $validatedData['ano_inicio'],
+         'observacao' => $validatedData['observacao'],
+         'no_contacto' => $validatedData['no_contacto'],
+         'email' => $validatedData['email'],
+         'categoria' => $validatedData['categoria']
+     ]);
+ 
+     // Create associated user record
+     ModelUser::create([
+         'user_id' => (string) Str::uuid(),
+         'username' => $funcionarios->nome_funcionario, // Assuming 'nre' refers to 'nome_funcionario'
+         'email' => $request->email ?? null,
+         'password' => Hash::make('defaultpassword'), // Default password, replace with logic to generate a secure password
+         'docente_student_id' => $funcionarios->id_funcionario,
+         'tipo_usuario' => $funcionarios->categoria,
+     ]);
+ 
+     // Create a new entry in the 'funcionario_departamento' table
+     ModelFuncionarioDepartamento::create([
+         'id_departamento_funcionario' => (string) Str::uuid(),
+         'id_funcionario' => $funcionarios->id_funcionario,
+         'id_faculdade' => $validatedData['id_faculdade'],
+         'id_departamento' => $validatedData['id_departamento'],
+         'data_inicio' => $validatedData['data_inicio'],
+         'data_fim' => $validatedData['data_fim'],
+     ]);
+ 
+     // Create a new entry in the 'habilitacao' table
+     HabilitacaoModel::create([
+         'id_habilitacao' => (string) Str::uuid(),
+         'id_funcionario' => $funcionarios->id_funcionario,
+         'habilitacao' => $validatedData['habilitacao'],
+         'area_especialidade' => $validatedData['area_especialidade'],
+         'universidade_origem' => $validatedData['universidade_origem'],
+     ]);
+ 
+     // Create a new entry in the 'estatuto' table
+     FuncionarioEstatutoModel::create([
+         'id_estatuto_funcionario' => (string) Str::uuid(),
+         'id_funcionario' => $funcionarios->id_funcionario,
+         'id_estatuto' => $validatedData['id_estatuto'],
+         'data_inicio' => $validatedData['data_inicio'],
+         'data_fim' => $validatedData['data_fim'],
+     ]);
+ 
+     // Redirect with success or error message
+     if ($funcionarios) {
+         return redirect()->route('funcionarios.index')->with(['success' => 'Dados com sucesso gravados']);
+     } else {
+         return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
+     }
+ }
+ 
+ 
+ 
+
+
+
+
+ // editar docente
+ public function edit($id)
+ {
+     $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
+     $estatuto = ModelEstatuto::all();
+     $editar = ModelDocente::findOrFail($id);
+     // $funcionario = DB::table('view_gfuncionario')
+     // ->whereIn('id', $id) // Assuming 'id' is the column name for filtering
+     // ->get();
+
+     $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+     ->distinct()
+     ->get();
+     $postos = ViewPostoSuco::select('id_posto_administrativo', 'posto_administrativo')
+     ->distinct()
+     ->get();
+
+     $sucos = ViewSucoAldeia::select('id_sucos', 'sucos')
+     ->distinct()
+     ->get();
+
+     $aldeias = ViewSucoAldeia::select('id_sucos', 'sucos')
+     ->distinct()
+     ->get();
+     $tipo_admin = (new ModelDocente())->getAllData();
+
+     return view('pages.teachers.edit_teacher', compact('tipo_admin','aldeias','sucos','postos','municipios','editar', 'departamento', 'estatuto'));
+ }
+
+ public function update(Request $request, $id): RedirectResponse
+ {
+     // Find the existing docente record
+     $funcionarios = ModelDocente::findOrFail($id);
+
+     // Validation Rules
+     $validated = $request->validate([
+         'nome_funcionario' => 'required|string|max:255',
+         'sexo' => 'required|string|max:255',
+         'data_moris' => 'required|date',
+         'id_aldeias' => 'required|string|max:255',
+         'id_suco' => 'required|string|max:255',
+         'id_posto_administrativo' => 'required|string|max:255',
+         'id_municipio' => 'required|string|max:255',
+         'nacionalidade' => 'nullable|string|max:255',            
+         'ano_inicio' => 'nullable|date',
+         'observacao' => 'nullable|string',
+     ]);
+
+     // Handle File Upload if a new image is provided
+     if ($request->hasFile('photo_docente')) {
+         // Delete the old image if it exists
+         if ($funcionarios->photo_docente) {
+             Storage::delete('public/asset/posts/' . $funcionarios->photo_docente);
+         }
+
+         // Store the new image
+         $image = $request->file('photo_docente');
+         $photo_docente = $image->hashName(); // Generate a unique name for the image
+         $image->storeAs('public/asset/posts', $photo_docente);
+     } else {
+         // If no new image, keep the current one
+         $photo_docente = $funcionarios->photo_docente;
+     }
+
+     // Update the existing record in the database
+     $funcionarios->update([
+         'photo_docente' => $photo_docente, // Use the new photo name if available, otherwise retain the old one
+         'nome_funcionario' => $validated['nome_funcionario'],
+         'sexo' => $validated['sexo'],
+         'data_moris' => $validated['data_moris'],
+         'id_aldeias' => $validated['id_aldeias'],
+         'id_suco' => $validated['id_suco'],
+         'id_posto_administrativo' => $validated['id_posto_administrativo'],
+         'id_municipio' => $validated['id_municipio'],
+         'nacionalidade' => $validated['nacionalidade'],           
+         'ano_inicio' => $validated['ano_inicio'],
+         'observacao' => $validated['observacao']
+     ]);
+
+     // Redirect with Success Message
+     return redirect()->route('funcionarios.index')->with(['success' => 'Dados Funcionario atualizados com sucesso']);
+ }
+
+
+
+ public function destroy($id)
+ {
+     // Find the docente by its ID
+     $docente = ModelDocente::findOrFail($id);
+
+     // Update the `controlo_estado` field to 'deleted'
+     $docente->controlo_estado = 'Nao Ativo';
+     $docente->save();
+
+     // Redirect back with success message
+     return redirect()->route('funcionarios.index')->with('success', 'Docente status  deleted successfully');
+ }
 
     public function showDetail($id)
     {
         // Fetch the detail data from the view_gfuncionario view based on id_funcionario
-        $detail = DB::table('view_gfuncionario')
+        $detail = DB::table('view_monitoramento_funcionario')
             ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
             ->first();
 
+           
         // Check if the data was found
         if (!$detail) {
             // Optionally, handle the case where no data was found
             return redirect()->back()->with('error', 'Details not found.');
         }
-        
+       
 
         // Return the view with the detail data
         return view('pages.teachers.teacher_details', compact('detail'));
@@ -100,75 +333,26 @@ class DocenteController extends Controller
 
 
 
-    public function show($id, Request $request)
-    {
-        // Get the 'tab' query parameter
-        $tab = $request->query('tab');
-
-        // Determine which content to show based on the 'tab' parameter
-        switch ($tab) {
-            case 'habilitacao_funcionario':
-                // Logic for 'habilitacao_docente'
-                $content = view('pages.teachers.habilitacao.habilitacao_funcionario');
-                break;
-
-            case 'horario':
-                // Logic for 'horario'
-                $content = view('pages.teachers.horario');
-                break;
-
-            case 'inserir_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_inserir');
-                break;
-            case 'edit_habilitacao':
-                // Logic for 'horario'
-                $content = view('pages.teachers.habilitacao.habilitacao_alterar');
-                break;
-
-            case 'estatuto':
-                // Logic for 'pagamento'
-                $content = view('pages.teachers.estatuto.estatuto');
-                break;
-            case 'inserir_estatuto':
-                // Logic for 'horario'
-                $content = view('pages.teachers.estatuto.estatuto_inserir');
-                break;
-
-            case 'edit_estatuto':
-                // Logic for 'horario'
-                $content = view('pages.teachers.estatuto.estatuto_alterar');
-                break;
-            case 'departamento':
-                // Logic for 'horario'
-                $content = view('pages.teachers.departamento.departamento');
-                break;
-
-
-            default:            
-                // Default content if 'tab' is not set or does not match any case
-                $content = view('pages.teachers.identificacao');
-                break;
-        }
-
-        // Return the main view with dynamic content
-        return view('detailho', ['content' => $content, 'id' => $id]);
-    }
-
 
 
     #start habilitacao   
 
     public function showHabilitacoes($id)
     {
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
         $habilitacoes = HabilitacaoModel::where('id_funcionario', $id)->get();
         return view('pages.teachers.habilitacao.habilitacao_funcionario', compact('habilitacoes', 'detail'));
     }
 
     public function create_habilitacao($id)
     {
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
         return view('pages.teachers.habilitacao.habilitacao_inserir', compact('detail', 'id'));
     }
     public function storeHabilitacao(Request $request)
@@ -193,9 +377,9 @@ class DocenteController extends Controller
     {
         // Fetch the habilitacao by its ID
         $detail = HabilitacaoModel::findOrFail($id);
-
+        // $detail = ModelDocente::findOrFail($id);
         // Return the edit view and pass the habilitacao data
-        return view('pages.teachers.habilitacao.habilitacao_alterar', compact('detail', 'id'));
+        return view('pages.teachers.habilitacao.habilitacao_alterar', compact('id','detail'));
     }
 
     // Handle the update request
@@ -234,7 +418,10 @@ class DocenteController extends Controller
     #start Horarrio
     public function horario($id)
     {
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         $horario = ModelHorario::all();
         return view('pages.teachers.horario.horario_ensinar', compact('detail','horario'));
     }
@@ -244,9 +431,13 @@ class DocenteController extends Controller
     public function estatuto($id)
     {
         // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         $estatuto = DB::table('view_estatuto_funcionario')
             ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
             ->paginate(10);
         return view('pages.teachers.estatuto.estatuto_funcionario', compact('estatuto', 'detail'));
     }
@@ -255,7 +446,10 @@ class DocenteController extends Controller
     public function create_estatuto($id)
     {
         $estatuto = ModelEstatuto::all();
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         return view('pages.teachers.estatuto.estatuto_inserir', compact('detail', 'id', 'estatuto'));
     }
 
@@ -280,8 +474,7 @@ class DocenteController extends Controller
     public function editEstatuto($id)
     {
         // Fetch the habilitacao by its ID
-        // $editar = DB::table('view_estatuto_funcionario')
-        // ->where('id_funcionario', $id);
+        
 
         $estatuto = ModelEstatuto::all();
         $detail = FuncionarioEstatutoModel::findOrFail($id);
@@ -327,12 +520,10 @@ class DocenteController extends Controller
     #start departamento
     public function showDepartamento($id)
     {
-        // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
-        $detail = ModelDocente::findOrFail($id);
-        // $depfun = DB::table('view_departamento_funcionario')
-        //     ->where('id_funcionario', $id)
-        //     ->paginate(10);
-
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
             
             $depfun = DB::table('departamento_funcionario as a')
             ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
@@ -364,7 +555,10 @@ class DocenteController extends Controller
         $fac = DB::table('faculdade')->paginate(10);
       
         $dep = ModelDepartamento::all();
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         return view('pages.teachers.departamento.departamento_inserir', compact('detail', 'id', 'dep','fac'));
     }
 
@@ -395,10 +589,15 @@ class DocenteController extends Controller
 
         $dep = ModelDepartamento::all();
         $fac = DB::table('faculdade')->paginate(10);
-        $detail = ModelFuncionarioDepartamento::findOrFail($id);
-       
+        $edit = ModelFuncionarioDepartamento::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_departamento_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         
-        return view('pages.teachers.departamento.departamento_alterar', compact('id', 'detail','fac','dep'));
+       
+         
+        return view('pages.teachers.departamento.departamento_alterar', compact('id', 'edit','fac','dep','detail'));
     }
 
 
@@ -444,7 +643,10 @@ class DocenteController extends Controller
     public function showMateria($id)
     {
         // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         $materiadocen = DB::table('docente_materia as a')
         ->leftJoin('materia as b', 'b.id_materia', '=', 'a.id_materia')
       
@@ -469,7 +671,10 @@ class DocenteController extends Controller
     public function create_materiaDocente($id)
     {
         $materia = ModelMateria::all();
-        $detail = ModelDocente::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
         return view('pages.teachers.materia.materia_docente_inserir', compact('detail', 'id', 'materia'));
     }
 
@@ -495,10 +700,13 @@ class DocenteController extends Controller
     {
                
         $materia = ModelMateria::all();
-      
-        $detail = ModelDocenteDaMateria::findOrFail($id);       
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_departamento_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
+        $edit = ModelDocenteDaMateria::findOrFail($id);       
         
-        return view('pages.teachers.materia.materia_docente_alterar', compact('id', 'detail','materia'));
+        return view('pages.teachers.materia.materia_docente_alterar', compact('id', 'detail','edit','materia'));
     }
 
     public function updateDocentemateria(Request $request, $id)
@@ -540,233 +748,7 @@ class DocenteController extends Controller
 
 
 
-    # Start Funcionario adicionar
-    public function formDocente()
-    {
-       
-        $materia = ModelMateria::all();
-        $fac = DB::table('faculdade')->paginate(10); 
-        $departament = DB::table('departamento')->paginate(10);      
-        $estatuto = ModelEstatuto::all();
-        $dep = HabilitacaoModel::all();
-        $tipo_admin = (new ModelDocente())->getAllData();
-        $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
-        $estatuto = ModelEstatuto::all();
-        $docente = ModelDocente::paginate(10);
-        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
-            ->distinct()
-            ->get();
-        return view('pages.teachers.add_teacher', compact('docente', 'departamento', 'estatuto', 'tipo_admin', 'municipios','fac','departament','materia'));
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        // Validation Rules
-        $validatedData = $request->validate([
-            'nome_funcionario' => 'required|string|max:255',
-            'sexo' => 'required|string|max:255',
-            'data_moris' => 'required|date',
-            'id_aldeias' => 'required|string|max:255',
-            'id_suco' => 'required|string|max:255',
-            'id_posto_administrativo' => 'required|string|max:255',
-            'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',
-            'id_tipo_categoria' => 'nullable|string|max:255', // Nullable
-            'ano_inicio' => 'nullable|date',
-            'observacao' => 'nullable|string',
-            'categoria' => 'required|string|max:255',
-            'no_contacto' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'id_faculdade' => 'required|string|max:255',
-            'id_departamento' => 'required|string|max:255',
-            'habilitacao' => 'required|string|max:255',
-            'area_especialidade' => 'required|string|max:255',
-            'universidade_origem' => 'required|string|max:255',
-            'id_estatuto' => 'required|string|max:255',
-            'data_inicio' => 'required|date',
-            'data_fim' => 'nullable|date', // Nullable end date
-        ]);
-    
-        // Handle File Upload if an image is provided
-        $photo_docente = null; // Default value if no image is uploaded
-        if ($request->hasFile('photo_docente')) {
-            $image = $request->file('photo_docente');
-            $photo_docente = $image->hashName(); // Generate a unique name for the image
-            $image->storeAs('public/asset/posts', $photo_docente); // Store the image
-        }
-    
-        // Explicitly check if 'id_tipo_categoria' exists in the request
-        $id_tipo_categoria = $request->has('id_tipo_categoria') ? $validatedData['id_tipo_categoria'] : null;
-    
-        // Create a new record in the 'funcionarios' table
-        $funcionarios = ModelDocente::create([
-            'id_funcionario' => (string) Str::uuid(),
-            'photo_docente' => $photo_docente, // Use the photo name if available, otherwise null
-            'nome_funcionario' => $validatedData['nome_funcionario'],
-            'sexo' => $validatedData['sexo'],
-            'data_moris' => $validatedData['data_moris'],
-            'id_aldeias' => $validatedData['id_aldeias'],
-            'id_suco' => $validatedData['id_suco'],
-            'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
-            'id_municipio' => $validatedData['id_municipio'],
-            'nacionalidade' => $validatedData['nacionalidade'],
-            'id_tipo_categoria' => $id_tipo_categoria,
-            'ano_inicio' => $validatedData['ano_inicio'],
-            'observacao' => $validatedData['observacao'],
-            'no_contacto' => $validatedData['no_contacto'],
-            'email' => $validatedData['email'],
-            'categoria' => $validatedData['categoria']
-        ]);
-    
-        // Create associated user record
-        ModelUser::create([
-            'user_id' => (string) Str::uuid(),
-            'username' => $funcionarios->nome_funcionario, // Assuming 'nre' refers to 'nome_funcionario'
-            'email' => $request->email ?? null,
-            'password' => Hash::make('defaultpassword'), // Default password, replace with logic to generate a secure password
-            'docente_student_id' => $funcionarios->id_funcionario,
-            'tipo_usuario' => $funcionarios->categoria,
-        ]);
-    
-        // Create a new entry in the 'funcionario_departamento' table
-        ModelFuncionarioDepartamento::create([
-            'id_departamento_funcionario' => (string) Str::uuid(),
-            'id_funcionario' => $funcionarios->id_funcionario,
-            'id_faculdade' => $validatedData['id_faculdade'],
-            'id_departamento' => $validatedData['id_departamento'],
-            'data_inicio' => $validatedData['data_inicio'],
-            'data_fim' => $validatedData['data_fim'],
-        ]);
-    
-        // Create a new entry in the 'habilitacao' table
-        HabilitacaoModel::create([
-            'id_habilitacao' => (string) Str::uuid(),
-            'id_funcionario' => $funcionarios->id_funcionario,
-            'habilitacao' => $validatedData['habilitacao'],
-            'area_especialidade' => $validatedData['area_especialidade'],
-            'universidade_origem' => $validatedData['universidade_origem'],
-        ]);
-    
-        // Create a new entry in the 'estatuto' table
-        FuncionarioEstatutoModel::create([
-            'id_estatuto_funcionario' => (string) Str::uuid(),
-            'id_funcionario' => $funcionarios->id_funcionario,
-            'id_estatuto' => $validatedData['id_estatuto'],
-            'data_inicio' => $validatedData['data_inicio'],
-            'data_fim' => $validatedData['data_fim'],
-        ]);
-    
-        // Redirect with success or error message
-        if ($funcionarios) {
-            return redirect()->route('funcionarios.index')->with(['success' => 'Dados com sucesso gravados']);
-        } else {
-            return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
-        }
-    }
-    
-    
-    
-
-
-
-
-    // editar docente
-    public function edit($id)
-    {
-        $departamento = ModelDepartamento::all(); // Assuming you have a Docente model
-        $estatuto = ModelEstatuto::all();
-        $editar = ModelDocente::findOrFail($id);
-        // $funcionario = DB::table('view_gfuncionario')
-        // ->whereIn('id', $id) // Assuming 'id' is the column name for filtering
-        // ->get();
-
-        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
-        ->distinct()
-        ->get();
-        $postos = ViewPostoSuco::select('id_posto_administrativo', 'posto_administrativo')
-        ->distinct()
-        ->get();
-
-        $sucos = ViewSucoAldeia::select('id_sucos', 'sucos')
-        ->distinct()
-        ->get();
-
-        $aldeias = ViewSucoAldeia::select('id_sucos', 'sucos')
-        ->distinct()
-        ->get();
-        $tipo_admin = (new ModelDocente())->getAllData();
-
-        return view('pages.teachers.edit_teacher', compact('tipo_admin','aldeias','sucos','postos','municipios','editar', 'departamento', 'estatuto'));
-    }
-
-    public function update(Request $request, $id): RedirectResponse
-    {
-        // Find the existing docente record
-        $funcionarios = ModelDocente::findOrFail($id);
-
-        // Validation Rules
-        $validated = $request->validate([
-            'nome_funcionario' => 'required|string|max:255',
-            'sexo' => 'required|string|max:255',
-            'data_moris' => 'required|date',
-            'id_aldeias' => 'required|string|max:255',
-            'id_suco' => 'required|string|max:255',
-            'id_posto_administrativo' => 'required|string|max:255',
-            'id_municipio' => 'required|string|max:255',
-            'nacionalidade' => 'nullable|string|max:255',            
-            'ano_inicio' => 'nullable|date',
-            'observacao' => 'nullable|string',
-        ]);
-
-        // Handle File Upload if a new image is provided
-        if ($request->hasFile('photo_docente')) {
-            // Delete the old image if it exists
-            if ($funcionarios->photo_docente) {
-                Storage::delete('public/asset/posts/' . $funcionarios->photo_docente);
-            }
-
-            // Store the new image
-            $image = $request->file('photo_docente');
-            $photo_docente = $image->hashName(); // Generate a unique name for the image
-            $image->storeAs('public/asset/posts', $photo_docente);
-        } else {
-            // If no new image, keep the current one
-            $photo_docente = $funcionarios->photo_docente;
-        }
-
-        // Update the existing record in the database
-        $funcionarios->update([
-            'photo_docente' => $photo_docente, // Use the new photo name if available, otherwise retain the old one
-            'nome_funcionario' => $validated['nome_funcionario'],
-            'sexo' => $validated['sexo'],
-            'data_moris' => $validated['data_moris'],
-            'id_aldeias' => $validated['id_aldeias'],
-            'id_suco' => $validated['id_suco'],
-            'id_posto_administrativo' => $validated['id_posto_administrativo'],
-            'id_municipio' => $validated['id_municipio'],
-            'nacionalidade' => $validated['nacionalidade'],           
-            'ano_inicio' => $validated['ano_inicio'],
-            'observacao' => $validated['observacao']
-        ]);
-
-        // Redirect with Success Message
-        return redirect()->route('funcionarios.index')->with(['success' => 'Dados Funcionario atualizados com sucesso']);
-    }
-
-
-
-    public function destroy($id)
-    {
-        // Find the docente by its ID
-        $docente = ModelDocente::findOrFail($id);
-
-        // Update the `controlo_estado` field to 'deleted'
-        $docente->controlo_estado = 'deleted';
-        $docente->save();
-
-        // Redirect back with success message
-        return redirect()->route('funcionarios.index')->with('success', 'Docente status  deleted successfully');
-    }
+   
 
     /*  public function restore($id)
         {
@@ -782,37 +764,130 @@ class DocenteController extends Controller
         }
  */
 
-    //  public function report(Request $request)
-    //     {
-    //         $query = ModelDocente::query();
+         public function report(Request $request)
+        {
+            
 
-    //         // Apply filters
-    //         if ($request->filled('nome_funcionario')) {
-    //             $query->where('nome_funcionario', 'like', "%{$request->nome_funcionario}%");
-    //         }
-    //         if ($request->filled('sexo')) {
-    //             $query->where('sexo', $request->sexo);
-    //         }
-    //         if ($request->filled('id_estatuto')) {
-    //             $query->where('id_estatuto', $request->id_estatuto);
-    //         }
-    //         if ($request->filled('nivel_educacao')) {
-    //             $query->where('nivel_educacao', 'like', "%{$request->nivel_educacao}%");
-    //         }
-    //         if ($request->filled('controlo_estado')) {
-    //             $controlo_estado = $request->controlo_estado == 'active' ? null : 'deleted';
-    //             $query->where('controlo_estado', $controlo_estado);
-    //         }
+            return view('pages.teachers.report_teacher');
+        }
 
-    //         $docentes = $query->paginate(10);
+        public function getFuncionarioReport(Request $request)
+        {
+            if ($request->ajax()) {
+            
+                // Use DB query without pagination as DataTables will handle pagination
+                $data = DB::table('view_monitoramento_funcionario')->select('*');
+                
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                        $editUrl = route('editar', $row->id_funcionario);
+                        $detailUrl = route('detailho', $row->id_funcionario);
+                        $deleteUrl = route('docentes.destroy', $row->id_funcionario); // Delete route
+                        // Create Edit button
+                        $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                        
+                        // Append Detail button
+                        $btn .= ' <a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+                    
 
-    //         $estatutos = ModelEstatuto::all();
+                        // $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>';
+                        
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+        }
 
-    //         return view('pages.teachers.report_teacher', compact('docentes', 'estatutos'));
-    //     }
+    
+        public function exportPDF(Request $request)
+        {
+            // Fetch filtered data based on request parameters
+            $query = ModelDocente::query();
+        
+            if ($request->sexo) {
+                $query->where('sexo', $request->sexo);
+            }
+        
+            if ($request->data_moris) {
+                $query->where('data_moris', $request->data_moris);
+            }
+        
+            if ($request->categoria) {
+                $query->where('categoria', $request->categoria);
+            }
+        
+            $funcionarios = $query->get();
+        
+            // Initialize TCPDF
+            $pdf = new TCPDF();
+        
+            // Set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Your Company');
+            $pdf->SetTitle('Relatório de Funcionários');
+            $pdf->SetSubject('Funcionários');
+        
+            // Add the company logo at the top of the page (Optional)
+            // Path to the logo image stored in public/images/company_logo.png
+            $logoPath = public_path('images/logo-icon.png'); // adjust the path as needed
+            $pdf->Image($logoPath, 15, 10, 50, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        
+            // Set header and footer
+            $pdf->setHeaderData('', 0, 'Relatório de Funcionários', 'INSTITUTO CIÊNCIA DE SAÚDE');
+            $pdf->setFooterData();
+        
+            // Set margins
+            $pdf->SetMargins(15, 27, 15);
+            $pdf->SetHeaderMargin(5);
+            $pdf->SetFooterMargin(10);
+        
+            // Set auto page breaks
+            $pdf->SetAutoPageBreak(true, 25);
+        
+            // Add a page
+            $pdf->AddPage();
+        
+            // Create table header
+            $html = '
+            <h1>Lista Funcionários</h1>
+            <table border="1" cellpadding="5">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sexo</th>
+                        <th>Data Moris</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>';
+        
+            // Loop through the data and generate table rows
+            foreach ($funcionarios as $funcionario) {
+                $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
+                $html .= '
+                    <tr>
+                        <td>' . $funcionario->nome_funcionario . '</td>
+                        <td>' . $funcionario->sexo . '</td>
+                        <td>' . $funcionario->data_moris . '</td>
+                        <td>' . $funcionario->categoria . '</td>
+                        <td>' . $estado . '</td>
+                    </tr>';
+            }
+        
+            $html .= '</tbody></table>';
+        
+            // Write the HTML content into the PDF
+            $pdf->writeHTML($html, true, false, true, false, '');
+        
+            // Output the PDF
+            return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
+        }
+        
 
-    public function export(Request $request)
-    {
-        return Excel::download(new DocentesExport($request->all()), 'docentes.xlsx');
-    }
+
+
+
 }

@@ -8,7 +8,7 @@
         <h3>Students</h3>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li>All Students</li>
+            <li>Todos Listas Estudante</li>
         </ul>
     </div>
     <!-- Breadcrumbs Area End Here -->
@@ -17,27 +17,46 @@
     <div class="card height-auto">
           <div class="card-header shadow bg-white">
             <div class="card-title">
-                
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
-                
+                <span>
+
+                </span>     
+                        
+                <span>
+                  
+                </span>
+
+
+                <div class="ui-btn-wrap">
+                            <ul>
+                               
+
+                                <li>
+                                     <div class="col-lg-12 col-12 form-group mg-t-30">
+                                        <form action="/import-excel" method="POST" enctype="multipart/form-data">
+                                            {{ csrf_field() }}
+                                            <div class="from-group">
+                                                <label for="file">Submete Lista estudante com formato (xlsx,xls,csv)</label>
+                                                <input type="file" class="form-control-file" name="excel_file" id="file">
+                                            </div>
+                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel"></i> Upload</button>
+                                        </form>
+                                    </div>
+                                 </li>
+                            </ul>
+                 </div>
             </div>
         </div>
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>All Students Data</h3>
+                    <h3>Tabelas Estudante ICS</h3>
                 </div>
-                @if (Auth::user()->canAccess('create', 'admission_form_student') ||
-                        Auth::user()->canAccess('admin', 'admission_form_student')) 
-                        <div class="col-xl-2 col-lg-4 col-12 form-group">
-                            <a href="/admission_form_student" class="btn-fill-md text-light bg-dark-pastel-green">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                            </svg> Adicionar</a>
-                        </div>
-                    @endif
+                <!-- @if (Auth::user()->canAccess('create', 'admission_form_student') ||
+                        Auth::user()->canAccess('admin', 'admission_form_student'))  -->
+                        <!-- @endif -->
+                        <li>
+                            <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
+                        </li>
             </div>
 
             <div class="table-responsive">

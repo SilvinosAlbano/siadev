@@ -22,7 +22,7 @@
                         <form class="mg-b-20">
                             <div class="row gutters-8">
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group ms-auto text-end">
-                                <a class="fw-btn-fill btn-primary fas fa-plus fs-2 btn-sm" href="{{ route('inserir_habilitacao', $detail->id_funcionario) }}"> Inserir</a>
+                                <a class="fw-btn-fill btn-primary fs-2 btn-sm" href="{{ route('inserir_habilitacao', $detail->id_funcionario) }}">Inserir <i class="fas fa-plus-circle"></i></a>
                                 </div>
                             </div>
 
@@ -52,7 +52,7 @@
                                 <thead>
                                     <tr>
                                  
-                                        <th>Nome Habilitação</th>
+                                        <th>Nome Academico</th>
                                         <th>Area Especialidade</th>
                                         <th>Universidade Origem</th>
                                         <th>Asaun</th>

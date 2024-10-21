@@ -60,11 +60,11 @@
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Data de Nascimento *</label>
-                        <input type="text" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
+                        <input type="date" placeholder="dd/mm/yyyy" class="form-control"
                             data-position='bottom right' name="date_of_birth"
                             value="{{ old('date_of_birth', isset($student->date_of_birth) ? $student->date_of_birth->format('d/m/Y') : '') }}"
                             required>
-                        <i class="far fa-calendar-alt"></i>
+                        <!-- <i class="far fa-calendar-alt"></i> -->
                     </div>
                     <div class="col-md-3 form-group">
                         <label>Número Registo Estudante (NRE)</label>

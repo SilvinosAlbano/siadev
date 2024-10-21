@@ -16,7 +16,7 @@
         <div class="card-header shadow bg-white">
             <div class="card-title">
                 
-            <a class="btn-fill-md text-light bg-dodger-blue" href="/adiciona_funcionario"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
+            <a class="btn-fill-md text-light bg-dodger-blue fas fa-plus text-orange-peel" href="/adiciona_funcionario"> Inserir</a>
                 
             </div>
         </div>
@@ -35,43 +35,7 @@
             </div>
         @endif
 
-        <form class="mg-b-20" method="GET" action="{{ route('funcionarios.index') }}">
-            <div class="row gutters-8">
-                <!-- Search by nome_docente -->
-                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                    <input type="text" name="nome_docente" value="{{ request('nome_docente') }}" placeholder="Search by nome_docente..." class="form-control">
-                </div>
-
-                <!-- Search by sexo -->
-                <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
-                    <select name="sexo" class="form-control">
-                        <option value="" selected disabled>Select sexo</option>
-                        <option value="Masculino" {{ request('sexo') == 'Masculino' ? 'selected' : '' }}>Masculino</option>
-                        <option value="Feminino" {{ request('sexo') == 'Feminino' ? 'selected' : '' }}>Feminino</option>
-                    </select>
-                </div>
-
-                <!-- Search by id_estatuto -->
-                <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                    <select name="id_estatuto" class="form-control">
-                        <option value="" selected disabled>Select Estatuto</option>
-                        @foreach($estatutoOptions as $estatuto)
-                            <option value="{{ $estatuto->id_estatutu }}" {{ request('id_estatuto') == $estatuto->id_estatutu ? 'selected' : '' }}>
-                                {{ $estatuto->estatuto }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
-                    <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                </div>
-            </div>
-        </form>
-
        
-       
-
 
         @if (session('success'))
         <div class="ui-alart-box">
@@ -87,77 +51,108 @@
         @endif
 
         <div class="table-responsive">
-            <table id="docentes" class="table display data-table text-nowrap">
+            <table id="laravel_datatable" class="table display text-nowrap">
                 <thead>
                     <tr>
-                        <th>No.</th>
                         <th>Nome</th>
                         <th>Sexo</th>
-                        <th>Data Moris</th>                      
-                      
+                        <th>Data Moris</th>
                         <th>Categoria</th>
                         <th>Estado</th>
                         <th>Action</th>
                     </tr>
+                    <tr>
+                        <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
+                        <th>
+                            <select id="filter-sexo" class="form-control form-control-sm">
+                                <option value="">Select Sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </th>
+                        <th><input type="text" id="filter-data_moris" placeholder="Filter Data Moris" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-categoria" placeholder="Filter Categoria" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-estado" placeholder="Filter Estado" class="form-control form-control-sm"></th>
+                        <th></th>
+                    </tr>
                 </thead>
-                <tbody>
-                    @foreach ($docente as $data)
-                        <tr>
-                        <!-- <td>{{ $loop->iteration }}</td> -->
-                        <td>{{ ($docente->currentPage() - 1) * $docente->perPage() + $loop->iteration }}</td>
-
-                            <td class=""> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->nome_funcionario }}</a> </td>
-                            <td> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->sexo }}</a> </td>
-                            <td> <a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->data_moris }}</a></td>                          
-                          
-                            <td><a href="{{ route('detailho', $data->id_funcionario) }}">{{ $data->categoria }}</a> </td>
-
-                            <td> 
-                            @if (is_null($data->controlo_estado))
-                                <span class="text-primary">Ativo</span>
-                            @elseif ($data->controlo_estado == 'deleted')
-                                <span class="text-danger">Nao Ativo</span>
-                            @endif
-                            </td>
-                            <td>
-                            <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <span class="flaticon-more-button-of-three-dots"></span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('detailho', $data->id_funcionario) }}">
-                                        <i class="fas fa-eye text-orange-red"></i> Detail
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('editar', $data->id_funcionario) }}">
-                                        <i class="fas fa-edit text-dark-pastel-green"></i> Edit
-                                    </a>
-                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_funcionario }}').submit();">
-                                        <i class="fas fa-trash text-orange-peel"></i> Delete
-                                    </a>
-                                </div>
-
-                                <form id="delete-form-{{ $data->id_funcionario }}" action="{{ route('docentes.destroy', $data->id_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this docente?');">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
             </table>
-            <div class="row">
-                <div class="col-12">
-                    
-                    Masculino: {{ $totalMasculino }} -
-                    Feminino: {{ $totalFeminino }}
-                </div>
-            </div>
-            <!-- {{ $docente->links() }} -->
         </div>
+
 
     </div>
 </div>
 
-    <!-- Teacher Table Area End Here -->
+<script type="text/javascript">
+     $(document).ready(function () {
+    var table = $('#laravel_datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('get.funcionario') }}",
+        columns: [
+            {data: 'nome_funcionario', name: 'nome_funcionario'},
+            {data: 'sexo', name: 'sexo'},
+            {data: 'data_moris', name: 'data_moris'},
+            {data: 'categoria', name: 'categoria'},
+            {
+                data: 'controlo_estado', 
+                name: 'controlo_estado',
+                render: function(data, type, row) {
+                    return data == null ? 'Ativo' : 'Nao Ativo';
+                }
+            },
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    // Apply column-wise filters
+    $('#filter-nome_funcionario').on('keyup', function () {
+        table.column(0).search(this.value).draw();
+    });
+
+    $('#filter-sexo').on('change', function () {
+        table.column(1).search(this.value).draw();
+    });
+
+    $('#filter-data_moris').on('keyup', function () {
+        table.column(2).search(this.value).draw();
+    });
+
+    $('#filter-categoria').on('keyup', function () {
+        table.column(3).search(this.value).draw();
+    });
+
+    $('#filter-estado').on('keyup', function () {
+        table.column(4).search(this.value).draw();
+    });
+});
+</script>
+<script type="text/javascript">
+    // SweetAlert delete confirmation
+    function confirmDelete(deleteUrl) {
+        Swal.fire({
+            title: 'Tem certeza de apagar este dado?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, apagar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create a form dynamically and submit the DELETE request
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = deleteUrl;
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+</script>
+
 @endsection

@@ -10,6 +10,8 @@ use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
 use App\Http\Controllers\salasController;
 use App\Http\Controllers\Datascontroller;
+use App\Http\Controllers\HomeController;
+
 // routes/web.php
 // routes/web.php
 Route::get('/unauthorized', function () {
@@ -37,6 +39,8 @@ Route::middleware('check.access')->group(function () {
         return view('pages.home');
     });
 
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
     // Students Routes
     Route::resource('students', StudentController::class);
 
@@ -47,11 +51,36 @@ Route::middleware('check.access')->group(function () {
     Route::get('/students/{id_student}/edit', [StudentController::class, 'edit'])->name('students.edit');
     Route::put('/students/{id_student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id_student}', [StudentController::class, 'destroy'])->name('students.destroy');
-
-        #start materia estudante
+    Route::get('/lista_pagamento_estudante', [StudentController::class, 'listaPagamento'])->name('lista_pagamento_estudante');
+    Route::get('/get-payment-student', [StudentController::class, 'getPaymentStudent'])->name('get.payment_student');
+    #start materia estudante
         Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
-
         #end
+
+         #start Departamento estudante
+         Route::get('/estudante/departamento/{id}', [StudentController::class, 'DepartamentoEstudante'])->name('departamento_estudante');
+         #end
+
+          #start Matricula estudante
+          Route::get('/estudante/matricula/{id}', [StudentController::class, 'MatriculaEstudante'])->name('matricula_estudante');
+          #end
+
+         #start pagamento estudante
+         Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
+         Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
+         Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
+
+         Route::get('export-payments', [StudentController::class, 'exportPayments'])->name('export.payments');
+         
+         Route::get('export-payments-csv', [StudentController::class, 'exportPaymentscsv'])->name('export.payments.csv');
+         #end
+
+         #programa estudo start
+         Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
+
+
+         Route::post('/import-excel', [StudentController::class, 'import_excel_post'])->name('import-excel');
+
     // end student
 
     // Existing routes for users and roles management
@@ -75,6 +104,12 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/habilitacao/{id}', [DocenteController::class, 'destroyHabilitacao'])->name('destroy_habilitacao');
 
     Route::put('/update_habilitacao/{id}', [DocenteController::class, 'updateHabilitacao'])->name('habilitacao.update');
+
+    Route::get('get-funcionario', [DocenteController::class, 'getFuncionario'])->name('get.funcionario');
+    Route::get('get-funcionario-report', [DocenteController::class, 'getFuncionarioReport'])->name('get.funcionario.report');
+    Route::get('/funcionarios/export-pdf', [DocenteController::class, 'exportPDF'])->name('funcionarios.export.pdf');
+
+
     #estatuto
     Route::get('/funcionario/estatuto/{id}', [DocenteController::class, 'estatuto'])->name('estatuto');
     Route::get('/funcionario/inserir_estatuto/{id_funcionario}', [DocenteController::class, 'create_estatuto'])->name('inserir_estatuto');
@@ -99,6 +134,11 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria.update');
     Route::delete('/docentemateria/{id}', [DocenteController::class, 'destroyDocentemateria'])->name('docentemateria.destroy');
     #end
+    Route::get('/funcionario/posicao/{id}', [DocenteController::class, 'PosicaoFuncionario'])->name('posicao_funcionario');
+    #posicao funcionario
+
+    #end 
+    #create funcionario
     Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
 
@@ -118,6 +158,8 @@ Route::middleware('check.access')->group(function () {
     Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
     Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
+ 
+    Route::get('get-materia', [DisciplinasController::class, 'getMateria'])->name('get.materia');
     // end
 
     // sala aulas start

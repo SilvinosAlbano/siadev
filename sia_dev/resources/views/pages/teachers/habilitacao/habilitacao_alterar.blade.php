@@ -39,8 +39,8 @@
 
                     <div class="col-12 form-group mg-t-8">
                         <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Update</button>
-                        <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
-                    </div>
+                        <a href="{{ route('habilitacao_funcionario', $detail->id_funcionario) }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Cancelar</a>
+                        </div>
                 </form>
             </div>
         </div>
