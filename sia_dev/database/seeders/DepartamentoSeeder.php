@@ -27,6 +27,7 @@ class DepartamentoSeeder extends Seeder
                 'id_faculdade' => '1d1b3f74-16f0-4b14-bd36-4eae2a6b3c1d',
                 'created_at' => $now,
                 'updated_at' => $now,
+                
             ],
         ];
 

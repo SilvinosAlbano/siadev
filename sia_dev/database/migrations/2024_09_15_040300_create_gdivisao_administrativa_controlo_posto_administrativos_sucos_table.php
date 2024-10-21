@@ -1,15 +1,13 @@
 <?php
-
+/* 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
+
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('gdivisao_administrativa_controlo_posto_administrativos_sucos', function (Blueprint $table) {
@@ -39,22 +37,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Schema::table('gdivisao_administrativa_controlo_posto_administrativos_sucos', function (Blueprint $table) {
-        //     $table->dropForeign(['id_posto_administrativo']);
-        //     $table->dropForeign(['id_sucos']);
-        // });
-
-        // Schema::table('gdivisao_administrativa_controlo_posto_administrativos_sucos', function (Blueprint $table) {
-        //     $table->dropForeign(['id_posto_administrativo']);  // Use the correct column name
-        //     $table->dropForeign(['id_sucos']);
-        // });
-
-
         Schema::dropIfExists('gdivisao_administrativa_controlo_posto_administrativos_sucos');
     }
 };
+ */
