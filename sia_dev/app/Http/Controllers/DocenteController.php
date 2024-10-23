@@ -830,7 +830,7 @@ class DocenteController extends Controller
         
             // Set document information
             $pdf->SetCreator(PDF_CREATOR);
-            $pdf->SetAuthor('Your Company');
+            $pdf->SetAuthor('Instituto Cidencia Saude (ICS)');
             $pdf->SetTitle('Relatório de Funcionários');
             $pdf->SetSubject('Funcionários');
         
@@ -856,7 +856,7 @@ class DocenteController extends Controller
         
             // Create table header
             $html = '
-            <h1>Lista Funcionários</h1>
+            <h1>Lista dos Funcionários</h1>
             <table border="1" cellpadding="5">
                 <thead>
                     <tr>
