@@ -30,6 +30,7 @@ use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisa
 use App\Models\ModelHorario;
 use App\Models\ModelMateria;
 use TCPDF;
+use App\Imports\TeacherImport;
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
 #$sucosAldeiasData = ModelGdivisaoAdministrativaSucosAldeias::all();
@@ -117,6 +118,7 @@ class DocenteController extends Controller
          'ano_inicio' => 'nullable|date',
          'observacao' => 'nullable|string',
          'categoria' => 'required|string|max:255',
+         'titulu' => 'nullable|string|max:255',
          'no_contacto' => 'nullable|string|max:255',
          'email' => 'nullable|email|max:255',
          'id_faculdade' => 'required|string|max:255',
@@ -157,7 +159,8 @@ class DocenteController extends Controller
          'observacao' => $validatedData['observacao'],
          'no_contacto' => $validatedData['no_contacto'],
          'email' => $validatedData['email'],
-         'categoria' => $validatedData['categoria']
+         'categoria' => $validatedData['categoria'],
+         'titulu' => $validatedData['titulu']
      ]);
  
      // Create associated user record
@@ -252,12 +255,13 @@ class DocenteController extends Controller
          'sexo' => 'required|string|max:255',
          'data_moris' => 'required|date',
          'id_aldeias' => 'required|string|max:255',
-         'id_suco' => 'required|string|max:255',
+         'id_sucos' => 'required|string|max:255',
          'id_posto_administrativo' => 'required|string|max:255',
          'id_municipio' => 'required|string|max:255',
          'nacionalidade' => 'nullable|string|max:255',            
          'ano_inicio' => 'nullable|date',
          'observacao' => 'nullable|string',
+         'titulu' => 'nullable|string',
      ]);
 
      // Handle File Upload if a new image is provided
@@ -283,12 +287,13 @@ class DocenteController extends Controller
          'sexo' => $validated['sexo'],
          'data_moris' => $validated['data_moris'],
          'id_aldeias' => $validated['id_aldeias'],
-         'id_suco' => $validated['id_suco'],
+         'id_sucos' => $validated['id_sucos'],
          'id_posto_administrativo' => $validated['id_posto_administrativo'],
          'id_municipio' => $validated['id_municipio'],
          'nacionalidade' => $validated['nacionalidade'],           
          'ano_inicio' => $validated['ano_inicio'],
-         'observacao' => $validated['observacao']
+         'observacao' => $validated['observacao'],
+         'titulu' => $validated['titulu']
      ]);
 
      // Redirect with Success Message
@@ -889,5 +894,17 @@ class DocenteController extends Controller
 
 
 
+        public function import_excel_post(Request $request)
+        {
+            $request->validate([
+                'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+            ]);
+        
+            // Import the Excel file
+            Excel::import(new TeacherImport, $request->file('excel_file'));
+    
+            
+            return redirect()->route('students.index')->with('success', 'Dadus funcionario Importa com sucesso!');
+        }
 
 }

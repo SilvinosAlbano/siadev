@@ -38,7 +38,7 @@
                                                 <label for="file">Submete Lista estudante com formato (xlsx,xls,csv)</label>
                                                 <input type="file" class="form-control-file" name="excel_file" id="file">
                                             </div>
-                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel"></i> Upload</button>
+                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel text-success"></i> Upload</button>
                                         </form>
                                     </div>
                                  </li>

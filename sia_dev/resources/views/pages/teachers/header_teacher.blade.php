@@ -48,7 +48,7 @@
 
             <div class="item-content">
                 <div class="header-inline item-header">
-                    <h4 class="text-dark-medium font-medium">{{ $detail->nome_funcionario }}</h4>
+                    <h4 class="text-dark-medium font-medium">{{ $detail->nome_funcionario }},{{ $detail->titulu }} - ({{ $detail->sexo }})</h4>
 
                 </div>
 

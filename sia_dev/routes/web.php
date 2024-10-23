@@ -92,6 +92,7 @@ Route::middleware('check.access')->group(function () {
 
     // route for teachers
     // Route for Menus of Teachers
+    Route::post('/import-excel-funcionario', [DocenteController::class, 'import_excel_post'])->name('import-excel-funcionario');
     Route::get('/funcionarios', [DocenteController::class, 'index'])->name('funcionarios.index');
     Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
     Route::get('/habilitacao/{id}', [DocenteController::class, 'showHabilitacoes'])->name('habilitacao_funcionario');

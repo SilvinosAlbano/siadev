@@ -44,12 +44,21 @@
                             <div class="row">
                                 <div class="col-md-7 border">
                                    <div class="row">
-                                         <div class="col-xl-5  form-group">
+                                         <div class="col-xl-6  form-group">
                                             <label>Nome Funcionario *</label>
                                             <input type="text" name="nome_funcionario" placeholder="" required class="form-control border">
                                             <input type="hidden" name="id_funcionario">
                                         </div>
-                                        <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                        <div class="col-xl-6  form-group">
+                                            <label>Titulu Funcionario *</label>
+                                            <input type="text" name="titulu" placeholder="ex:S.Kep.,MM" required class="form-control border">
+                                            
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-12 form-group">
                                             <label>Sexo *</label>
                                             <select class="select2" name="sexo">
                                                 <option value="">Escolha *</option>
@@ -57,13 +66,13 @@
                                                 <option value="Feminino">Feminino</option>
                                             </select>
                                         </div>
+                                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                                           <label>Data Nascimento *</label>
+                                           <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
+                                               class="border form-control">
+                                           <!-- <i class="far fa-calendar-alt"></i> -->
+                                       </div>
 
-                                        <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                            <label>Data Nascimento *</label>
-                                            <input type="date" name="data_moris" placeholder="dd/mm/yyyy"
-                                                class="border form-control">
-                                            <!-- <i class="far fa-calendar-alt"></i> -->
-                                        </div>
                                    </div>
 
                                    <div class="row">

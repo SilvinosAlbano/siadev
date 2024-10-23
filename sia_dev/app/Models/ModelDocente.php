@@ -41,6 +41,7 @@ class ModelDocente extends Model
         'no_contacto',
         'email',
         'categoria',
+        'titulu',
         'photo_docente'
     ];
 

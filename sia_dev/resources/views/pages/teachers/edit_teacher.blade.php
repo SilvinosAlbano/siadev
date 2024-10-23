@@ -43,9 +43,14 @@
                 @method('PUT') <!-- Use PUT for update -->
                 
                 <div class="row">
-                    <div class="col-xl-6 col-lg-6 col-12 form-group">
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
                         <label>Nome Funcionario *</label>
                         <input type="text" name="nome_funcionario" value="{{ old('nome_funcionario', $editar->nome_funcionario) }}" required class="form-control border">
+                    </div>
+
+                    <div class="col-xl-2 col-lg-6 col-12 form-group">
+                        <label>Titulu Funcionario *</label>
+                        <input type="text" name="titulu" value="{{ old('titulu', $editar->titulu) }}" required class="form-control border">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Sexo *</label>
@@ -156,7 +161,7 @@
                         <label>Observacão</label>
                         <textarea class="textarea form-control border" name="observacao" cols="10" rows="5">{{ old('observacao', $editar->observacao) }}</textarea>
                     </div>
-                    <div class="col-lg-4 col-12 form-group mg-t-30">
+                    <div class="col-lg-4 col-12 form-group mg-t-30 border">
                         <label class="text-dark-medium">Upload Docente Photo (150px X 150px)</label>
                         <input type="file" name="photo_docente" class="form-control-file">
                     </div>

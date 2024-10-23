@@ -12,18 +12,13 @@
     <!-- Breadcrumbs Area End Here -->
 
     <!-- Teacher Table Area Start Here -->
-    <div class="card height-auto">
-        <div class="card-header shadow bg-white">
-            <div class="card-title">
-                
-            <a class="btn-fill-md text-light bg-dodger-blue fas fa-plus text-orange-peel" href="/adiciona_funcionario"> Inserir</a>
-                
-            </div>
-        </div>
+  <div class="card height-auto">
+      
+
     <div class="card-body">
         <div class="heading-layout1">
             <div class="item-title">
-               
+            <a class="btn-fill-md text-light bg-dodger-blue fas fa-plus text-orange-peel" href="/adiciona_funcionario"> Inserir</a>
             </div>
         </div>
         @if (session('error'))
@@ -41,7 +36,7 @@
         <div class="ui-alart-box">
             <div class="dismiss-alart">
                 <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                    Well done! {{ session('success') }}
+                    Parabens! {{ session('success') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
