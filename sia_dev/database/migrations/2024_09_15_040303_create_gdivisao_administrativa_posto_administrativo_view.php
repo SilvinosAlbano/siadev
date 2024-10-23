@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+/* use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreateGdivisaoAdministrativaPostoAdministrativoView extends Migration
+return new class extends Migration
 {
     public function up()
     {
@@ -36,4 +36,5 @@ class CreateGdivisaoAdministrativaPostoAdministrativoView extends Migration
     {
         DB::statement("DROP VIEW IF EXISTS gdivisao_administrativa_posto_administrativo_view");
     }
-}
+};
+ */

@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+/* use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreateGdivisaoAdministrativaSucosAldeiasView extends Migration
+return new class extends Migration
 {
     public function up()
     {
@@ -42,6 +42,10 @@ class CreateGdivisaoAdministrativaSucosAldeiasView extends Migration
 
     public function down()
     {
-        DB::statement("DROP VIEW IF EXISTS gdivisao_administrativa_sucos_aldeias_view");
+        // DB::statement('DROP TABLE IF EXISTS gdivisao_administrativa_municipio');
+        // DB::statement('DROP TABLE IF EXISTS gdivisao_administrativa_posto_administrativo');
+        // DB::statement('DROP TABLE IF EXISTS gdivisao_administrativa_aldeias');
+        // DB::statement('DROP TABLE IF EXISTS gdivisao_administrativa_sucos');
+        DB::statement("DROP VIEW IF EXISTS view_gfuncionario");
     }
-}
+}; */

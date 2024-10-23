@@ -23,7 +23,7 @@ class DocentesSeeder extends Seeder
                 'id_municipio' => '00000000-0000-0000-0000-00000000000e',
                 'id_posto_administrativo' => '00000000-0000-0000-0000-0000000001f3',
                 'id_suco' => '00000000-0000-0000-0000-0000000001f3',
-                'id_aldeia' => '00000000-0000-0000-0000-000000000922',
+                'id_aldeias' => '00000000-0000-0000-0000-000000000922',
                 'data_moris' => '1998-02-25',
                 'nacionalidade' => 'Timorense',
                 'categoria' => 'Docente',

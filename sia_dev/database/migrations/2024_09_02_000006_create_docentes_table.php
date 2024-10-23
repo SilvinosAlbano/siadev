@@ -18,7 +18,7 @@ class CreateDocentesTable extends Migration
             $table->uuid('id_funcionario')->primary()->default(DB::raw('gen_random_uuid()')); // Set as primary key and UUID type
             $table->string('nome_funcionario');
             $table->string('sexo');
-            $table->uuid('id_aldeia');
+            $table->uuid('id_aldeias');
             $table->uuid('id_suco');
             $table->uuid('id_posto_administrativo');
             $table->uuid('id_municipio');

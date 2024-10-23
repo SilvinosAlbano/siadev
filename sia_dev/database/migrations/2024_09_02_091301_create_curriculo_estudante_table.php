@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('curriculo_student', function (Blueprint $table) {
-            $table->uuid('id_curriculo_student')->primary()->default(DB::raw('gen_random_uuid()'));
+        Schema::create('matricula', function (Blueprint $table) {
+            $table->uuid('id_matricula')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->uuid('id_student');
             $table->uuid('id_programa_estudo');
             $table->uuid('id_semestre');
@@ -33,7 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('curriculo_student');
+        Schema::dropIfExists('matricula');
     }
 };
 

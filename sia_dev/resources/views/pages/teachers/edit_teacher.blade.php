@@ -106,7 +106,7 @@
                         <select class="select2" name="id_aldeias">
                             <option selected disabled value="">Escolha *</option>
                             @foreach($aldeias as $aldeia)
-                                <option value="{{ $aldeia->id_aldeia }}" {{ $editar->id_aldeias == $aldeia->id_aldeias ? 'selected' : '' }}>{{ $aldeia->aldeias }}</option>
+                                <option value="{{ $aldeia->id_aldeias }}" {{ $editar->id_aldeias == $aldeia->id_aldeias ? 'selected' : '' }}>{{ $aldeia->aldeias }}</option>
                             @endforeach
                         </select>
                     </div>
