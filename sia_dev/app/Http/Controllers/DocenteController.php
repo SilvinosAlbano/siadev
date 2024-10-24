@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\ModelDocente;
+use App\Models\ModelPozisaunFuncionario;
 use App\Models\ViewMunicipioPosto;
 use App\Models\ViewPostoSuco;
 use App\Models\ViewSucoAldeia;
@@ -203,7 +204,7 @@ class DocenteController extends Controller
  
      // Redirect with success or error message
      if ($funcionarios) {
-         return redirect()->route('funcionarios.index')->with(['success' => 'Dados com sucesso gravados']);
+         return redirect()->route('adiciona_funcionario.index')->with(['success' => 'Parabens Dados com sucesso gravados!']);
      } else {
          return back()->withInput()->withErrors(['error' => 'Failed to save data.']);
      }
@@ -381,10 +382,12 @@ class DocenteController extends Controller
     public function editHabilitacao($id)
     {
         // Fetch the habilitacao by its ID
-        $detail = HabilitacaoModel::findOrFail($id);
-        // $detail = ModelDocente::findOrFail($id);
-        // Return the edit view and pass the habilitacao data
-        return view('pages.teachers.habilitacao.habilitacao_alterar', compact('id','detail'));
+        $edit = HabilitacaoModel::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_habilitacao', $id)
+        ->orderByDesc('created_at')
+        ->first();
+        return view('pages.teachers.habilitacao.habilitacao_alterar', compact('id','detail','edit'));
     }
 
     // Handle the update request
@@ -482,9 +485,13 @@ class DocenteController extends Controller
         
 
         $estatuto = ModelEstatuto::all();
-        $detail = FuncionarioEstatutoModel::findOrFail($id);
+        $edit = FuncionarioEstatutoModel::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_estatuto_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
         // Return the edit view and pass the habilitacao data
-        return view('pages.teachers.estatuto.estatuto_alterar', compact('id', 'estatuto', 'detail'));
+        return view('pages.teachers.estatuto.estatuto_alterar', compact('id', 'estatuto', 'detail','edit'));
     }
     public function updateEstatuto(Request $request, $id)
     {
@@ -907,4 +914,93 @@ class DocenteController extends Controller
             return redirect()->route('students.index')->with('success', 'Dadus funcionario Importa com sucesso!');
         }
 
+
+    public function showPozisaun($id)
+    {
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
+            
+           
+
+     $pozisaunFuncionario = DB::table('pozisaun_funcionario as a')
+    ->leftJoin('funcionario as b', 'b.id_funcionario', '=', 'a.id_funcionario')
+    ->select(
+        'a.id_pozisaun_funcionario',
+        'b.id_funcionario',
+        'a.nome_pozisaun',
+        'a.data_inicio',
+        'a.data_fim',
+        'a.estado',
+        'a.created_at',
+        'a.updated_at',
+        'a.deleted_at'
+    )
+    ->where('b.id_funcionario', $id)
+    ->whereNull('a.estado')
+    ->get();
+
+          
+        return view('pages.teachers.pozisaun.pozisaun_funcionario', compact('detail','pozisaunFuncionario'));
+    }
+
+    public function createPozisaun($id)
+    {
+        $pozisaun = ModelPozisaunFuncionario::all();
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
+        return view('pages.teachers.pozisaun.pozisaun_inserir', compact('detail', 'id', 'pozisaun'));
+    }
+
+    public function storePozisaun(Request $request)
+    {
+        $request->validate([
+            'nome_pozisaun' => 'required|string|max:255',
+            'data_inicio' => 'required|string|max:255',
+        ]);
+
+        $pozisaun = new ModelPozisaunFuncionario();
+        $pozisaun->id_funcionario = $request->input('id_funcionario');
+        $pozisaun->nome_pozisaun = $request->input('nome_pozisaun');
+        $pozisaun->data_inicio = $request->input('data_inicio');
+        $pozisaun->data_fim = $request->input('data_fim');
+        $pozisaun->save();
+
+        return redirect()->route('posicao_funcionario', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Posição inserida com sucesso.');
+    }
+
+    public function editPozisaun($id)
+    {
+      
+        $edit = ModelPozisaunFuncionario::findOrFail($id);
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_pozisaun_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
+        return view('pages.teachers.pozisaun.edit_pozisaun_funcionario', compact('id','detail','edit'));
+    }
+
+    public function updatePozisaun(Request $request, $id)
+    {
+      
+        $request->validate([
+            'nome_pozisaun' => 'required|string|max:255',
+            'data_inicio' => 'required|string|max:255',
+           
+        ]);
+
+        $pozisaun = ModelPozisaunFuncionario::findOrFail($id); 
+        $pozisaun->nome_pozisaun = $request->input('nome_pozisaun');
+        $pozisaun->data_inicio = $request->input('data_inicio');
+        $pozisaun->data_fim = $request->input('data_fim');
+        $pozisaun->save(); // Save the updated habilitacao
+
+        // Redirect back to the habilitacao page with a success message
+        return redirect()->route('posicao_funcionario', ['id' => $pozisaun->id_funcionario])
+            ->with('success', 'posição Atualiza com sucesso .');
+    }
 }

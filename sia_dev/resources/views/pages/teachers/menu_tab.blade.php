@@ -72,6 +72,12 @@
                         <a class="nav-link {{ request()->routeIs('posicao_funcionario') ? 'active' : '' }}" href="{{ route('posicao_funcionario', $detail->id_funcionario) }}">Posição</a>
                     </li>
 
+                    @if (request()->routeIs('inserir_materia_pozisaun'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('inserir_materia_pozisaun') ? 'active' : '' }}" href="{{ route('inserir_materia_pozisaun', $detail->id_funcionario) }}">Inserir Posição</a>
+                    </li>
+                    @endif
+
                 </ul>
             </div>
 

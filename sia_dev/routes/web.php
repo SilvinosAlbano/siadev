@@ -135,8 +135,13 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria.update');
     Route::delete('/docentemateria/{id}', [DocenteController::class, 'destroyDocentemateria'])->name('docentemateria.destroy');
     #end
-    Route::get('/funcionario/posicao/{id}', [DocenteController::class, 'PosicaoFuncionario'])->name('posicao_funcionario');
     #posicao funcionario
+    Route::get('/funcionario/posicao/{id}', [DocenteController::class, 'showPozisaun'])->name('posicao_funcionario');
+    Route::get('/funcionario/inserir_pozisaun/{id_funcionario}', [DocenteController::class, 'createPozisaun'])->name('inserir_materia_pozisaun');
+    Route::post('/funcionario/pozisaun/store', [DocenteController::class, 'storePozisaun'])->name('store_pozisaun');
+    Route::get('/alterar_posicao/{id}', [DocenteController::class, 'editPozisaun'])->name('alterar_posicao');
+
+    Route::put('/update_pozisaun/{id}', [DocenteController::class, 'updatePozisaun'])->name('update_posicao.update');
 
     #end 
     #create funcionario

@@ -16,18 +16,18 @@
                 </div>
             
                 <!-- Update form -->
-                <form method="POST" action="{{ route('estatuto.update', $detail->id_estatuto_funcionario) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('estatuto.update', $edit->id_estatuto_funcionario) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
-                    <input type="hidden" name="id_funcionario" value="{{ $detail->id_funcionario}}">
+                    <input type="hidden" name="id_funcionario" value="{{ $edit->id_funcionario}}">
                     
                     <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Categoria Estatuto (P/IP/C) *</label>
                         <select class="select2" name="id_estatuto">
                             @foreach($estatuto as $est)
-                                <option value="{{ $est->id_estatuto }}" {{ $detail->id_estatuto == $est->id_estatuto ? 'selected' : '' }}>
+                                <option value="{{ $est->id_estatuto }}" {{ $edit->id_estatuto == $est->id_estatuto ? 'selected' : '' }}>
                                     {{ $est->estatuto }}
                                 </option>
                             @endforeach
@@ -35,11 +35,11 @@
                     </div>
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Area Especialidade *</label>
-                            <input type="date" name="data_inicio" value="{{ $detail->data_inicio }}" placeholder="ex: Parteira" required class="form-control border">
+                            <input type="date" name="data_inicio" value="{{ $edit->data_inicio }}" placeholder="ex: Parteira" required class="form-control border">
                         </div>
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Universidade origem *</label>
-                            <input type="date" name="data_fim" value="{{ $detail->data_fim }}"  class="form-control border">
+                            <input type="date" name="data_fim" value="{{ $edit->data_fim }}"  class="form-control border">
                         </div>
                     </div>
 
