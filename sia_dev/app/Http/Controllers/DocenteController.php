@@ -361,6 +361,7 @@ class DocenteController extends Controller
             ->first();
         return view('pages.teachers.habilitacao.habilitacao_inserir', compact('detail', 'id'));
     }
+
     public function storeHabilitacao(Request $request)
     {
         $request->validate([
@@ -373,7 +374,6 @@ class DocenteController extends Controller
         $habilitacao->area_especialidade = $request->input('area_especialidade');
         $habilitacao->universidade_origem = $request->input('universidade_origem');
         $habilitacao->save();
-
         return redirect()->route('habilitacao_funcionario', ['id' => $request->input('id_funcionario')])
             ->with('success', 'Habilitação inserida com sucesso.');
     }
@@ -418,7 +418,7 @@ class DocenteController extends Controller
         $habilitacao->save();
 
         return redirect()->route('habilitacao_funcionario', ['id' => $habilitacao->id_funcionario])
-            ->with('success', 'Habilitação updated successfully.');
+            ->with('success', 'Habilitação Apaga Com Suceso.');
     }
 
     #end Habilitacao
@@ -482,8 +482,6 @@ class DocenteController extends Controller
     public function editEstatuto($id)
     {
         // Fetch the habilitacao by its ID
-        
-
         $estatuto = ModelEstatuto::all();
         $edit = FuncionarioEstatutoModel::findOrFail($id);
         $detail = DB::table('view_monitoramento_funcionario')
@@ -493,6 +491,7 @@ class DocenteController extends Controller
         // Return the edit view and pass the habilitacao data
         return view('pages.teachers.estatuto.estatuto_alterar', compact('id', 'estatuto', 'detail','edit'));
     }
+
     public function updateEstatuto(Request $request, $id)
     {
         $request->validate([
@@ -837,36 +836,47 @@ class DocenteController extends Controller
         
             // Set document information
             $pdf->SetCreator(PDF_CREATOR);
-            $pdf->SetAuthor('Instituto Cidencia Saude (ICS)');
+            $pdf->SetAuthor('Instituto Ciência de Saúde (ICS)');
             $pdf->SetTitle('Relatório de Funcionários');
             $pdf->SetSubject('Funcionários');
-        
-            // Add the company logo at the top of the page (Optional)
-            // Path to the logo image stored in public/images/company_logo.png
-            $logoPath = public_path('images/logo-icon.png'); // adjust the path as needed
-            $pdf->Image($logoPath, 15, 10, 50, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        
-            // Set header and footer
-            $pdf->setHeaderData('', 0, 'Relatório de Funcionários', 'INSTITUTO CIÊNCIA DE SAÚDE');
-            $pdf->setFooterData();
-        
-            // Set margins
-            $pdf->SetMargins(15, 27, 15);
-            $pdf->SetHeaderMargin(5);
-            $pdf->SetFooterMargin(10);
-        
-            // Set auto page breaks
-            $pdf->SetAutoPageBreak(true, 25);
         
             // Add a page
             $pdf->AddPage();
         
+            // Path to the logo image
+            $logoPath = public_path('/public/images/logo-con.png'); // Adjust the path accordingly
+        
+            // Create the custom header HTML similar to your provided image
+            $headerHtml = '
+            <table cellpadding="5" cellspacing="0" border="0">
+                <tr>
+                    <td style="text-align: center;">
+                        <img src="' . $logoPath . '" alt="Logo" height="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <h4>FUNDAÇÃO GRAÇA DEUS</h4>
+                        <h5>INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
+                        <p>ACREDITADA</p>
+                        <p>Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
+                        <p>Telemovel (+670) 76546180</p>
+                    </td>
+                </tr>
+            </table>';
+        
+            // Write the header to the PDF
+            $pdf->writeHTML($headerHtml, true, false, true, false, '');
+        
+            // Add a bit of space between the header and the table
+            $pdf->Ln(10);
+        
             // Create table header
             $html = '
-            <h1>Lista dos Funcionários</h1>
-            <table border="1" cellpadding="5">
+            <h3>Lista dos Funcionários</h3>
+            <table border="1" cellpadding="4">
                 <thead>
-                    <tr>
+                    <tr style="background-color: #f2f2f2;">
                         <th>Nome</th>
                         <th>Sexo</th>
                         <th>Data Moris</th>
@@ -891,12 +901,13 @@ class DocenteController extends Controller
         
             $html .= '</tbody></table>';
         
-            // Write the HTML content into the PDF
+            // Write the table content into the PDF
             $pdf->writeHTML($html, true, false, true, false, '');
         
             // Output the PDF
             return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
         }
+        
         
 
 
@@ -939,6 +950,7 @@ class DocenteController extends Controller
     )
     ->where('b.id_funcionario', $id)
     ->whereNull('a.estado')
+    ->orderByDesc('created_at')
     ->get();
 
           
@@ -984,13 +996,13 @@ class DocenteController extends Controller
         return view('pages.teachers.pozisaun.edit_pozisaun_funcionario', compact('id','detail','edit'));
     }
 
-    public function updatePozisaun(Request $request, $id)
+    public function update_posicao(Request $request, $id)
     {
       
         $request->validate([
             'nome_pozisaun' => 'required|string|max:255',
-            'data_inicio' => 'required|string|max:255',
-           
+            'data_inicio' => 'nullable|date',
+            'data_fim' => 'nullable|date',
         ]);
 
         $pozisaun = ModelPozisaunFuncionario::findOrFail($id); 
@@ -1002,5 +1014,15 @@ class DocenteController extends Controller
         // Redirect back to the habilitacao page with a success message
         return redirect()->route('posicao_funcionario', ['id' => $pozisaun->id_funcionario])
             ->with('success', 'posição Atualiza com sucesso .');
+    }
+
+    public function destroyPozisaun($id)
+    {
+        $posicao = ModelPozisaunFuncionario::findOrFail($id);
+        $posicao->estado = 'deleted'; // Update status to 'deleted'
+        $posicao->save();
+
+        return redirect()->route('posicao_funcionario', ['id' => $posicao->id_funcionario])
+            ->with('success', 'Posição do Funcionario Desabilitar Com Suceso.');
     }
 }

@@ -92,7 +92,7 @@
 
                                                     </div>
 
-                                                    <form id="delete-form-{{ $row->id_pozisaun_funcionario }}" action="{{ route('destroy_habilitacao', $row->id_pozisaun_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this habilitacao?');">
+                                                    <form id="delete-form-{{ $row->id_pozisaun_funcionario }}" action="{{ route('posicao.destroy', $row->id_pozisaun_funcionario) }}" method="POST" style="display: none;" onsubmit="return confirm('Voce tem certeza de desabilitar😢?');">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>

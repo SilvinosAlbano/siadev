@@ -14,7 +14,11 @@ class ModelMateriaSemestre extends Model
 
     protected $fillable = [
         'id_semestre',
-        'id_materia'
+        'id_materia',
+        'id_departamento',
+        'credito',
+        'observacao',
+        'estado'
     ];
 
     // Relacionamento com Semestre

@@ -87,6 +87,9 @@
                         <li class="nav-item">
                             <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Curiculo Faculdade</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da Semestre</a>
+                        </li>
                        
                     </ul>
                 </li>

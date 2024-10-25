@@ -78,10 +78,10 @@
                         </div>
                        
 
-                        <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                        <!-- <div class="col-12-xxxl col-lg-6 col-12 form-group">
                             <label>Credito *</label>
                             <input type="text" name="credito" value="{{ isset($mat) ? $mat->credito : old('credito') }}" class="form-control" required>
-                        </div>
+                        </div> -->
 
                             <div class="col-12 form-group mg-t-8">
                                 <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">
@@ -119,7 +119,7 @@
                                     </div>
                                 </th>
                                 <th>Nome Materia</th>
-                                <th>Credito</th>
+                                <!-- <th>Credito</th> -->
                                 <th>Acao</th>
                             </tr>
                         </thead>
@@ -140,7 +140,7 @@
             //    {data: 'id_materia', name: 'id_materia'},
                {data: 'codigo_materia', name: 'codigo_materia'},
                {data: 'materia', name: 'materia'},
-               {data: 'credito', name: 'credito'},
+            //    {data: 'credito', name: 'credito'},
                {data: 'action', name: 'action', orderable: false, searchable: false},
            ]
        });

@@ -77,6 +77,11 @@
                         <a class="nav-link active {{ request()->routeIs('inserir_materia_pozisaun') ? 'active' : '' }}" href="{{ route('inserir_materia_pozisaun', $detail->id_funcionario) }}">Inserir Posição</a>
                     </li>
                     @endif
+                    @if (request()->routeIs('alterar_posicao'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('alterar_posicao') ? 'active' : '' }}" href="{{ route('alterar_posicao', $detail->id_funcionario) }}">Atualizar Posição Funcionario</a>
+                    </li>
+                    @endif
 
                 </ul>
             </div>

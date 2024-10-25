@@ -11,12 +11,12 @@
             <div class="card-body border">
                 <div class="heading-layout1">
                     <div class="item-title">
-                        <h3>Atualizar Posição Funcionario</h3>
+                        <h3>Atualizar Posição do Funcionario ICS</h3>
                     </div>
                 </div>
             
                 <!-- Update form -->
-                <form method="POST" action="{{ route('update_posicao.update', $edit->id_pozisaun_funcionario) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('updateposicao', $detail->id_pozisaun_funcionario) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Nome Posição *</label>
-                            <input type="text" name="habilitacao" value="{{ $edit->nome_pozisaun }}"  required class="form-control border">
+                            <input type="text" name="nome_pozisaun" value="{{ $edit->nome_pozisaun }}"  required class="form-control border">
                         </div>
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label>Data Inicio Posição *</label>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-xl-4 col-lg-6 col-12 form-group">
                             <label> Data fim Posição *</label>
-                            <input type="date" name="data_fim" value="{{ $edit->data_fim }}" required class="form-control border">
+                            <input type="date" name="data_fim" value="{{ $edit->data_fim }}" class="form-control border">
                         </div>
                     </div>
 

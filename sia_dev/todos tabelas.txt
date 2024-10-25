@@ -213,3 +213,31 @@ CREATE OR REPLACE VIEW public.view_gdivisao_administrativa_suco_aldeia
      JOIN gdivisao_administrativa_controlo_sucos_aldeias sa ON sa.id_aldeias = a.id_aldeias
      JOIN gdivisao_administrativa_sucos s ON s.id_sucos = sa.id_sucos
   ORDER BY s.codigo_sucos, a.codigo_aldeias;
+
+
+==================
+CREATE TABLE IF NOT EXISTS public.materia_semestre
+(
+    id_materia_semestre uuid NOT NULL DEFAULT gen_random_uuid(),
+    id_materia uuid NOT NULL,
+    id_departamento uuid NOT NULL,
+    id_semestre uuid NOT NULL,
+    credito integer NOT NULL,
+    observacao text COLLATE pg_catalog."default",
+    estado character varying(250) COLLATE pg_catalog."default",
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT materia_semestre_pkey PRIMARY KEY (id_materia_semestre),
+    CONSTRAINT materia_semestre_id_departamento_foreign FOREIGN KEY (id_departamento)
+        REFERENCES public.departamento (id_departamento) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT materia_semestre_id_materia_foreign FOREIGN KEY (id_materia)
+        REFERENCES public.materia (id_materia) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT materia_semestre_id_semestre_foreign FOREIGN KEY (id_semestre)
+        REFERENCES public.semestre (id_semestre) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)

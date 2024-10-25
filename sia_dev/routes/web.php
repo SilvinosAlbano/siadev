@@ -141,8 +141,8 @@ Route::middleware('check.access')->group(function () {
     Route::post('/funcionario/pozisaun/store', [DocenteController::class, 'storePozisaun'])->name('store_pozisaun');
     Route::get('/alterar_posicao/{id}', [DocenteController::class, 'editPozisaun'])->name('alterar_posicao');
 
-    Route::put('/update_pozisaun/{id}', [DocenteController::class, 'updatePozisaun'])->name('update_posicao.update');
-
+    Route::put('/update_pozisaun/{id}', [DocenteController::class, 'update_posicao'])->name('updateposicao');
+    Route::delete('/funcionarioposicao/{id}', [DocenteController::class, 'destroyPozisaun'])->name('posicao.destroy');
     #end 
     #create funcionario
     Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
@@ -166,6 +166,13 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
  
     Route::get('get-materia', [DisciplinasController::class, 'getMateria'])->name('get.materia');
+
+    Route::get('/materia_semestre', [DisciplinasController::class, 'showMateriaSemestre'])->name('materia_semestre.index');
+    Route::post('/materia/store', [DisciplinasController::class, 'storeMateriaSemestre'])->name('materiasemestre.store');
+    Route::put('/materia/update/{id}', [DisciplinasController::class, 'updateMateriaSemestre'])->name('materiasemestre.update');
+    Route::get('get-materia-semetre', [DisciplinasController::class, 'getMateriaSemestre'])->name('get.materia_semestre');
+    Route::delete('/materia/semestre/{id}', [DisciplinasController::class, 'destroyMateriaSemestre'])->name('materia_semestre.destroy');
+
     // end
 
     // sala aulas start
