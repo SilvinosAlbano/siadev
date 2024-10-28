@@ -26,9 +26,10 @@
                         </div>
                     </div>
                     <div class="col-6">
+                       
                         <div class="item-content">
                             <div class="item-title">Estudante</div>
-                            <div class="item-number"><span class="counter" data-num="{{$totalEstudante}}">{{$totalEstudante}}</span>
+                            <div class="item-number"><span>total:</span><span class="counter" data-num="{{$totalEstudante}}">{{$totalEstudante}}</span>
                             </div>
                         </div>
                     </div>
@@ -43,12 +44,14 @@
                             <i class="flaticon-multiple-users-silhouette text-blue"></i>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6">                      
+
                         <div class="item-content">
                             <div class="item-title">Funcionario em Ativo</div>
-                            <div class="item-number"><span class="counter" data-num="{{$totalFuncionario}}">{{$totalFuncionario}}</span>
+                            <div class="item-number"><span>total:</span><span class="counter" data-num="{{$totalFuncionario}}">{{$totalFuncionario}}</span>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -61,13 +64,16 @@
                             <i class="flaticon-couple text-orange"></i>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="item-content">
-                            <div class="item-title">Parents</div>
-                            <div class="item-number"><span class="counter" data-num="5690">5,690</span>
+                    <a href="#">
+                        <div class="col-6">
+                           
+                            <div class="item-content">
+                                <div class="item-title">Departamento</div>
+                                <div class="item-number"><span>total:</span><span class="counter" data-num="5">5</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -81,8 +87,8 @@
                     </div>
                     <div class="col-6">
                         <div class="item-content">
-                            <div class="item-title">Earnings</div>
-                            <div class="item-number"><span>$</span><span class="counter" data-num="193000">1,93,000</span>
+                            <div class="item-title">Faculdade</div>
+                            <div class="item-number"><span>total:</span><span class="counter" data-num="1">1</span>
                             </div>
                         </div>
                     </div>
