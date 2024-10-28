@@ -15,6 +15,18 @@ class HomeController extends Controller
         ->whereNull('controlo_estado')
         ->count('id_student');
 
-        return view('pages.home', compact('totalFuncionario','totalEstudante'));
+
+       
+       $data = DB::table('view_pagamento_estudante')
+        ->select(
+            DB::raw("EXTRACT(YEAR FROM data_selu) as year"),
+            DB::raw("SUM(total_paid) as total_earning")
+        )
+        ->where('payment_status', 'Paid')
+        ->groupBy(DB::raw("EXTRACT(YEAR FROM data_selu)"))
+        ->orderBy('year')
+        ->get();
+    
+        return view('pages.home', compact('totalFuncionario','totalEstudante','data'));
     }
 }

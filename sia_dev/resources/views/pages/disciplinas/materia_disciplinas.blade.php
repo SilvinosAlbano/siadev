@@ -58,7 +58,7 @@
 
                     <!-- Form for Adding/Editing a Subject -->
                     <form method="POST"
-                        action="{{ isset($mat) ? route('materia.update', $mat->id_materia) : route('materia.store') }}">
+                        action="">
                         @csrf
                         @if (isset($mat))
                             @method('PUT')

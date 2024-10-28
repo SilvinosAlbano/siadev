@@ -137,7 +137,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <p>Total Credito (SKS): <span id="totalCredito">0</span></p>
+                        <p class="text-primary">Total Credito (SKS): <span class="text-danger" id="totalCredito">0</span></p>
 
                        
                     </div>

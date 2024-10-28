@@ -31,6 +31,8 @@ use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisa
 use App\Models\ModelHorario;
 use App\Models\ModelMateria;
 use TCPDF;
+Use App\Http\Controllers\Storage;
+use App\Http\Controllers\rawcolumns;
 use App\Imports\TeacherImport;
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
@@ -41,12 +43,86 @@ class DocenteController extends Controller
 {
 
 
+
+    public function escolhaDados()
+    {
+     
+        // $departamento = ModelDepartamento::all();
+      
+        // $departamento = DB::table('view_docente')->select('id_departamento')->distinct()->get();
+        $departamento = DB::table('funcionario as a')
+        ->select(
+            'h.id_departamento',
+            'h.nome_departamento',
+            DB::raw('COUNT(a.id_funcionario) as total_funcionarios')
+        )
+        ->leftJoin('departamento_funcionario as g', 'g.id_funcionario', '=', 'a.id_funcionario')
+        ->leftJoin('departamento as h', 'h.id_departamento', '=', 'g.id_departamento')
+        ->groupBy('h.id_departamento', 'h.nome_departamento')
+        ->get();
+
+        return view('pages.teachers.escolha_modul_docente', compact('departamento'));
+
+    }
+
+    public function showDetailEscolha($id)
+    {
+        // Fetch the detail data from the view_gfuncionario view based on id_funcionario
+        $docente = DB::table('view_docente')
+            ->where('id_departamento', $id)
+            ->orderByDesc('created_at')
+            ->first();
+
+           
+        // Check if the data was found
+        if (!$docente) {
+            // Optionally, handle the case where no data was found
+            return redirect()->back()->with('error', 'Details not found.');
+        }
+
+        return view('pages.teachers.docente_por_departamento', compact('docente'));
+    }
+
     public function index(Request $request)
     {
      
         
         return view('pages.teachers.all_teachers');
+        
+
     }
+
+
+    public function getDocentesdepartamento(Request $request)
+    {
+        $id_departamento = $request->id_departamento;
+    
+        if ($request->ajax()) {
+            $data = DB::table('view_docente')
+                      ->where('id_departamento', $id_departamento) // Filter by id_departamento
+                      ->select('*');
+    
+                      return DataTables::of($data)
+                      ->addIndexColumn()
+                      ->addColumn('action', function($row) {
+                          $editUrl = route('editar', $row->id_funcionario);
+                          $detailUrl = route('detailho', $row->id_funcionario);
+                          $deleteUrl = route('docentes.destroy', $row->id_funcionario);
+                  
+                          $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                          $btn .= ' <a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+                          $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Delete</button>';
+                  
+                          return $btn;
+                      })
+                      ->rawColumns(['action']) // Ensure correct syntax here
+                      ->make(true);
+                  
+        }
+    }
+    
+
+
 
 
     public function getFuncionario(Request $request)

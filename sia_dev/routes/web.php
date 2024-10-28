@@ -32,13 +32,13 @@ Route::post('password/reset', [AuthController::class, 'reset'])->name('password.
 // Route::group(['middleware' => ['auth', 'role:admin']], function () {
 Route::middleware('check.access')->group(function () {
     // Public Routes
-    Route::get('/', function () {
-        return view('pages.home');
-    });
-    Route::get('/home', function () {
-        return view('pages.home');
-    });
-
+    // Route::get('/', function () {
+    //     return view('pages.home');
+    // });
+    // Route::get('/home', function () {
+    //     return view('pages.home');
+    // });
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     // Students Routes
@@ -92,8 +92,14 @@ Route::middleware('check.access')->group(function () {
 
     // route for teachers
     // Route for Menus of Teachers
+    Route::get('/escolha_dados_docentes', [DocenteController::class, 'escolhaDados'])->name('escolha');
+    Route::get('/detailho_escolha/{id}', [DocenteController::class, 'showDetailEscolha'])->name('detailho_escolha');
     Route::post('/import-excel-funcionario', [DocenteController::class, 'import_excel_post'])->name('import-excel-funcionario');
     Route::get('/funcionarios', [DocenteController::class, 'index'])->name('funcionarios.index');
+    Route::get('get-docentes', [DocenteController::class, 'getDocentesdepartamento'])->name('get.docentesdepartamento');
+
+
+
     Route::get('/detailho/{id}', [DocenteController::class, 'showDetail'])->name('detailho');
     Route::get('/habilitacao/{id}', [DocenteController::class, 'showHabilitacoes'])->name('habilitacao_funcionario');
     Route::get('/funcionario/horario/{id}', [DocenteController::class, 'horario'])->name('horario');
@@ -160,7 +166,7 @@ Route::middleware('check.access')->group(function () {
 
     // materia discplina start
     Route::get('/disciplinas', [DisciplinasController::class, 'index'])->name('disciplinas.index');
-    Route::post('/materia/store', [DisciplinasController::class, 'store'])->name('materia.store');
+    Route::post('/materia/store', [DisciplinasController::class, 'store'])->name('materia.stores');
     Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
     Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');

@@ -6,7 +6,7 @@
         <h3>Docentes</h3>
         <ul>
             <li>
-                <a href="/home">Home</a>
+                <a href="escolha_dados_docentes">Escolha Dados</a>
             </li>
             <li>Formulário de Submissão Funcionario ICS</li>
         </ul>

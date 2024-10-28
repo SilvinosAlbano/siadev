@@ -42,20 +42,22 @@
                     <a href="#" class="nav-link"><i
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
                     <ul class="nav sub-group-menu">
+                         <li class="nav-item">
+                            <a href="/adiciona_funcionario" class="nav-link"><i class="fas fa-angle-right"></i>Registo
+                               Docentes</a>
+                        </li>
+                         <li class="nav-item">
+                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Docentes</a>
+                        </li>
                         <li class="nav-item">
-                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Todos
-                                Funcionarios</a>
+                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Dados 
+                               Gerais</a>
                         </li>
                         <li class="nav-item">
                             <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
-                                Funcionarios</a>
+                                </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/teacher_payment" class="nav-link"><i class="fas fa-angle-right"></i>Pagamento
-                                de
-                                Funcionarios</a>
-                        </li>
-
+                        
                     </ul>
                 </li>
                 <li class="nav-item sidebar-nav-item">
@@ -84,9 +86,7 @@
                         <li class="nav-item">
                             <a href="/disciplinas" class="nav-link"><i class="fas fa-angle-right"></i>silabos da Materia</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Curiculo Faculdade</a>
-                        </li>
+                       
                         <li class="nav-item">
                             <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da Semestre</a>
                         </li>
