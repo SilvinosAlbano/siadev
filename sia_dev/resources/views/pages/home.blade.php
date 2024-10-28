@@ -3,16 +3,20 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<style>
+    
+</style>
     <!-- Breadcubs Area Start Here -->
-    <div class="breadcrumbs-area">
-        <h3>Admin Dashboard</h3>
-        <ul>
-            <li>
-                <a href="/home">Home</a>
-            </li>
-            <li>Admin</li>
-        </ul>
+    <div class="breadcrumbs-area text-center">
+    <div class="university-logo">
+        <img src="{{ asset('images/logo.jpg') }}" alt="University Logo" class="logo" style="width: 50px;">
     </div>
+    <h3 class="mt-1">BEM-VINDO AO DASHBOARD DO SISTEMA DE INFORMAÇÃO ACADÊMICA DO INSTITUTO DE CIÊNCIA DA SAÚDE <br>ICS </h3>
+    <ul class="breadcrumb-list">
+       
+    </ul>
+</div>
+
 
     <!-- Breadcubs Area End Here -->
     <!-- Dashboard summery Start Here -->
