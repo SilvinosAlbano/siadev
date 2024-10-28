@@ -26,7 +26,14 @@ class HomeController extends Controller
         ->groupBy(DB::raw("EXTRACT(YEAR FROM data_selu)"))
         ->orderBy('year')
         ->get();
-    
-        return view('pages.home', compact('totalFuncionario','totalEstudante','data'));
+
+
+
+        $genderData = DB::table('students')
+        ->select(DB::raw('gender, COUNT(*) as count'))
+        ->groupBy('gender')
+        ->pluck('count', 'gender')
+        ->toArray();
+        return view('pages.home', compact('totalFuncionario','totalEstudante','data','genderData'));
     }
 }
