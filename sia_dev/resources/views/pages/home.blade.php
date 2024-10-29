@@ -102,13 +102,15 @@
     </div>
     <!-- Dashboard summery End Here -->
     <!-- Dashboard Content Start Here -->
+
+   
     <div class="row gutters-20">
         <div class="col-12 col-xl-8 col-6-xxxl">
             <div class="card dashboard-card-one pd-b-20">
                 <div class="card-body">
                     <div class="heading-layout1">
                         <div class="item-title">
-                            <h3>Earnings</h3>
+                            <h3>Grafico  total de ganhos cada ano</h3>
                         </div>
                     </div>
                     <div class="earning-chart-wrap">
@@ -116,13 +118,8 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
 
-
-
-<!-- Make sure to load main.js where the chart initialization code exists -->
-
-        <!-- student -->
         <div class="col-xl-12 col-xl-12 col-6-xxxl">
             <div class="card dashboard-card-three pd-b-20">
                 <div class="card-body">
@@ -147,26 +144,24 @@
                 </div>
             </div>
         </div>
-
+    </div>
         <!-- alertas -->
-        <div class="col-12 col-xl-6 col-4-xxxl">
-            <div class="card dashboard-card-four pd-b-20">
-                <div class="card-body">
-                    <div class="heading-layout1">
-                        <div class="item-title">
-                            <h3>Alertas</h3>
+        
+        <div class="row">
+            <div class="col-12 col-xl-6 col-12-xxxl mt-4 mb-4">
+                <div class="card dashboard-card-four pd-b-20">
+                    <div class="card-body">
+                        <div class="heading-layout1">
+                            <div class="item-title">
+                                <h3>Alertas Total Estudante que Falta de pagamento Cada Departamento</h3>
+                            </div>
+                        
                         </div>
-                       
-                    </div>
-                    <div class="calender-wrap">
-                       Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa ex facere beatae placeat ad similique, culpa nam rem sint ullam minus iste mollitia atque deserunt eveniet, amet ut eos pariatur!
+                      
                     </div>
                 </div>
             </div>
         </div>
-        
-       
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     // Pass the data from PHP to JavaScript

@@ -888,101 +888,105 @@ class DocenteController extends Controller
         }
 
     
-        public function exportPDF(Request $request)
-        {
-            // Fetch filtered data based on request parameters
-            $query = ModelDocente::query();
-        
-            if ($request->sexo) {
-                $query->where('sexo', $request->sexo);
-            }
-        
-            if ($request->data_moris) {
-                $query->where('data_moris', $request->data_moris);
-            }
-        
-            if ($request->categoria) {
-                $query->where('categoria', $request->categoria);
-            }
-        
-            $funcionarios = $query->get();
-        
-            // Initialize TCPDF
-            $pdf = new TCPDF();
-        
-            // Set document information
-            $pdf->SetCreator(PDF_CREATOR);
-            $pdf->SetAuthor('Instituto Ciência de Saúde (ICS)');
-            $pdf->SetTitle('Relatório de Funcionários');
-            $pdf->SetSubject('Funcionários');
-        
-            // Add a page
-            $pdf->AddPage();
-        
-            // Path to the logo image
-            $logoPath = public_path('/public/images/logo-con.png'); // Adjust the path accordingly
-        
-            // Create the custom header HTML similar to your provided image
-            $headerHtml = '
-            <table cellpadding="5" cellspacing="0" border="0">
-                <tr>
-                    <td style="text-align: center;">
-                        <img src="' . $logoPath . '" alt="Logo" height="50" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">
-                        <h4>FUNDAÇÃO GRAÇA DEUS</h4>
-                        <h5>INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
-                        <p>ACREDITADA</p>
-                        <p>Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
-                        <p>Telemovel (+670) 76546180</p>
-                    </td>
-                </tr>
-            </table>';
-        
-            // Write the header to the PDF
-            $pdf->writeHTML($headerHtml, true, false, true, false, '');
-        
-            // Add a bit of space between the header and the table
-            $pdf->Ln(10);
-        
-            // Create table header
-            $html = '
-            <h3>Lista dos Funcionários</h3>
-            <table border="1" cellpadding="4">
-                <thead>
-                    <tr style="background-color: #f2f2f2;">
-                        <th>Nome</th>
-                        <th>Sexo</th>
-                        <th>Data Moris</th>
-                        <th>Categoria</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>';
-        
-            // Loop through the data and generate table rows
-            foreach ($funcionarios as $funcionario) {
-                $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
-                $html .= '
-                    <tr>
-                        <td>' . $funcionario->nome_funcionario . '</td>
-                        <td>' . $funcionario->sexo . '</td>
-                        <td>' . $funcionario->data_moris . '</td>
-                        <td>' . $funcionario->categoria . '</td>
-                        <td>' . $estado . '</td>
-                    </tr>';
-            }
-        
-            $html .= '</tbody></table>';
-        
-            // Write the table content into the PDF
-            $pdf->writeHTML($html, true, false, true, false, '');
-        
-            // Output the PDF
-            return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
-        }
+       public function exportPDF(Request $request)
+{
+    // Fetch filtered data based on request parameters
+    $query = ModelDocente::query();
+
+    if ($request->sexo) {
+        $query->where('sexo', $request->sexo);
+    }
+
+    if ($request->data_moris) {
+        $query->where('data_moris', $request->data_moris);
+    }
+
+    if ($request->categoria) {
+        $query->where('categoria', $request->categoria);
+    }
+
+    $funcionarios = $query->get();
+
+    // Initialize TCPDF
+    $pdf = new TCPDF();
+
+    // Set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Instituto Ciência de Saúde (ICS)');
+    $pdf->SetTitle('Relatório de Funcionários');
+    $pdf->SetSubject('Funcionários');
+
+    // Add a page
+    $pdf->AddPage();
+
+    // Path to the logo image
+    $logoPath = public_path('/asset/images/logo.jpg'); // Adjust the path accordingly
+
+    // Create the custom header HTML similar to your provided image
+    $headerHtml = '
+    <table cellpadding="5" cellspacing="0" border="0" style="width:100%; text-align: center;">
+        <tr>
+            <td>
+                <img src="' . $logoPath . '" alt="Logo" height="50" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4 style="font-size: 14px; margin: 0;">FUNDAÇÃO GRAÇA DEUS</h4>
+                <h5 style="font-size: 12px; margin: 0;">INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
+                <p style="font-size: 10px; margin: 0;">ACREDITADA</p>
+                <p style="font-size: 10px; margin: 0;">Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
+                <p style="font-size: 10px; margin: 0;">Telemovel (+670) 76546180</p>
+            </td>
+        </tr>
+    </table>';
+
+    // Write the header to the PDF
+    $pdf->writeHTML($headerHtml, true, false, true, false, '');
+
+    // Add a bit of space between the header and the table
+    $pdf->Ln(10);
+
+    // Create table header with numbering column
+    $html = '
+    <h3 style="text-align: center; font-family: Arial, sans-serif;">Lista dos Funcionários</h3>
+    <table border="1" cellpadding="4" cellspacing="0" style="width:100%; border-collapse:collapse; font-size: 11px; font-family: Arial, sans-serif;">
+        <thead>
+            <tr style="background-color: #f2f2f2; color: #333; text-align: center;">
+              
+                <th style="border: 1px solid #ddd; padding: 8px;">Nome</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Sexo</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Data Moris</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Categoria</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+    // Loop through the data and generate table rows with numbering
+    $number = 1;
+    foreach ($funcionarios as $funcionario) {
+        $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
+        $html .= '
+            <tr style="text-align: center;">
+                
+                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->nome_funcionario . '</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->sexo . '</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->data_moris . '</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->categoria . '</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">' . $estado . '</td>
+            </tr>';
+    }
+
+    $html .= '</tbody></table>';
+
+    // Write the table content into the PDF
+    $pdf->writeHTML($html, true, false, true, false, '');
+
+    // Output the PDF
+    return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
+}
+
         
         
 
