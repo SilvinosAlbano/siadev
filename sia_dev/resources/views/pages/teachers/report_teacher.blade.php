@@ -18,7 +18,7 @@
                 
             <div class="col-2-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                 <a href="{{ route('funcionarios.export.pdf', request()->query()) }}" class="fw-btn-fill btn-gradient-yellow">
-                                    Export to PDF
+                                    Export to PDF <i class="fas fa-file"></i>
                                 </a>
                             </div>
             </div>
@@ -100,7 +100,13 @@
             columns: [
                 {data: 'nome_funcionario', name: 'nome_funcionario'},
                 {data: 'sexo', name: 'sexo'},
-                {data: 'data_moris', name: 'data_moris'},
+                { 
+                data: 'data_moris', 
+                name: 'data_moris',
+                render: function(data, type, row) {
+                    return moment(data).format('DD-MM-YYYY'); // Format the date using moment.js
+                }
+            },
                 {data: 'categoria', name: 'categoria'},
                 {data: 'nome_departamento', name: 'nome_departamento'},
                 {

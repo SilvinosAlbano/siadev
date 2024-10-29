@@ -47,8 +47,7 @@ class DocenteController extends Controller
     public function escolhaDados()
     {
      
-        // $departamento = ModelDepartamento::all();
-      
+
         // $departamento = DB::table('view_docente')->select('id_departamento')->distinct()->get();
         $departamento = DB::table('funcionario as a')
         ->select(
@@ -61,7 +60,17 @@ class DocenteController extends Controller
         ->groupBy('h.id_departamento', 'h.nome_departamento')
         ->get();
 
-        return view('pages.teachers.escolha_modul_docente', compact('departamento'));
+        $alerta_tipo_contrato  = DB::table('funcionario as a')
+        ->select(
+            'j.estatuto as tipo_contrato', 
+            DB::raw('COUNT(DISTINCT a.id_funcionario) as total_funcionarios')
+        )
+        ->leftJoin('estatuto_funcionario as i', 'i.id_funcionario', '=', 'a.id_funcionario')
+        ->leftJoin('tipo_estatuto as j', 'j.id_estatuto', '=', 'i.id_estatuto')
+        ->groupBy('j.estatuto')
+        ->get();
+
+        return view('pages.teachers.escolha_modul_docente', compact('departamento','alerta_tipo_contrato'));
 
     }
 
@@ -888,104 +897,103 @@ class DocenteController extends Controller
         }
 
     
-       public function exportPDF(Request $request)
-{
-    // Fetch filtered data based on request parameters
-    $query = ModelDocente::query();
+     public function exportPDF(Request $request)
+    {
+        // Fetch filtered data based on request parameters
+        // $query = ModelDocente::query();
+        $query = DB::table('view_monitoramento_funcionario');
+        if ($request->sexo) {
+            $query->where('sexo', $request->sexo);
+        }
 
-    if ($request->sexo) {
-        $query->where('sexo', $request->sexo);
-    }
+        if ($request->data_moris) {
+            $query->where('data_moris', $request->data_moris);
+        }
 
-    if ($request->data_moris) {
-        $query->where('data_moris', $request->data_moris);
-    }
+        if ($request->categoria) {
+            $query->where('categoria', $request->categoria);
+        }
 
-    if ($request->categoria) {
-        $query->where('categoria', $request->categoria);
-    }
+        $funcionarios = $query->get();
 
-    $funcionarios = $query->get();
+        // Initialize TCPDF
+        $pdf = new TCPDF();
 
-    // Initialize TCPDF
-    $pdf = new TCPDF();
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Instituto Ciência de Saúde (ICS)');
+        $pdf->SetTitle('Relatório de Funcionários');
+        $pdf->SetSubject('Funcionários');
 
-    // Set document information
-    $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Instituto Ciência de Saúde (ICS)');
-    $pdf->SetTitle('Relatório de Funcionários');
-    $pdf->SetSubject('Funcionários');
+        // Add a page
+        $pdf->AddPage();
 
-    // Add a page
-    $pdf->AddPage();
+        // Path to the logo image
+        $logoPath = public_path('/images/logo_con.png'); // Adjust the path accordingly
 
-    // Path to the logo image
-    $logoPath = public_path('/asset/images/logo.jpg'); // Adjust the path accordingly
-
-    // Create the custom header HTML similar to your provided image
-    $headerHtml = '
-    <table cellpadding="5" cellspacing="0" border="0" style="width:100%; text-align: center;">
-        <tr>
-            <td>
+        // Create the custom header HTML similar to your provided image
+        $headerHtml = '
+        <table cellpadding="5" cellspacing="0" border="0" style="width:100%; text-align: center;">
+        
+                <tr>
+                <td>
                 <img src="' . $logoPath . '" alt="Logo" height="50" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h4 style="font-size: 14px; margin: 0;">FUNDAÇÃO GRAÇA DEUS</h4>
-                <h5 style="font-size: 12px; margin: 0;">INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
-                <p style="font-size: 10px; margin: 0;">ACREDITADA</p>
-                <p style="font-size: 10px; margin: 0;">Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
-                <p style="font-size: 10px; margin: 0;">Telemovel (+670) 76546180</p>
-            </td>
-        </tr>
-    </table>';
-
-    // Write the header to the PDF
-    $pdf->writeHTML($headerHtml, true, false, true, false, '');
-
-    // Add a bit of space between the header and the table
-    $pdf->Ln(10);
-
-    // Create table header with numbering column
-    $html = '
-    <h3 style="text-align: center; font-family: Arial, sans-serif;">Lista dos Funcionários</h3>
-    <table border="1" cellpadding="4" cellspacing="0" style="width:100%; border-collapse:collapse; font-size: 11px; font-family: Arial, sans-serif;">
-        <thead>
-            <tr style="background-color: #f2f2f2; color: #333; text-align: center;">
-              
-                <th style="border: 1px solid #ddd; padding: 8px;">Nome</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Sexo</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Data Moris</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Categoria</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Estado</th>
+                    <h4 style="font-size: 14px; margin: 0;">FUNDAÇÃO GRAÇA DEUS</h4>
+                    <h5 style="font-size: 12px; margin: 0;">INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
+                    <p style="font-size: 10px; margin: 0;">ACREDITADA</p>
+                    <p style="font-size: 10px; margin: 0;">Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
+                    <p style="font-size: 10px; margin: 0;">Telemovel (+670) 76546180</p>
+                </td>
             </tr>
-        </thead>
-        <tbody>';
+        </table>';
 
-    // Loop through the data and generate table rows with numbering
-    $number = 1;
-    foreach ($funcionarios as $funcionario) {
-        $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
-        $html .= '
-            <tr style="text-align: center;">
-                
-                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->nome_funcionario . '</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->sexo . '</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->data_moris . '</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->categoria . '</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">' . $estado . '</td>
-            </tr>';
+        // Write the header to the PDF
+        $pdf->writeHTML($headerHtml, true, false, true, false, '');
+
+        // Add a bit of space between the header and the table
+        $pdf->Ln(2);
+
+        // Create table header with numbering column
+        $html = '
+        
+        <h3 style="text-align: left; font-family: Arial, sans-serif;">I.Lista dos Funcionários</h3>
+        <table border="1" cellpadding="4" cellspacing="0" style="width:100%; border-collapse:collapse; font-size: 8px; font-family: Arial, sans-serif;">
+            <thead>
+                <tr style="background-color: #f2f2f2; color: #333; text-align: center;">
+                    <th style="border: 1px solid #ddd; padding: 0px;">No.</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Nome</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Sexo</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Data Moris</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Categoria</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Departamento</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        // Loop through the data and generate table rows with numbering
+        $number = 1;
+        foreach ($funcionarios as $funcionario) {
+            $estado = $funcionario->controlo_estado === null ? 'Ativo' : 'Nao Ativo';
+            $html .= '
+                <tr style="text-align: center;">
+                    <td style="border: 1px solid #ddd; padding: 8px;">' . $number++ . '</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->nome_funcionario . ', ' . $funcionario->titulu . '</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->sexo . '</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">' . date('d-m-Y', strtotime($funcionario->data_moris)) . '</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->categoria . '</td>
+                   <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->nome_departamento . '</td>
+
+                </tr>';
+        }
+
+        $html .= '</tbody></table>';
+
+        // Write the table content into the PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Output the PDF
+        return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
     }
-
-    $html .= '</tbody></table>';
-
-    // Write the table content into the PDF
-    $pdf->writeHTML($html, true, false, true, false, '');
-
-    // Output the PDF
-    return $pdf->Output('funcionarios_report.pdf', 'D'); // D = download, I = inline display
-}
 
         
         

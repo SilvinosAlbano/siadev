@@ -97,7 +97,13 @@
             columns: [
                 {data: 'nome_funcionario', name: 'nome_funcionario'},
                 {data: 'sexo', name: 'sexo'},
-                {data: 'data_moris', name: 'data_moris'},
+                { 
+                data: 'data_moris', 
+                name: 'data_moris',
+                render: function(data, type, row) {
+                    return moment(data).format('DD-MM-YYYY'); // Format the date using moment.js
+                }
+            },
                 {data: 'nome_departamento', name: 'nome_departamento'},
                 // {data: 'tipo_contrato', name: 'tipo_contrato'},
                 {
