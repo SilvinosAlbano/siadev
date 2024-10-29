@@ -9,7 +9,7 @@
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area text-center">
     <div class="university-logo">
-        <img src="{{ asset('images/logo.jpg') }}" alt="University Logo" class="logo" style="width: 50px;">
+        <img src="{{ asset('images/logo_con.png') }}" alt="University Logo" class="logo" style="width: 50px;">
     </div>
     <h3 class="mt-1">BEM-VINDO AO DASHBOARD DO SISTEMA DE INFORMAÇÃO ACADÊMICA DO INSTITUTO DE CIÊNCIA DA SAÚDE <br>ICS </h3>
     <ul class="breadcrumb-list">
@@ -147,7 +147,7 @@
     </div>
         <!-- alertas -->
         
-        <div class="row">
+        <div class="row gutters-20">
             <div class="col-12 col-xl-6 col-12-xxxl mt-4 mb-4">
                 <div class="card dashboard-card-four pd-b-20">
                     <div class="card-body">
