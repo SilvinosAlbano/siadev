@@ -105,7 +105,7 @@
 
    
     <div class="row gutters-20">
-        <div class="col-12 col-xl-8 col-6-xxxl">
+        <div class="col-12 col-xl-12 col-6-xxxl">
             <div class="card dashboard-card-one pd-b-20">
                 <div class="card-body">
                     <div class="heading-layout1">
