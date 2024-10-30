@@ -241,3 +241,45 @@ CREATE TABLE IF NOT EXISTS public.materia_semestre
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
+
+
+
+==================================
+CREATE OR REPLACE VIEW public.view_docente
+ AS
+ SELECT DISTINCT ON (a.id_funcionario) a.id_funcionario,
+    h.id_departamento,
+    a.nome_funcionario,
+    a.titulu,
+    a.sexo,
+    a.data_moris,
+    a.nacionalidade,
+    a.categoria,
+    a.ano_inicio,
+    f.id_tipo_categoria,
+    a.observacao,
+    a.controlo_estado,
+    a.no_contacto,
+    a.email,
+    g.id_departamento_funcionario,
+    h.nome_departamento,
+    j.estatuto AS tipo_contrato,
+    i.id_estatuto_funcionario,
+    i.data_inicio AS inicio_estatuto,
+    i.data_fim AS fim_estatuto,
+    k.id_habilitacao,
+    k.habilitacao,
+    k.universidade_origem,
+    k.area_especialidade,
+    k.controlo_estado AS estado_habilitacao,
+    l.id_pozisaun_funcionario,
+    l.nome_pozisaun,
+    i.created_at
+   FROM funcionario a
+     LEFT JOIN tipo_categoria_admin f ON f.id_tipo_categoria = a.id_tipo_categoria
+     LEFT JOIN departamento_funcionario g ON g.id_funcionario = a.id_funcionario
+     LEFT JOIN departamento h ON h.id_departamento = g.id_departamento
+     LEFT JOIN estatuto_funcionario i ON i.id_funcionario = a.id_funcionario
+     LEFT JOIN tipo_estatuto j ON j.id_estatuto = i.id_estatuto
+     LEFT JOIN habilitacao k ON k.id_funcionario = a.id_funcionario
+     LEFT JOIN pozisaun_funcionario l ON l.id_funcionario = a.id_funcionario;
