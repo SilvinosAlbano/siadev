@@ -92,6 +92,7 @@ class DocenteController extends Controller
         return view('pages.teachers.docente_por_departamento', compact('docente'));
     }
 
+    // index dados gerais docentes
     public function index(Request $request)
     {
      
@@ -139,7 +140,7 @@ class DocenteController extends Controller
         if ($request->ajax()) {
         
             // Use DB query without pagination as DataTables will handle pagination
-            $data = DB::table('view_gfuncionario')->select('*');
+            $data = DB::table('view_docente')->select('*');
             
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -933,16 +934,16 @@ class DocenteController extends Controller
 
         // Create the custom header HTML similar to your provided image
         $headerHtml = '
-        <table cellpadding="5" cellspacing="0" border="0" style="width:100%; text-align: center;">
+        <table cellpadding="7" cellspacing="0" border="0" style="width:100%; text-align: center;">
         
                 <tr>
                 <td>
-                <img src="' . $logoPath . '" alt="Logo" height="50" />
-                    <h4 style="font-size: 14px; margin: 0;">FUNDAÇÃO GRAÇA DEUS</h4>
-                    <h5 style="font-size: 12px; margin: 0;">INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
-                    <p style="font-size: 10px; margin: 0;">ACREDITADA</p>
-                    <p style="font-size: 10px; margin: 0;">Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
-                    <p style="font-size: 10px; margin: 0;">Telemovel (+670) 76546180</p>
+                <img src="' . $logoPath . '" alt="Logo" height="30" />
+                    <h5 style="font-size: 8px; margin: 0;">FUNDAÇÃO GRAÇA DEUS</h5>
+                    <h5 style="font-size: 8px; margin: 0;">INSTITUTO DE CIÊNCIAS DA SAÚDE</h5>
+                    <p style="font-size: 7px; margin: 0;">ACREDITADA</p>
+                    <p style="font-size: 7px; margin: 0;">Rua de Moris Foun, Comoro, Dili, Timor – Leste</p>
+                    <p style="font-size: 7px; margin: 0;">Telemovel (+670) 76546180</p>
                 </td>
             </tr>
         </table>';
@@ -956,16 +957,18 @@ class DocenteController extends Controller
         // Create table header with numbering column
         $html = '
         
-        <h3 style="text-align: left; font-family: Arial, sans-serif;">I.Lista dos Funcionários</h3>
-        <table border="1" cellpadding="4" cellspacing="0" style="width:100%; border-collapse:collapse; font-size: 8px; font-family: Arial, sans-serif;">
+        <h5 style="text-align: left; font-family: Arial, sans-serif;">I.Lista dos Funcionários</h5>
+        <table border="1" cellpadding="4" cellspacing="0" style="width:100%; border-collapse:collapse; font-size: 7px; font-family: Arial, sans-serif;">
             <thead>
                 <tr style="background-color: #f2f2f2; color: #333; text-align: center;">
                     <th style="border: 1px solid #ddd; padding: 0px;">No.</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">Nome</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Nome</th>
                     <th style="border: 1px solid #ddd; padding: 8px;">Sexo</th>
                     <th style="border: 1px solid #ddd; padding: 8px;">Data Moris</th>
                     <th style="border: 1px solid #ddd; padding: 8px;">Categoria</th>
                     <th style="border: 1px solid #ddd; padding: 8px;">Departamento</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Tipo Contrato</th>
+                     <th style="border: 1px solid #ddd; padding: 8px;">Nivel Educação</th>
                 </tr>
             </thead>
             <tbody>';
@@ -982,6 +985,8 @@ class DocenteController extends Controller
                     <td style="border: 1px solid #ddd; padding: 8px;">' . date('d-m-Y', strtotime($funcionario->data_moris)) . '</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->categoria . '</td>
                    <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->nome_departamento . '</td>
+                   <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->estatuto . '</td>
+                   <td style="border: 1px solid #ddd; padding: 8px;">' . $funcionario->habilitacao . '</td>
 
                 </tr>';
         }

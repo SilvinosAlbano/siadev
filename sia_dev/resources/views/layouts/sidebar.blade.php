@@ -47,7 +47,7 @@
                                Docentes</a>
                         </li>
                          <li class="nav-item">
-                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Docentes</a>
+                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Escolha Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Dados 

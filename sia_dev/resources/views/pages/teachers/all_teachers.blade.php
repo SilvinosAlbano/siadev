@@ -54,7 +54,7 @@
                         <th>Data Moris</th>
                         <th>Categoria</th>
                         <th>Estado</th>
-                        <th>Action</th>
+                        <th>Acao</th>
                     </tr>
                     <tr>
                         <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
