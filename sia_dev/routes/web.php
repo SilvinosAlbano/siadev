@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
+use App\Http\Controllers\Disciplinas_DisciplinasController;
 use App\Http\Controllers\salasController;
 use App\Http\Controllers\Datascontroller;
 use App\Http\Controllers\HomeController;
@@ -54,32 +55,32 @@ Route::middleware('check.access')->group(function () {
     Route::get('/lista_pagamento_estudante', [StudentController::class, 'listaPagamento'])->name('lista_pagamento_estudante');
     Route::get('/get-payment-student', [StudentController::class, 'getPaymentStudent'])->name('get.payment_student');
     #start materia estudante
-        Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
-        #end
+    Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
+    #end
 
-         #start Departamento estudante
-         Route::get('/estudante/departamento/{id}', [StudentController::class, 'DepartamentoEstudante'])->name('departamento_estudante');
-         #end
+    #start Departamento estudante
+    Route::get('/estudante/departamento/{id}', [StudentController::class, 'DepartamentoEstudante'])->name('departamento_estudante');
+    #end
 
-          #start Matricula estudante
-          Route::get('/estudante/matricula/{id}', [StudentController::class, 'MatriculaEstudante'])->name('matricula_estudante');
-          #end
+    #start Matricula estudante
+    Route::get('/estudante/matricula/{id}', [StudentController::class, 'MatriculaEstudante'])->name('matricula_estudante');
+    #end
 
-         #start pagamento estudante
-         Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
-         Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
-         Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
+    #start pagamento estudante
+    Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
+    Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
+    Route::post('/pagamento_store', [StudentController::class, 'Pagamentostore'])->name('pagamento.store');
 
-         Route::get('export-payments', [StudentController::class, 'exportPayments'])->name('export.payments');
-         
-         Route::get('export-payments-csv', [StudentController::class, 'exportPaymentscsv'])->name('export.payments.csv');
-         #end
+    Route::get('export-payments', [StudentController::class, 'exportPayments'])->name('export.payments');
 
-         #programa estudo start
-         Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
+    Route::get('export-payments-csv', [StudentController::class, 'exportPaymentscsv'])->name('export.payments.csv');
+    #end
+
+    #programa estudo start
+    Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
 
 
-         Route::post('/import-excel', [StudentController::class, 'import_excel_post'])->name('import-excel');
+    Route::post('/import-excel', [StudentController::class, 'import_excel_post'])->name('import-excel');
 
     // end student
 
@@ -125,6 +126,8 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_estatuto/{id}', [DocenteController::class, 'updateEstatuto'])->name('estatuto.update');
     Route::delete('/estatuto/{id}', [DocenteController::class, 'destroyEstatuto'])->name('estatuto.destroy');
     #end
+
+
     #departamento
     Route::get('/funcionario/departamento/{id}', [DocenteController::class, 'showDepartamento'])->name('departamento');
     Route::get('/funcionario/inserir_departamento/{id_funcionario}', [DocenteController::class, 'create_departamento'])->name('inserir_departamento');
@@ -165,12 +168,12 @@ Route::middleware('check.access')->group(function () {
     #end
 
     // materia discplina start
-    Route::get('/disciplinas', [DisciplinasController::class, 'index'])->name('disciplinas.index');
+    // Route::get('/disciplinas', [DisciplinasController::class, 'index'])->name('disciplinas.index');
     Route::post('/materia/store', [DisciplinasController::class, 'store'])->name('materia.stores');
     Route::put('/materia/update/{id}', [DisciplinasController::class, 'update'])->name('materia.update');
     Route::get('/materia/{id}/edit', [DisciplinasController::class, 'edit'])->name('materia.edit');
     Route::delete('/materia/{id}', [DisciplinasController::class, 'destroy'])->name('materia.destroy');
- 
+
     Route::get('get-materia', [DisciplinasController::class, 'getMateria'])->name('get.materia');
 
     Route::get('/materia_semestre', [DisciplinasController::class, 'showMateriaSemestre'])->name('materia_semestre.index');
@@ -199,4 +202,21 @@ Route::middleware('check.access')->group(function () {
     Route::get('/get-postos/{idMunicipio}', [DivisaoAdministrativaController::class, 'getPostos']);
     Route::get('/get-sucos/{idPosto}', [DivisaoAdministrativaController::class, 'getSucos']);
     Route::get('/get-aldeias/{idSuco}', [DivisaoAdministrativaController::class, 'getAldeias']);
+
+
+
+    // Web routes for Disciplinas
+
+    // For the Silabos Materias page
+    Route::get('disciplinas_index', [DisciplinasController::class, 'index'])->name('disciplinas_index.index');
+
+
+    // Non-resource routes for other parts of "Disciplinas"
+    Route::get('/disciplina_departamentos', [DisciplinasController::class, 'disciplina_departamentos'])->name('disciplinas.departamentos');
+    Route::get('/disciplina_programas', [DisciplinasController::class, 'disciplina_programas'])->name('disciplinas.programas');
+    Route::get('/disciplina_semestres', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.semestres');
+    Route::get('/disciplina_disciplinas/all', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
+    Route::get('disciplinas_index/disciplinas/{disciplina}', [DisciplinasController::class, 'show'])->name('disciplinas_index.disciplinas.show');
+
+    Route::get('disciplinas_index/disciplinas/{disciplina}/edit', [Disciplinas_DisciplinasController::class, 'edit'])->name('disciplinas_index.disciplinas.edit');
 });

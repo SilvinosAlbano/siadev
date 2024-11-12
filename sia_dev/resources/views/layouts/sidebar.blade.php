@@ -21,11 +21,12 @@
                         </li>
                         {{-- @endif --}}
 
-                       
+
 
                         {{-- @if ($user->canAccess('read', 'students')) --}}
                         <li class="nav-item">
-                            <a href="{{route('lista_pagamento_estudante')}}" class="nav-link"><i class="fas fa-angle-right"></i>Lista pagamento</a>
+                            <a href="{{ route('lista_pagamento_estudante') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Lista pagamento</a>
                         </li>
                         {{-- @endif --}}
 
@@ -42,22 +43,23 @@
                     <a href="#" class="nav-link"><i
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
                     <ul class="nav sub-group-menu">
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a href="/adiciona_funcionario" class="nav-link"><i class="fas fa-angle-right"></i>Registo
-                               Docentes</a>
-                        </li>
-                         <li class="nav-item">
-                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Escolha Docentes</a>
+                                Docentes</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Dados 
-                               Gerais</a>
+                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Escolha
+                                Docentes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Dados
+                                Gerais</a>
                         </li>
                         <li class="nav-item">
                             <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
-                                </a>
+                            </a>
                         </li>
-                        
+
                     </ul>
                 </li>
                 <li class="nav-item sidebar-nav-item">
@@ -81,19 +83,22 @@
 
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Curiculo Disciplinas</span></a>
+                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Curiculo
+                            Disciplinas</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/disciplinas" class="nav-link"><i class="fas fa-angle-right"></i>silabos da Materia</a>
+                            <a href="/disciplinas_index" class="nav-link"><i class="fas fa-angle-right"></i>Silabos da
+                                Materia</a>
                         </li>
-                       
+
                         <li class="nav-item">
-                            <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da Semestre</a>
+                            <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da
+                                Semestre</a>
                         </li>
-                       
+
                     </ul>
                 </li>
-               
+
                 <li class="nav-item">
                     <a href="/student_attendence" class="nav-link"><i
                             class="flaticon-checklist"></i><span>Atendimentos</span></a>
@@ -105,13 +110,13 @@
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
                             <a href="/salas" class="nav-link"><i class="fas fa-angle-right"></i>
-                                 Sala Aulas</a>
+                                Sala Aulas</a>
                         </li>
                         <li class="nav-item">
                             <a href="/datas" class="nav-link"><i class="fas fa-angle-right"></i>
-                               Configurar de  Datas</a>
+                                Configurar de Datas</a>
                         </li>
-                      
+
 
                     </ul>
                 </li>

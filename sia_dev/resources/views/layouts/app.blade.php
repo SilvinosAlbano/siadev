@@ -44,6 +44,7 @@
         <!-- Header Menu Area End Here -->
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
+            
             <!-- Sidebar Area Start Here -->
             @include('layouts.sidebar')
             <!-- Sidebar Area End Here -->
