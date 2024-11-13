@@ -206,17 +206,10 @@ Route::middleware('check.access')->group(function () {
 
 
     // Web routes for Disciplinas
-
-    // For the Silabos Materias page
     Route::get('disciplinas_index', [DisciplinasController::class, 'index'])->name('disciplinas_index.index');
-
-
-    // Non-resource routes for other parts of "Disciplinas"
     Route::get('/disciplina_departamentos', [DisciplinasController::class, 'disciplina_departamentos'])->name('disciplinas.departamentos');
     Route::get('/disciplina_programas', [DisciplinasController::class, 'disciplina_programas'])->name('disciplinas.programas');
     Route::get('/disciplina_semestres', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.semestres');
-    Route::get('/disciplina_disciplinas/all', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
-    Route::get('disciplinas_index/disciplinas/{disciplina}', [DisciplinasController::class, 'show'])->name('disciplinas_index.disciplinas.show');
-
-    Route::get('disciplinas_index/disciplinas/{disciplina}/edit', [Disciplinas_DisciplinasController::class, 'edit'])->name('disciplinas_index.disciplinas.edit');
+    Route::get('/disciplina_disciplinas', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
+    Route::resource('departamentos', DisciplinasController::class);
 });

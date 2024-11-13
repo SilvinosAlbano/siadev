@@ -18,6 +18,7 @@ class ModelDepartamento extends Model
         return $this->belongsTo(ModelFaculdade::class, 'id_faculdade', 'id_faculdade');
     }
 
+
     public function programasEstudo()
     {
         return $this->hasMany(ModelProgramaEstudo::class, 'id_departamento', 'id_departamento');

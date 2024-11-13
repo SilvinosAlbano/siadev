@@ -5,10 +5,10 @@
         </div>
     </div>
     <div class="basic-tab">
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs" role="tablist" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('disciplinas_index') ? 'active' : '' }}" data-toggle="tab"
-                    href="#disciplinas_index" data-url="{{ route('disciplinas_index.index') }}">
+                <a class="nav-link {{ request()->is('disciplinas_disciplinas') ? 'active' : '' }}" data-toggle="tab"
+                    href="#disciplinas" data-url="{{ route('disciplinas.disciplinas') }}">
                     Disciplinas
                 </a>
             </li>
@@ -18,6 +18,7 @@
                     Departamentos
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('disciplina_programas') ? 'active' : '' }}" data-toggle="tab"
                     href="#programas" data-url="{{ route('disciplinas.programas') }}">
@@ -51,29 +52,41 @@
     </div>
 </div>
 
+{{-- <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="disciplinas" role="tabpanel" aria-labelledby="disciplinas-tab">
+        <!-- Content for Disciplinas -->
+        <p>This is the content for Disciplinas tab.</p>
+    </div>
+    <div class="tab-pane fade" id="departamentos" role="tabpanel" aria-labelledby="departamentos-tab">
+        <!-- Content for Departamentos -->
+        <p>This is the content for Departamentos tab.</p>
+    </div>
+</div> --}}
+
 <script>
     $(document).ready(function() {
         $('.nav-link').click(function(event) {
-            event.preventDefault();
-            var url = $(this).data('url');
-            var target = $(this).attr('href').substring(1);
+            event.preventDefault(); // Prevent default link behavior
+
+            var targetPaneId = $(this).attr('href').substring(1); // Get target pane ID
+            var url = $(this).data(
+                'url'); // Assuming each link has a data-url attribute with URL to load
 
             if (url) {
-                $('#' + target).load(url, function(response, status, xhr) {
+                // Load content into the corresponding pane
+                $('#' + targetPaneId).load(url, function(response, status, xhr) {
                     if (status === "error") {
-                        console.log("Error loading content: " + xhr.status + " " + xhr
+                        console.error("Failed to load content: " + xhr.status + " " + xhr
                             .statusText);
-                    } else {
-                        $('#' + target).addClass('show active');
                     }
                 });
-            } else {
-                console.log("No URL found for this tab.");
             }
+
+            // Manage active classes to toggle the visibility of panes
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-pane').removeClass('show active');
+            $('#' + targetPaneId).addClass('show active');
         });
-
-
-        // Trigger click on the first tab by default
-        // $('.nav-link').first().trigger('click');
     });
 </script>

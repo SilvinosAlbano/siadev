@@ -10,7 +10,7 @@ class Disciplinas_DisciplinasController extends Controller
     public function index()
     {
         $disciplinas = ModelMateria::all();
-        return view('pages.disciplinas.disciplinas.disciplinas', compact('disciplinas'));
+        return view('pages.disciplinas.silabos_materias', compact('disciplinas'));
     }
 
 
@@ -65,5 +65,36 @@ class Disciplinas_DisciplinasController extends Controller
         return redirect()->route('disciplinas.index')->with('success', 'Disciplina atualizada com sucesso!');
     }
 
+
+    public function showDepartamento($id)
+    {
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
+
+        $depfun = DB::table('departamento_funcionario as a')
+            ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
+            ->leftJoin('faculdade as c', 'c.id_faculdade', '=', 'a.id_faculdade')
+            ->leftJoin('funcionario as d', 'd.id_funcionario', '=', 'a.id_funcionario')
+            ->select(
+                'a.id_departamento_funcionario',
+                'b.id_departamento',
+                'b.nome_departamento',
+                'c.id_faculdade',
+                'c.nome_faculdade',
+                'd.id_funcionario',
+                'd.nome_funcionario',
+                'a.data_inicio',
+                'a.data_fim',
+                'a.controlo_estado'
+            )
+            ->where('d.id_funcionario', $id)
+            ->whereNull('a.controlo_estado')
+            ->orderBy('a.data_inicio', 'DESC')
+            ->paginate(5);
+
+        return view('pages.disciplinas.departamentos.departamentos', compact('depfun', 'detail'));
+    }
     // (Optional) You can also add a destroy method if needed for deleting.
 }
