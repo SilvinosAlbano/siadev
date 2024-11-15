@@ -211,5 +211,6 @@ Route::middleware('check.access')->group(function () {
     Route::get('/disciplina_programas', [DisciplinasController::class, 'disciplina_programas'])->name('disciplinas.programas');
     Route::get('/disciplina_semestres', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.semestres');
     Route::get('/disciplina_disciplinas', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
-    Route::resource('departamentos', DisciplinasController::class);
+    // Route::resource('departamentos', DisciplinasController::class);
+    // Route::resource('disciplinas', DisciplinasController::class);
 });

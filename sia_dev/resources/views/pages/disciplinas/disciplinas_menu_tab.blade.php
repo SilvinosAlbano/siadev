@@ -7,7 +7,7 @@
     <div class="basic-tab">
         <ul class="nav nav-tabs" role="tablist" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('disciplinas_disciplinas') ? 'active' : '' }}" data-toggle="tab"
+                <a class="nav-link {{ request()->is('disciplina_disciplinas') ? 'active' : '' }}" data-toggle="tab"
                     href="#disciplinas" data-url="{{ route('disciplinas.disciplinas') }}">
                     Disciplinas
                 </a>
