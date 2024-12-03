@@ -27,3 +27,5 @@ CREATE OR REPLACE VIEW public.view_gfuncionario
      LEFT JOIN gdivisao_administrativa_sucos d ON d.id_sucos = a.id_suco
      LEFT JOIN gdivisao_administrativa_aldeias e ON e.id_aldeias = a.id_aldeias
      LEFT JOIN tipo_categoria_admin f ON f.id_tipo_categoria = a.id_tipo_categoria;
+
+     ==========
