@@ -15,6 +15,7 @@ use App\Http\Controllers\HomeController;
 
 // routes/web.php
 // routes/web.php
+// 123
 Route::get('/unauthorized', function () {
     return view('unauthorized');
 });
