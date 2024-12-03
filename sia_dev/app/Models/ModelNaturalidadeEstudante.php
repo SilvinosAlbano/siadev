@@ -9,12 +9,12 @@ class ModelNaturalidadeEstudante extends Model
 {
     use HasFactory;
     protected $table = 'naturalidade_estudante';
-    protected $primaryKey = 'id_naturalidade_studante';
+    protected $primaryKey = 'id_naturalidade_estudante';
     public $incrementing = false;
     protected $keyType = 'uuid';
 
     protected $fillable = [
-        'id_naturalidade_studante',
+        'id_naturalidade_estudante',
         'id_student',
         'id_municipio',
         'id_posto_administrativo',

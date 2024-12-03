@@ -1,6 +1,6 @@
 
 @extends('layouts.app')
-@section('title', 'Habilitacao Inserir')
+@section('title', 'Naturalidade Alterar')
 @section('content') 
     <!-- Identificao Content -->
     @include('pages.students.header_students')

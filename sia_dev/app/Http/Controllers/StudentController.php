@@ -130,7 +130,7 @@ class StudentController extends Controller
                     $deleteUrl = route('docentes.destroy', $row->id_student);
     
                     $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Editar</a>';
-                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Inserir Valor</a>';
+                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Detail</a>';
                     $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Apagar</button>';
     
                     return $btn;
@@ -847,15 +847,16 @@ class StudentController extends Controller
         {
             // Fetch the habilitacao by its ID
             $edit = ModelNaturalidadeEstudante::findOrFail($id);
+         
     
             $detail = DB::table('view_estudante')
-            ->where('id_student', $id)
-            // ->orderByDesc('created_at')
+            ->where('id_naturalidade_estudante', $id)
             ->first();
     
             $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
             ->distinct()
             ->get();
-            return view('pages.students.naturalidade_estudante.naturalidade_alterar', compact('id','detail','edit','municipios'));
+            $student = ModelStudent::findOrFail($id);
+            return view('pages.students.naturalidade_estudante.naturalidade_estudante_alterar', compact('student','id','detail','edit','municipios'));
         }
 }
