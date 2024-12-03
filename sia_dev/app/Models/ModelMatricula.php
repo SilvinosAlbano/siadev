@@ -15,7 +15,7 @@ class ModelMatricula extends Model
     protected $fillable = [
         'id_student',
         'id_programa_estudo',
-        'id_semestre',
+        // 'id_semestre',
         'data_inicio',
         'data_fim',
         'status'

@@ -124,7 +124,7 @@
         <div class="login-image-section shadow">
             <h1>Bem-vindo ao SIA-ICS!</h1>
             <p>Sistema de Informação Acadêmica do Instituto de Ciência de Saúde</p>
-            <img src="img/logo2.png" alt="Login Illustration" class="login-illustration">
+            <img src="img/logo2.png" alt="Login Illustration" class="login-illustration" width="50%">
         </div>
 
         <!-- Right Section (Login Form) -->

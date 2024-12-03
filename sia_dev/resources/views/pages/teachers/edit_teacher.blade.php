@@ -68,52 +68,11 @@
                 </div>
 
                 {{-- Fatim Moris --}}
-                <div class="row">
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Municipio *</label>
-                        <select class="select2" name="id_municipio" required>
-                            <option value="">Escolha *</option>
-                            @foreach($municipios as $municipio)
-                                <option value="{{ $municipio->id_municipio }}" {{ $editar->id_municipio == $municipio->id_municipio ? 'selected' : '' }}>{{ $municipio->municipio }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Posto *</label>
-                        <select class="select2" name="id_posto_administrativo">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach($postos as $posto)
-                                <option value="{{ $posto->id_posto_administrativo }}" {{ $editar->id_posto_administrativo == $posto->id_posto_administrativo ? 'selected' : '' }}>{{ $posto->posto_administrativo }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Suco *</label>
-                        <select class="select2" name="id_sucos">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach($sucos as $suco)
-                                <option value="{{ $suco->id_sucos }}" {{ $editar->id_sucos == $suco->id_sucos ? 'selected' : '' }}>{{ $suco->sucos }}</option>
-                            @endforeach
-                        </select>
-                    </div>              
-                </div>
+               
 
                 <div class="row">
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Aldeia *</label>
-                        <select class="select2" name="id_aldeias">
-                            <option selected disabled value="">Escolha *</option>
-                            @foreach($aldeias as $aldeia)
-                                <option value="{{ $aldeia->id_aldeias }}" {{ $editar->id_aldeias == $aldeia->id_aldeias ? 'selected' : '' }}>{{ $aldeia->aldeias }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
-                        <label>Nacionalidade *</label>
-                        <input type="text" name="nacionalidade" value="{{ old('nacionalidade', $editar->nacionalidade) }}" class="form-control border">
-                    </div>
+                   
+                  
 
                     <div class="col-xl-4 col-lg-6 col-12 form-group">
                         <label>Categoria *</label>
@@ -123,10 +82,8 @@
                             <option value="Admin" {{ $editar->categoria == 'Admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="row mb-2" id="tipoDataRow" style="display: {{ $editar->categoria == 'Admin' ? 'block' : 'none' }};">
-                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                    <div class="col-xl-4 col-lg-6 col-12 form-group" id="tipoDataRow" style="display: {{ $editar->categoria == 'Admin' ? 'block' : 'none' }};">
                         <label>Tipo Categoria Admin *</label>
                         <select class="select2" name="id_tipo_categoria">
                             <option selected disabled value="">Escolha *</option>
@@ -137,8 +94,19 @@
                     </div>
                 </div>
 
-                <div class="row">
-                 
+                <!-- <div class="row mb-2" id="tipoDataRow" style="display: {{ $editar->categoria == 'Admin' ? 'block' : 'none' }};">
+                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                        <label>Tipo Categoria Admin *</label>
+                        <select class="select2" name="id_tipo_categoria">
+                            <option selected disabled value="">Escolha *</option>
+                            @foreach ($tipo_admin as $tipo)
+                                <option value="{{ $tipo->id_tipo_categoria }}" {{ $editar->id_tipo_categoria == $tipo->id_tipo_categoria ? 'selected' : '' }}>{{ $tipo->tipo_categoria }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div> -->
+
+                <div class="row">                 
 
                     <div class="col-xl-4 col-lg-6 col-12 form-group">
                         <label>Ano Inicio</label>

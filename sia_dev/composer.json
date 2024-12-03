@@ -9,6 +9,7 @@
         "laravel/framework": "*",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
+        "ramsey/uuid": "*",
         "spatie/laravel-permission": "*",
         "tecnickcom/tcpdf": "^6.7",
         "yajra/laravel-datatables-oracle": "^11.1"

@@ -15,6 +15,7 @@ use App\Models\ModelEstatuto;
 use App\Models\HabilitacaoModel;
 use App\Models\FuncionarioEstatutoModel;
 use App\Models\ModelFuncionarioDepartamento;
+use App\Models\ModelNaturalidadeFuncionario;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -30,10 +31,15 @@ use App\Models\ModelGdivisaoAdministrativaPostoAdministrativo; //Asesu ba View D
 use App\Models\ModelGdivisaoAdministrativaSucosAldeias; ////Asesu ba View Divisao Administrativa nian
 use App\Models\ModelHorario;
 use App\Models\ModelMateria;
+use App\Models\ViewDocenteMateriaEstudante;
 use TCPDF;
 Use App\Http\Controllers\Storage;
 use App\Http\Controllers\rawcolumns;
 use App\Imports\TeacherImport;
+use App\Models\ModelMateriaSemestre;
+use App\Models\ModelSemestre;
+use App\Models\ModelvalorEstudante;
+
 // Atu View karik bele bolu hanesan ne
 #$postoAdministrativoData = ModelGdivisaoAdministrativaPostoAdministrativo::all();
 #$sucosAldeiasData = ModelGdivisaoAdministrativaSucosAldeias::all();
@@ -47,8 +53,6 @@ class DocenteController extends Controller
     public function escolhaDados()
     {
      
-
-        // $departamento = DB::table('view_docente')->select('id_departamento')->distinct()->get();
         $departamento = DB::table('funcionario as a')
         ->select(
             'h.id_departamento',
@@ -57,19 +61,21 @@ class DocenteController extends Controller
         )
         ->leftJoin('departamento_funcionario as g', 'g.id_funcionario', '=', 'a.id_funcionario')
         ->leftJoin('departamento as h', 'h.id_departamento', '=', 'g.id_departamento')
+        ->whereNotNull('h.id_departamento') // Exclude records where id_departamento is null
         ->groupBy('h.id_departamento', 'h.nome_departamento')
         ->get();
-
-        $alerta_tipo_contrato  = DB::table('funcionario as a')
+    
+    $alerta_tipo_contrato = DB::table('funcionario as a')
         ->select(
             'j.estatuto as tipo_contrato', 
             DB::raw('COUNT(DISTINCT a.id_funcionario) as total_funcionarios')
         )
         ->leftJoin('estatuto_funcionario as i', 'i.id_funcionario', '=', 'a.id_funcionario')
         ->leftJoin('tipo_estatuto as j', 'j.id_estatuto', '=', 'i.id_estatuto')
+        ->whereNotNull('j.estatuto') // Exclude records where estatuto is null
         ->groupBy('j.estatuto')
         ->get();
-
+    
         return view('pages.teachers.escolha_modul_docente', compact('departamento','alerta_tipo_contrato'));
 
     }
@@ -189,6 +195,9 @@ class DocenteController extends Controller
      return view('pages.teachers.add_teacher', compact('docente', 'departamento', 'estatuto', 'tipo_admin', 'municipios','fac','departament','materia'));
  }
 
+ function removeAccents($string) {
+    return iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+}
  public function store(Request $request): RedirectResponse
  {
      // Validation Rules
@@ -196,11 +205,13 @@ class DocenteController extends Controller
          'nome_funcionario' => 'required|string|max:255',
          'sexo' => 'required|string|max:255',
          'data_moris' => 'required|date',
-         'id_aldeias' => 'required|string|max:255',
-         'id_suco' => 'required|string|max:255',
-         'id_posto_administrativo' => 'required|string|max:255',
-         'id_municipio' => 'required|string|max:255',
+         'id_funcionario' => 'nullable|string|max:255',
+         'id_aldeias' => 'nullable|string|max:255',
+         'id_suco' => 'nullable|string|max:255',
+         'id_posto_administrativo' => 'nullable|string|max:255',
+         'id_municipio' => 'nullable|string|max:255',
          'nacionalidade' => 'nullable|string|max:255',
+         'endereco_atual' => 'nullable|string|max:255',
          'id_tipo_categoria' => 'nullable|string|max:255', // Nullable
          'ano_inicio' => 'nullable|date',
          'observacao' => 'nullable|string',
@@ -236,11 +247,6 @@ class DocenteController extends Controller
          'nome_funcionario' => $validatedData['nome_funcionario'],
          'sexo' => $validatedData['sexo'],
          'data_moris' => $validatedData['data_moris'],
-         'id_aldeias' => $validatedData['id_aldeias'],
-         'id_suco' => $validatedData['id_suco'],
-         'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
-         'id_municipio' => $validatedData['id_municipio'],
-         'nacionalidade' => $validatedData['nacionalidade'],
          'id_tipo_categoria' => $id_tipo_categoria,
          'ano_inicio' => $validatedData['ano_inicio'],
          'observacao' => $validatedData['observacao'],
@@ -251,14 +257,53 @@ class DocenteController extends Controller
      ]);
  
      // Create associated user record
-     ModelUser::create([
-         'user_id' => (string) Str::uuid(),
-         'username' => $funcionarios->nome_funcionario, // Assuming 'nre' refers to 'nome_funcionario'
-         'email' => $request->email ?? null,
-         'password' => Hash::make('defaultpassword'), // Default password, replace with logic to generate a secure password
-         'docente_student_id' => $funcionarios->id_funcionario,
-         'tipo_usuario' => $funcionarios->categoria,
-     ]);
+      // Extract first and last name from nome_funcionario
+    //   $nameParts = explode(' ', $funcionarios->nome_funcionario);
+    //   $firstName = $nameParts[0] ?? '';
+    //   $lastName = $nameParts[count($nameParts) - 1] ?? '';
+    // //   $middleName = implode(' ', array_slice($nameParts, 1, -1));
+    //   $username = strtolower($firstName. '.' .$lastName);
+
+      // Create ModelUser record
+      function removeAccents($string) {
+        $unwanted = array(
+            'Á'=>'A', 'À'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'AE', 'Ç'=>'C',
+            'É'=>'E', 'È'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'Í'=>'I', 'Ì'=>'I', 'Î'=>'I', 'Ï'=>'I',
+            'Ñ'=>'N', 'Ó'=>'O', 'Ò'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ú'=>'U',
+            'Ù'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'á'=>'a', 'à'=>'a', 'â'=>'a', 'ã'=>'a',
+            'ä'=>'a', 'å'=>'a', 'æ'=>'ae', 'ç'=>'c', 'é'=>'e', 'è'=>'e', 'ê'=>'e', 'ë'=>'e',
+            'í'=>'i', 'ì'=>'i', 'î'=>'i', 'ï'=>'i', 'ñ'=>'n', 'ó'=>'o', 'ò'=>'o', 'ô'=>'o',
+            'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ú'=>'u', 'ù'=>'u', 'û'=>'u', 'ü'=>'u', 'ý'=>'y',
+            'ÿ'=>'y', 'Ŕ'=>'R', 'ŕ'=>'r', '~'=>'', "'"=>''
+        );
+        return strtr($string, $unwanted);
+    }
+    
+    // Remove accents from first and last names
+    $nameParts = explode(' ', $funcionarios->nome_funcionario);
+    $firstName = removeAccents($nameParts[0] ?? '');
+    $lastName = removeAccents($nameParts[count($nameParts) - 1] ?? '');
+    
+    // Generate username without accents
+    $username = strtolower($firstName . '.' . $lastName);
+    //   $password = Str::random(10);
+      ModelUser::create([
+          'user_id'            => (string) Str::uuid(),
+          'username'           => $username,
+          'email'              => $funcionarios->email,
+          'password'           => Hash::make('123456'),
+        //  'password'           => Hash::make($password),
+          'docente_id_student' => $funcionarios->id_funcionario,
+          'tipo_usuario'       => 'Docente',
+      ]);
+    //  ModelUser::create([
+    //      'user_id' => (string) Str::uuid(),
+    //      'username' => $funcionarios->nome_funcionario, // Assuming 'nre' refers to 'nome_funcionario'
+    //      'email' => $request->email ?? null,
+    //      'password' => Hash::make('defaultpassword'), // Default password, replace with logic to generate a secure password
+    //      'docente_student_id' => $funcionarios->id_funcionario,
+    //      'tipo_usuario' => $funcionarios->categoria,
+    //  ]);
  
      // Create a new entry in the 'funcionario_departamento' table
      ModelFuncionarioDepartamento::create([
@@ -287,6 +332,19 @@ class DocenteController extends Controller
          'data_inicio' => $validatedData['data_inicio'],
          'data_fim' => $validatedData['data_fim'],
      ]);
+
+
+     ModelNaturalidadeFuncionario::create([
+        'id_naturalidade_funcionario' => (string) Str::uuid(),
+        'id_funcionario' => $funcionarios->id_funcionario,
+        'id_municipio' => $validatedData['id_municipio'],
+        'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
+        'id_suco' => $validatedData['id_suco'],
+        'id_aldeias' => $validatedData['id_aldeias'],
+        'nacionalidade' => $validatedData['nacionalidade'],
+        'endereco_atual' => $validatedData['endereco_atual'],
+        'observacao' => $validatedData['observacao'],
+    ]);
  
      // Redirect with success or error message
      if ($funcionarios) {
@@ -739,54 +797,81 @@ class DocenteController extends Controller
     #materia docente start
     public function showMateria($id)
     {
-        // $estatuto = FuncionarioEstatutoModel::where('id_funcionario', $id)->get();
-        $detail = DB::table('view_monitoramento_funcionario')
-        ->where('id_funcionario', $id)
-        ->orderByDesc('created_at')
-        ->first();
-        $materiadocen = DB::table('docente_materia as a')
-        ->leftJoin('materia as b', 'b.id_materia', '=', 'a.id_materia')
-      
-        ->leftJoin('funcionario as d', 'd.id_funcionario', '=', 'a.id_funcionario')
-        ->select(
-            'a.id_docente_materia',
-            'a.data_inicio',
-            'a.data_fim',
-            'b.id_materia',
-            'b.materia',            
-            'd.id_funcionario',
-            'd.nome_funcionario',
-            'a.controlo_estado'
-        )
-        ->where('d.id_funcionario', $id)
-        ->whereNull('a.controlo_estado')
-        // ->get();
-        ->paginate(5);
-        return view('pages.teachers.materia.materia_docente', compact('materiadocen', 'detail'));
-    }
-
-    public function create_materiaDocente($id)
-    {
-        $materia = ModelMateria::all();
+        // Busca detalhes do funcionário
         $detail = DB::table('view_monitoramento_funcionario')
             ->where('id_funcionario', $id)
             ->orderByDesc('created_at')
             ->first();
-        return view('pages.teachers.materia.materia_docente_inserir', compact('detail', 'id', 'materia'));
+    
+        // Busca as matérias do docente filtradas por id_funcionario e id_semestre
+        $materiadocen = DB::table('view_docente_materia_estudante')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->get();
+    
+        // Retorna a view com os dados
+        return view('pages.teachers.materia.materia_docente', compact('materiadocen', 'detail'));
     }
+    
+
+    public function create_materiaDocente($id)
+    {
+        $materia = ModelMateria::all();
+        $semestre =ModelSemestre::all();
+        $departamento =ModelDepartamento::all();
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
+            
+        return view('pages.teachers.materia.materia_docente_inserir', compact('detail', 'id', 'materia','semestre','departamento'));
+    }
+
+
+    public function getSemestreByDepartamento(Request $request)
+{
+    $id_departamento = $request->id_departamento;
+
+    $semestres = DB::table('view_materia_semestre')
+        ->select('id_semestre', 'numero_semestre')
+        ->where('id_departamento', $id_departamento)
+        ->groupBy('id_semestre', 'numero_semestre')
+        ->get();
+
+    return response()->json($semestres);
+}
+
+
+public function getMateriaSemestreBySemestre(Request $request)
+{
+    $id_semestre = $request->id_semestre;
+
+    $materiasemestres = DB::table('view_materia_semestre')
+        ->select('id_materia_semestre', 'materia', 'numero_semestre')
+        ->where('id_semestre', $id_semestre)
+        ->get();
+
+    return response()->json($materiasemestres);
+}
+
+    
+
 
     public function storeDocenteMateria(Request $request)
     {
         $request->validate([
-            'id_materia' => 'required|string|max:255',            
+            'id_materia_semestre' => 'required|string|max:255',            
             
         ]);
  
         $materia_docente = new ModelDocenteDaMateria();
         $materia_docente->id_funcionario = $request->input('id_funcionario');
-        $materia_docente->id_materia = $request->input('id_materia');
-        $materia_docente->data_inicio = $request->input('data_inicio');
-        $materia_docente->data_fim = $request->input('data_fim');
+        $materia_docente->id_materia_semestre= $request->input('id_materia_semestre');
+        // $materia_docente->id_materia = $request->input('id_materia');
+        $materia_docente->data_inicio_aula = $request->input('data_inicio_aula');
+        $materia_docente->data_fim_aula = $request->input('data_fim_aula');
+        $materia_docente->ano_academico = $request->input('ano_academico');
+        $materia_docente->estado_de_aula = $request->input('estado_de_aula');
         $materia_docente->observacao = $request->input('observacao');
         $materia_docente->save();
         return redirect()->route('materia_docente', ['id' => $request->input('id_funcionario')])
@@ -795,15 +880,23 @@ class DocenteController extends Controller
 
     public function editDocentemateria($id)
     {
-               
-        $materia = ModelMateria::all();
+        $materia = DB::table('view_materia_semestre')
+        ->where('id_materia_semestre', $id)
+        
+        ->get();    
+       
+        $edit = DB::table('view_docente_materia')
+        ->where('id_docente_materia', $id)
+        ->orderByDesc('created_at')
+        ->get();
         $detail = DB::table('view_monitoramento_funcionario')
-        ->where('id_departamento_funcionario', $id)
+        ->where('id_docente_materia', $id)
         ->orderByDesc('created_at')
         ->first();
-        $edit = ModelDocenteDaMateria::findOrFail($id);       
-        
-        return view('pages.teachers.materia.materia_docente_alterar', compact('id', 'detail','edit','materia'));
+        // $edit = ModelDocenteDaMateria::findOrFail($id);     
+        $semestre = ModelSemestre::all();   
+          
+        return view('pages.teachers.materia.materia_docente_alterar', compact('id', 'detail','edit','materia','semestre'));
     }
 
     public function updateDocentemateria(Request $request, $id)
@@ -841,6 +934,200 @@ class DocenteController extends Controller
             return redirect()->back()->with('error', 'Materia not found.');
         }
     }
+
+
+
+
+    public function DetailDocenteSemestreEstudante($id)
+    {
+        // Fetch the detail data from the view_gfuncionario view based on id_funcionario
+        $load_id = DB::table('view_docente_materia_estudante')
+            ->where('id_docente_materia', $id)
+            ->orderByDesc('created_at')
+            ->first();
+           
+        // Check if the data was found
+        if (!$load_id) {
+            // Optionally, handle the case where no data was found
+            return redirect()->back()->with('error', 'Details not found.');
+        }
+
+        $detailho_docente_semestre_estudante = DB::table('view_docente_materia_estudante')
+        ->where('id_docente_materia', $id)
+        ->paginate(10);
+
+   
+       
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_docente_materia', $id)
+        ->orderByDesc('created_at')
+        ->first();
+
+        $anos = DB::table('view_docente_materia_estudante')
+        ->where('id_semestre', $id) // Use the same $id for the department
+        ->distinct()
+        ->pluck('ano_academico');
+       
+
+        // Return the view with the detail data
+        return view('pages.teachers.materia.detail_docente_semestre_estudante', compact('detail','detailho_docente_semestre_estudante','load_id','anos'));
+    }
+
+
+ 
+
+    
+
+
+
+    public function InserirValorEstudante ($id)
+    {
+        $valor_estudante = DB::table('view_docente_materia_estudante')
+        ->where('id_student', $id)
+        ->orderByDesc('created_at')
+        ->first();
+        return view('pages.teachers.materia.valor_estudante.valor_inserir', compact('valor_estudante'));
+    }
+
+
+
+
+
+public function storeValor(Request $request)
+{
+    $request->validate([
+        'id_student' => 'required|string|max:255', 
+        'id_materia_semestre' => 'required|string|max:255',      
+        'valor' => 'required|numeric|min:0',      
+        
+    ]);
+
+    $valor = new ModelvalorEstudante();
+    $valor->id_student = $request->input('id_student');
+    $valor->id_materia_semestre= $request->input('id_materia_semestre');
+    $valor->valor = $request->input('valor');
+    $valor->observacao = $request->input('observacao');
+    
+    $valor->save();
+    return redirect()->back()->with('success', 'valor sucesso gravado!');
+    // return redirect()->route('materia_docente', ['id' => $request->input('id_funcionario')])
+    //     ->with('success', 'Materia Docentes inserida com sucesso.');
+}
+
+public function updateValor(Request $request)
+{
+    // Validate the input
+    $request->validate([
+        'id_student' => 'required|string|max:255',
+        'id_materia_semestre' => 'required|string|max:255',
+        'valor' => 'required|numeric|min:0',
+    ]);
+
+    // Find the existing record
+    $valor = ModelvalorEstudante::where('id_student', $request->input('id_student'))
+        ->where('id_materia_semestre', $request->input('id_materia_semestre'))
+        ->first();
+
+    if (!$valor) {
+        // If record does not exist, return an error message
+        return redirect()->back()->with('error', 'Registro não encontrado para atualizar.');
+    }
+
+    // Update the record
+    $valor->valor = $request->input('valor');
+    $valor->observacao = $request->input('observacao');
+    $valor->save();
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Valor atualizado com sucesso!');
+}
+
+
+
+
+public function exportToPDF($id)
+{
+    // Fetch data from the view
+    $data = DB::table('view_docente_materia_estudante')
+        ->where('id_docente_materia', $id)
+        ->get();
+
+    // Extract header information
+    $numero_semestre = $data->first()->numero_semestre ?? 'N/A';
+    $departamento_estudante = $data->first()->departamento_estudante ?? 'N/A';
+    $ano_academico = $data->first()->ano_academico ?? 'N/A';
+
+    // Create a new TCPDF instance
+    $pdf = new TCPDF();
+
+    // Set document information
+    $pdf->SetCreator('Laravel App');
+    $pdf->SetAuthor('Your Name');
+    $pdf->SetTitle('Lista de Valores dos Estudantes');
+    $pdf->SetSubject('Exported Valor Data');
+
+    // Set default header data
+    $pdf->SetHeaderData(
+        '',  // No logo
+        0,   // Logo width
+        "Lista de Valores dos Estudantes", 
+        "Semestre: $numero_semestre | Departamento: $departamento_estudante | Ano Acadêmico: $ano_academico\nGerado em " . now()->format('d/m/Y H:i')
+    );
+
+    // Set header and footer fonts
+    $pdf->setHeaderFont(['helvetica', '', 10]);
+    $pdf->setFooterFont(['helvetica', '', 8]);
+
+    // Set margins
+    $pdf->SetMargins(15, 27, 15);
+    $pdf->SetHeaderMargin(5);
+    $pdf->SetFooterMargin(10);
+
+    // Set auto page breaks
+    $pdf->SetAutoPageBreak(true, 25);
+
+    // Add a page
+    $pdf->AddPage();
+
+    // Define the table content
+    $html = '<h3 style="text-align: center;">Lista de Valores dos Estudantes</h3>';
+    $html .= '<table border="1" cellpadding="4" cellspacing="0" style="width: 100%; font-size: 8px;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>NRE</th>
+                        <th>Nome</th>
+                        <th>Departamento</th>
+                        <th>Semestre</th>
+                        <th>Disciplina</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>';
+
+    // Populate the table with data
+    foreach ($data as $row) {
+        $html .= '<tr>
+                    <td>' . $row->nre . '</td>
+                    <td>' . $row->complete_name . '</td>
+                    <td>' . $row->departamento_estudante . '</td>
+                    <td>' . $row->numero_semestre . '</td>
+                    <td>' . $row->codigo_materia . ' - ' . $row->materia . '</td>
+                    <td>' . ($row->valor ?? 'N/A') . '</td>
+                </tr>';
+    }
+
+    $html .= '</tbody></table>';
+
+    // Write the HTML content to the PDF
+    $pdf->writeHTML($html, true, false, true, false, '');
+
+    // Output the PDF (force download)
+    $pdf->Output('Lista_Valores_Estudantes.pdf', 'D');
+}
+
+
+
+
     #end
 
 
@@ -1003,7 +1290,7 @@ class DocenteController extends Controller
         
         
 
-        public function import_excel_post(Request $request)
+        public function import_excel_docente(Request $request)
         {
             $request->validate([
                 'excel_file' => 'required|file|mimes:xlsx,xls,csv',
@@ -1013,7 +1300,7 @@ class DocenteController extends Controller
             Excel::import(new TeacherImport, $request->file('excel_file'));
     
             
-            return redirect()->route('students.index')->with('success', 'Dadus funcionario Importa com sucesso!');
+            return redirect()->route('funcionarios.index')->with('success', 'Dadus  Importa com sucesso!');
         }
 
 
@@ -1115,5 +1402,61 @@ class DocenteController extends Controller
 
         return redirect()->route('posicao_funcionario', ['id' => $posicao->id_funcionario])
             ->with('success', 'Posição do Funcionario Desabilitar Com Suceso.');
+    }
+
+#start nacionalidade
+    public function create_naturalidade($id)
+    {
+        $pozisaun = ModelPozisaunFuncionario::all();
+        $detail = DB::table('view_monitoramento_funcionario')
+            ->where('id_funcionario', $id)
+            ->orderByDesc('created_at')
+            ->first();
+            
+
+         $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+         ->distinct()
+         ->get();
+        return view('pages.teachers.naturalidade.naturalidade_inserir', compact('detail', 'id', 'pozisaun','municipios'));
+    }
+
+    public function storeNaturalidade(Request $request)
+    {
+        $request->validate([
+         'id_aldeias' => 'required|string|max:255',
+         'id_suco' => 'required|string|max:255',
+         'id_posto_administrativo' => 'required|string|max:255',
+         'id_municipio' => 'required|string|max:255',
+        ]);
+
+        $naturalidade = new ModelNaturalidadeFuncionario();
+        $naturalidade->id_funcionario = $request->input('id_funcionario');
+        $naturalidade->id_municipio = $request->input('id_municipio');
+        $naturalidade->id_posto_administrativo = $request->input('id_posto_administrativo');
+        $naturalidade->id_suco = $request->input('id_suco');
+        $naturalidade->id_aldeias = $request->input('id_aldeias');
+        $naturalidade->nacionalidade = $request->input('nacionalidade');
+        $naturalidade->endereco_atual = $request->input('endereco_atual');
+        $naturalidade->observacao = $request->input('observacao');
+        $naturalidade->save();
+
+        return redirect()->route('detailho', ['id' => $request->input('id_funcionario')])
+            ->with('success', 'Naturalidade inserida com sucesso.');
+    }
+
+    public function editNaturalidade($id)
+    {
+        // Fetch the habilitacao by its ID
+        $edit = ModelNaturalidadeFuncionario::findOrFail($id);
+
+        $detail = DB::table('view_monitoramento_funcionario')
+        ->where('id_naturalidade_funcionario', $id)
+        ->orderByDesc('created_at')
+        ->first();
+
+        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+        ->distinct()
+        ->get();
+        return view('pages.teachers.naturalidade.naturalidade_alterar', compact('id','detail','edit','municipios'));
     }
 }

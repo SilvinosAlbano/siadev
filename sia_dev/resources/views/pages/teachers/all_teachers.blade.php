@@ -20,6 +20,26 @@
             <div class="item-title">
             <a class="btn-fill-lg bg-blue-dark btn-hover-yellow" href="/adiciona_funcionario"> Inserir <i class="fas fa-plus"></i> </a>
             </div>
+
+
+            <div class="ui-btn-wrap">
+                            <ul>
+                               
+
+                                <li>
+                                     <div class="col-lg-12 col-12 form-group mg-t-30">
+                                        <form action="/import-teacher" method="POST" enctype="multipart/form-data">
+                                            {{ csrf_field() }}
+                                            <div class="from-group">
+                                                <label for="file">Submete Lista Docente com formato (xlsx,xls,csv)</label>
+                                                <input type="file" class="form-control-file" name="excel_file" id="file">
+                                            </div>
+                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel text-success"></i> Upload</button>
+                                        </form>
+                                    </div>
+                                 </li>
+                            </ul>
+                 </div>
         </div>
         @if (session('error'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

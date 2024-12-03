@@ -52,7 +52,7 @@
                                 <thead>
                                     <tr>
                                  
-                                        <th>Nome Academico</th>
+                                        <th>Nome Habilitação</th>
                                         <th>Area Especialidade</th>
                                         <th>Universidade Origem</th>
                                         <th>Asaun</th>

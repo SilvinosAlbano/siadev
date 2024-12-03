@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="heading-layout1">
                             <div class="item-title">
-                                <h3>Departamento Funcionario</h3>
+                                <h3>Departamento Estudante</h3>
                             </div>
                           
                         </div>

@@ -6,9 +6,15 @@
             </div>
             <div class="basic-tab">
                 <ul class="nav nav-tabs" role="tablist">
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('detailho') ? 'active' : '' }}" href="{{ route('detailho', $detail->id_funcionario) }}">Identifição</a>
                     </li>
+                    @if (request()->routeIs('inserir_naturalidade'))
+                    <li class="nav-item">
+                        <a class="nav-link active {{ request()->routeIs('inserir_naturalidade') ? 'active' : '' }}" href="{{ route('inserir_naturalidade', $detail->id_funcionario) }}">Inserir Naturalidade</a>
+                    </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('habilitacao_funcionario') ? 'active' : '' }}" href="{{ route('habilitacao_funcionario', $detail->id_funcionario) }}">Habilitação</a>
                     </li>
@@ -49,6 +55,13 @@
                         <a class="nav-link {{ request()->routeIs('alterar_docentemateria') ? 'active' : '' }}" href="{{ route('alterar_docentemateria', $detail->id_funcionario) }}">Alterar Materia</a>
                     </li>
                     @endif
+
+                    @if (request()->routeIs('detailho_docente_semestre_estudante'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('detailho_docente_semestre_estudante') ? 'active' : '' }}" href="{{ route('detailho_docente_semestre_estudante', $detail->id_funcionario) }}">Lista Estudante</a>
+                    </li>
+                    @endif
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('horario') ? 'active' : '' }}" href="{{ route('horario', $detail->id_funcionario) }}">Horario Ensinar</a>
                     </li>
@@ -69,7 +82,7 @@
               
 
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('posicao_funcionario') ? 'active' : '' }}" href="{{ route('posicao_funcionario', $detail->id_funcionario) }}">Posição</a>
+                        <a class="nav-link {{ request()->routeIs('posicao_funcionario') ? 'active' : '' }}" href="{{ route('posicao_funcionario', $detail->id_funcionario) }}">Posição Funcionario</a>
                     </li>
 
                     @if (request()->routeIs('inserir_materia_pozisaun'))

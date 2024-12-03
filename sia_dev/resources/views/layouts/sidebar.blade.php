@@ -12,12 +12,23 @@
             <ul class="nav nav-sidebar-menu sidebar-toggle-view">
                 {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}}
                 <li class="nav-item sidebar-nav-item">
-                    <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Estudantes</span></a>
+                    <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Modul Estudantes</span></a>
                     <ul class="nav sub-group-menu">
+                      <li class="nav-item">
+                            <a href="{{ route('escolha_estudante') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Dados Estudante</a>
+                        </li>
+                        {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
+                        <li class="nav-item">
+                            <a href="/students/create" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Registo Estudante</a>
+                        </li>
+                        {{-- @endif --}}
+
                         {{-- @if ($user->canAccess('read', 'students')) --}}
                         <li class="nav-item">
                             <a href="{{ route('students.index') }}" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Todos os Estudantes</a>
+                                    class="fas fa-angle-right"></i>Lista Gerais</a>
                         </li>
                         {{-- @endif --}}
 
@@ -30,30 +41,26 @@
                         </li>
                         {{-- @endif --}}
 
-                        {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
-                        <li class="nav-item">
-                            <a href="/admission_form_student" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Formulário de Admissão</a>
-                        </li>
-                        {{-- @endif --}}
+                       
                     </ul>
                 </li>
                 {{-- @endif --}}
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
-                            class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
+                            class="flaticon-multiple-users-silhouette"></i><span>Modul Docente</span></a>
                     <ul class="nav sub-group-menu">
+                       <li class="nav-item">
+                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>
+                                Docentes</a>
+                        </li>
                         <li class="nav-item">
                             <a href="/adiciona_funcionario" class="nav-link"><i class="fas fa-angle-right"></i>Registo
                                 Docentes</a>
                         </li>
+                        
                         <li class="nav-item">
-                            <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>Escolha
-                                Docentes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Dados
-                                Gerais</a>
+                            <a href="/funcionarios" class="nav-link"><i class="fas fa-angle-right"></i>Lista
+                                Gerais Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a href="/docente-report" class="nav-link"><i class="fas fa-angle-right"></i>Monitoramento
@@ -62,6 +69,26 @@
 
                     </ul>
                 </li>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i
+                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Curiculo
+                            </span></a>
+                    <ul class="nav sub-group-menu">
+                        <li class="nav-item">
+                            <a href="{{route('disciplinas_index')}}" class="nav-link"><i class="fas fa-angle-right"></i>Silabos da
+                                Materia</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da
+                                Semestre</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
                             class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Classes</span></a>
@@ -81,23 +108,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item sidebar-nav-item">
-                    <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Curiculo
-                            Disciplinas</span></a>
-                    <ul class="nav sub-group-menu">
-                        <li class="nav-item">
-                            <a href="/disciplinas_index" class="nav-link"><i class="fas fa-angle-right"></i>Silabos da
-                                Materia</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="/materia_semestre" class="nav-link"><i class="fas fa-angle-right"></i>Materia da
-                                Semestre</a>
-                        </li>
-
-                    </ul>
-                </li>
+               
 
                 <li class="nav-item">
                     <a href="/student_attendence" class="nav-link"><i

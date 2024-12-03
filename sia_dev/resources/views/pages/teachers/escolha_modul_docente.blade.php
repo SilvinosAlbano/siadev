@@ -10,7 +10,7 @@
             <li>
                 <a href="/escolha_dados_docentes">Escolha Departamento</a>
             </li>
-            <li>Docemte</li>
+            <li>Docente</li>
         </ul>
     </div>
 

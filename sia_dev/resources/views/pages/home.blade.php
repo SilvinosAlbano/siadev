@@ -1,4 +1,4 @@
-`@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Dashboard')
 
@@ -175,7 +175,8 @@
                             </div>
                         </div>
                         <div class="doughnut-chart-wrap">
-                        <canvas id="department-bar-chart" width="400" height="400"></canvas>                        </div>
+                        <canvas id="department-bar-chart" width="400" height="400"></canvas>                       
+                     </div>
                     
                     </div>
                 </div>
@@ -186,7 +187,7 @@
         </div>
 
         
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../js/chart.js"></script>
     <script>
         // Pass the data from PHP to JavaScript
         var earningData = @json($data);
@@ -363,7 +364,7 @@
         var barChartData = {
             labels: departmentLabels,
             datasets: [{
-                label: "Total Students per Department",
+                label: "Total Estudante por Departament",
                 backgroundColor: "#304ffe",  // Bar color
                 borderColor: "#304ffe",      // Border color
                 borderWidth: 1,
@@ -414,4 +415,3 @@
 
 
 @endsection
-`

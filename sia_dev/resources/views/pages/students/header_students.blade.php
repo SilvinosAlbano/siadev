@@ -3,7 +3,7 @@
         <h3>Dados detalhados de estudante <strong>{{ $student->complete_name }}</strong></h3>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="{{ route('students.index') }}">Lista Estudantes</a></li>
+            <li><a href="{{ route('escolha_estudante') }}">Lista Estudantes</a></li>
             <li>Detalhes do Estudante</li>
         </ul>
     </div>
@@ -31,7 +31,7 @@
             <div class="info-table table-responsive">
                 <ul>
                     <li>
-                        <span>Funcionario:</span>
+                        <span>Nome Estudante:</span>
                         <span class="font-medium text-dark-medium">{{ $student->complete_name }}</span>
                     </li>
                     <li>

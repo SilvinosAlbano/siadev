@@ -1,120 +1,233 @@
 @extends('layouts.app')
-
-@section('title', 'Students')
-
+@section('title', 'Dados Estudante')
 @section('content')
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3>Students</h3>
         <ul>
-            <li><a href="/home">Home</a></li>
-            <li>Todos Listas Estudante</li>
+            <li><a href="/escolha_dados_docentes">Escolha Departamento</a></li>
+            <li>Dados Estudante Geral</li>
         </ul>
+        <h3>Lista Estudante</h3>
     </div>
     <!-- Breadcrumbs Area End Here -->
 
-    <!-- Student Table Area Start Here -->
-    <div class="card height-auto">
-          <div class="card-header shadow bg-white">
-            <div class="card-title">
-                <span>
-
-                </span>     
-                        
-                <span>
-                  
-                </span>
-
-
-                <div class="ui-btn-wrap">
-                            <ul>
-                               
-
-                                <li>
-                                     <div class="col-lg-12 col-12 form-group mg-t-30">
-                                        <form action="/import-excel" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <div class="from-group">
-                                                <label for="file">Submete Lista estudante com formato (xlsx,xls,csv)</label>
-                                                <input type="file" class="form-control-file" name="excel_file" id="file">
-                                            </div>
-                                            <button type="submit" class="btn-fill-md text-light bg-dodger-blue"> <i class="fas fa-file-excel text-success"></i> Upload</button>
-                                        </form>
-                                    </div>
-                                 </li>
-                            </ul>
-                 </div>
+    <!-- Teacher Table Area Start Here -->
+  <div class="card height-auto">
+      
+ 
+    <div class="card-body">
+        <div class="heading-layout1">
+            <div class="item-title">
+            <a class="btn-fill-lg bg-blue-dark btn-hover-yellow" href="/students/create"> Inserir novo <i class="fas fa-plus"></i> </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="heading-layout1">
-                <div class="item-title">
-                    <h3>Tabelas Estudante ICS</h3>
+        @if (session('error'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+       
+
+        @if (session('success'))
+        <div class="ui-alart-box">
+            <div class="dismiss-alart">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    Parabens! {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <!-- @if (Auth::user()->canAccess('create', 'admission_form_student') ||
-                        Auth::user()->canAccess('admin', 'admission_form_student'))  -->
-                        <!-- @endif -->
-                        <li>
-                            <a class="btn-fill-md text-light bg-dodger-blue" href="/students/create"> Inserir Novo <i class="fas fa-plus text-orange-peel"></i></a>
-                        </li>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table display data-table text-nowrap">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Place of Birth</th>
-                            <th>Date of Birth</th>
-                            <th>NRE</th>
-                            <th>Semester</th>
-                            <th>Department</th>
-                            <th>Programa de Estudo</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($students as $student)
-                            <tr>
-                                <td>{{ $student->student->complete_name }}</td>
-                                <td>{{ $student->student->gender }}</td>
-                                <td>{{ $student->student->place_of_birth }}</td>
-                                <td>{{ $student->student->date_of_birth }}</td>
-                                <td>{{ $student->student->nre }}</td>
-                                <td>{{ $student->semestre->periodo ?? 'N/A' }}</td>
-                                <td>{{ $student->programaEstudo->nome_programa ?? 'N/A' }}</td>
-                                <td>{{ $student->programaEstudo->departamento->nome_departamento ?? 'N/A' }}</td>
-                                <td>
-                                    {{-- @if (Auth::user()->canAccess('edit', 'student_details')) --}}
-                                    <a href="{{ route('students.edit', ['id_student' => $student->id_student]) }}"
-                                        class="btn btn-primary btn-lg">Edit</a>
-                                    {{-- @endif --}}
-                                    {{-- @if (Auth::user()->canAccess('delete', 'students')) --}}
-                                    <form action="{{ route('students.destroy', ['id_student' => $student->id_student]) }}"
-                                        method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-lg"
-                                            onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
-                                    {{-- @endif --}}
-
-                                   
-                                </td>
-
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center">
-                {{ $students->links() }}
             </div>
         </div>
+        @endif
+       
+        <div class="row">
+           
+
+            <div class="col-4-xxxl col-xl-6 col-lg-6 col-12 form-group border">
+                <select id="filter-select-ano_inicio" class="form-control">
+                    <option value="">--Escolha Estudante por Ano Academico--</option>
+                    @foreach ($anos as $ano)
+                        <option value="{{ $ano }}">{{ $ano }}</option>
+                    @endforeach
+                </select>
+              </div>
+                
+                
+         <div class="col-2-xxxl col-xl-6 col-lg-3 col-12 form-group border">
+            <button id="export-csv" class="btn btn-success btn-lg mt-2">  <i class="fas fa-download"></i> Export CSV</button>
+
+        </div>
+
+       
+
     </div>
-    <!-- Student Table Area End Here -->
+
+    <div class="row">
+    <div class="col-12 col-lg-6 col-xl-4 col-xxxl-3 form-group">
+    <form action="/import-excel" method="POST" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        
+        <div class="form-group">
+            <label for="file" class="font-weight-bold">Submete Lista estudante com formato (xlsx, xls, csv)</label>
+            
+            <!-- File input with custom styling -->
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" name="excel_file" id="file" accept=".xlsx,.xls,.csv" required>
+                <label class="custom-file-label" for="file">Escolha o arquivo</label>
+            </div>
+            
+            <!-- Feedback for selected file -->
+            <small class="form-text text-muted">Selecione um arquivo no formato .xlsx, .xls, ou .csv</small>
+        </div>
+        
+        <!-- Submit button aligned left with styling -->
+        <div class="text-left mt-3">
+            <button type="submit" class="btn btn-primary btn-block text-light">
+                <i class="fas fa-file-excel text-success"></i> Sumete
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Custom file input styling using Bootstrap 4/5 -->
+<script>
+    // Display the selected file name
+    document.getElementById("file").addEventListener("change", function(event) {
+        var fileName = event.target.files[0].name;
+        var label = event.target.nextElementSibling;
+        label.textContent = fileName;
+    });
+</script>
+
+    </div>
+
+
+
+
+        <div class="table-responsive">
+            <table id="laravel_datatable" class="table display text-nowrap table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sexo</th>
+                        <th>Data Moris</th>
+                        <th>Departamento</th>
+                        <th>Ano Academico</th>
+                        <th>Estado</th>
+                        <th>Acao</th>
+                    </tr>
+                    <tr>
+                        <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
+                        <th>
+                            <select id="filter-sexo" class="form-control form-control-sm">
+                                <option value="">Select Sexo</option>
+                                <option value="Male">Masculino</option>
+                                <option value="Famale">Feminino</option>
+                            </select>
+                        </th>
+                        <th><input type="text" id="filter-data_moris" placeholder="Filter Data Moris" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-nome_departamento" placeholder="Filter Departamento" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-ano_inicio" placeholder="Filter Ano Academico" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-estado" placeholder="Filter Estado" class="form-control form-control-sm"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    var table = $('#laravel_datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('get.estudantegeral') }}",
+            data: function (d) {
+                d.ano_inicio = $('#filter-select-ano_inicio').val(); // Pass only `ano_inicio`
+            }
+        },
+        columns: [
+            {data: 'complete_name', name: 'complete_name'},
+            {data: 'gender', name: 'gender'},
+            {
+                data: 'data_moris',
+                name: 'data_moris',
+                render: function (data, type, row) {
+                    return moment(data).format('DD-MM-YYYY'); // Format the date
+                }
+            },
+            {data: 'nome_departamento', name: 'nome_departamento'},
+            {data: 'ano_inicio', name: 'ano_inicio'},
+            {
+                data: 'controlo_estado',
+                name: 'controlo_estado',
+                render: function (data, type, row) {
+                    return data == null ? 'Ativo' : 'Nao Ativo';
+                }
+            },
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    // Apply dropdown filter for ano_inicio
+    $('#filter-select-ano_inicio').on('change', function () {
+        table.ajax.reload(); // Reload the table data
+    });
+
+    // Export CSV
+    $('#export-csv').on('click', function () {
+        var ano_inicio = $('#filter-select-ano_inicio').val();
+        var exportUrl = "{{ route('export.estudantes') }}?ano_inicio=" + (ano_inicio || '');
+        window.location.href = exportUrl;
+    });
+});
+
+
+
+ // Export CSV
+ $('#export-csv').on('click', function () {
+            var id_departamento = window.location.href.split('/').pop();
+            var ano_inicio = $('#filter-select-ano_inicio').val();
+            var exportUrl = "{{ route('export.estudantes') }}?id_departamento=" + id_departamento + "&ano_inicio=" + (ano_inicio || '');
+            window.location.href = exportUrl;
+        });
+
+</script>
+
+<script type="text/javascript">
+    // SweetAlert delete confirmation
+    function confirmDelete(deleteUrl) {
+        Swal.fire({
+            title: 'Tem certeza de apagar este dado?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, apagar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create a form dynamically and submit the DELETE request
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = deleteUrl;
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+</script>
 @endsection

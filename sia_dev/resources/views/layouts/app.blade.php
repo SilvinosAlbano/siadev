@@ -26,11 +26,11 @@
     <link rel="stylesheet" href="../../../css/style.css">
 
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../../js/dataTables.bootstrap5.min.css">
+       <script src="../../../js/jquery.min.js"></script>
        <!-- <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
-       <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+       <script src="../../../js/dataTables.bootstrap5.min.js"></script>
+       <script src="../../../js/sweetalert2@10"></script>
 
 </head>
 

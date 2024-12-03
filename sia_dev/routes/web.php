@@ -11,11 +11,11 @@ use App\Http\Controllers\DisciplinasController;
 use App\Http\Controllers\Disciplinas_DisciplinasController;
 use App\Http\Controllers\salasController;
 use App\Http\Controllers\Datascontroller;
+use App\Http\Controllers\DisciplinasController_Bcp;
 use App\Http\Controllers\HomeController;
 
 // routes/web.php
 // routes/web.php
-// 123
 Route::get('/unauthorized', function () {
     return view('unauthorized');
 });
@@ -44,13 +44,20 @@ Route::middleware('check.access')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     // Students Routes
-    Route::resource('students', StudentController::class);
-
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/export-estudantes', [StudentController::class, 'exportEstudantes'])->name('export.estudantes');
+    Route::get('get-estudante-geral', [StudentController::class, 'getEstudanteGeral'])->name('get.estudantegeral');
+
+    Route::resource('students', StudentController::class);
+    Route::get('/escolha_estudante', [StudentController::class, 'EscolhaEstudante'])->name('escolha_estudante');
+    Route::get('/detailho_escolha_departamento/{id}', [StudentController::class, 'showDetailEscolhaEstudante'])->name('detailho_escolha_departamento');
+    Route::get('get-estudante-departamentos', [StudentController::class, 'getEstudantedepartamento'])->name('get.estudantedepartamento');
     Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::get('/students/{id_student}', [StudentController::class, 'show'])->name('students.show');
     Route::get('/students/{id_student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+    Route::get('/students_detail/{id}/', [StudentController::class, 'detail_estudent'])->name('students.detail');
+
     Route::put('/students/{id_student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id_student}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/lista_pagamento_estudante', [StudentController::class, 'listaPagamento'])->name('lista_pagamento_estudante');
@@ -67,6 +74,15 @@ Route::middleware('check.access')->group(function () {
     Route::get('/estudante/matricula/{id}', [StudentController::class, 'MatriculaEstudante'])->name('matricula_estudante');
     #end
 
+
+    #start  estudante cuti
+    Route::get('/estudante/licenca/{id}', [StudentController::class, 'EstudanteLicenca'])->name('estudante_licenca');
+    Route::get('/estudante/inserir_licenca/{id}', [StudentController::class, 'InserirLicenca'])->name('Inserir_estudante_licenca');
+    Route::post('/licensa_store', [StudentController::class, 'LicensaStore'])->name('licensa_estudante.store');
+    Route::get('/alterar_licensa_estudante/{id}', [StudentController::class, 'LicensaAlterar'])->name('alterar_licensa_estudante'); // Handle the update request
+
+    #end
+    
     #start pagamento estudante
     Route::get('/estudante/pagamento/{id}', [StudentController::class, 'PagamentoEstudante'])->name('pagamento_estudante');
     Route::get('/estudante/inserir_pagamento/{id_student}', [StudentController::class, 'create_pagamento'])->name('inserir_pagamento');
@@ -77,12 +93,29 @@ Route::middleware('check.access')->group(function () {
     Route::get('export-payments-csv', [StudentController::class, 'exportPaymentscsv'])->name('export.payments.csv');
     #end
 
+
+    #start estudante semestre
+    Route::get('/estudante/semestre/{id}', [StudentController::class, 'SemestreEstudante'])->name('semestre_estudante');
+    Route::get('/estudante/inserir_semestre/{id}', [StudentController::class, 'InserirSemestre'])->name('inserir_semestre');
+    Route::post('/semestre_store', [StudentController::class, 'SemestreStore'])->name('semestre_estudante.store');
+   Route::get('/alterar_semestre_estudante/{id}', [StudentController::class, 'SemestreAlterar'])->name('alterar_semestre_estudante'); 
+    #ned semestre
+
+    #start naturalidade estudante
+    Route::get('/estudante/inserir_naturalidade_estudante/{id_student}', [StudentController::class, 'create_naturalidade_estudante'])->name('inserir_naturalidade_estudante');
+    Route::post('/estudante/naturalidade/store', [StudentController::class, 'storeNaturalidadeEstudante'])->name('store_naturalidade_estudante');
+    Route::get('/estudante/alterar_naturalidade/{id}', [StudentController::class, 'editNaturalidadeEstudante'])->name('alterar_naturalidade_estudante');
+  
+    #end
+
+
     #programa estudo start
     Route::get('/estudante/programa_estudo/{id}', [StudentController::class, 'ProgramaEstudo'])->name('programa_estudo');
 
 
     Route::post('/import-excel', [StudentController::class, 'import_excel_post'])->name('import-excel');
 
+         Route::post('/import-teacher', [DocenteController::class, 'import_excel_docente'])->name('import-excel-teacher');
     // end student
 
     // Existing routes for users and roles management
@@ -138,12 +171,21 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/departamento/{id}', [DocenteController::class, 'destroyDepartamento'])->name('departamento.destroy');
     #end
     //#materia docente
-    Route::get('/funcionario/materia/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
+    Route::get('/get_semestre_by_departamento', [DocenteController::class, 'getSemestreByDepartamento'])->name('get_semestre_by_departamento');
+    Route::get('/get_materiasemestre_by_semestre', [DocenteController::class, 'getMateriaSemestreBySemestre'])->name('get_materiasemestre_by_semestre');
+        Route::get('/funcionario/materia/{id}', [DocenteController::class, 'showMateria'])->name('materia_docente');
     Route::get('/funcionario/inserir_materia_docente/{id_funcionario}', [DocenteController::class, 'create_materiaDocente'])->name('inserir_materia_docente');
     Route::post('/funcionario/docentemateria/store', [DocenteController::class, 'storeDocenteMateria'])->name('store_docentemateria');
     Route::get('/alterar_docentemateria/{id}', [DocenteController::class, 'editDocentemateria'])->name('alterar_docentemateria');
-    Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria.update');
+    Route::put('/update_docentemateria/{id}', [DocenteController::class, 'updateDocentemateria'])->name('update_docentemateria');
     Route::delete('/docentemateria/{id}', [DocenteController::class, 'destroyDocentemateria'])->name('docentemateria.destroy');
+    Route::get('/detailho_docente_semestre_estudante/{id}', [DocenteController::class, 'DetailDocenteSemestreEstudante'])->name('detailho_docente_semestre_estudante');
+    Route::post('/inserir_valor_materia', [DocenteController::class, 'storeValor'])->name('inserir_valor_materia');
+    Route::post('/update_valor_materia', [DocenteController::class, 'updateValor'])->name('update_valor_materia');
+    Route::get('/export-pdf/{id}', [DocenteController::class, 'exportToPDF'])->name('export.pdf');
+
+
+    Route::get('get-docente-materia', [DocenteController::class, 'getDocenteMateria'])->name('get.docentemateria');
     #end
     #posicao funcionario
     Route::get('/funcionario/posicao/{id}', [DocenteController::class, 'showPozisaun'])->name('posicao_funcionario');
@@ -154,6 +196,15 @@ Route::middleware('check.access')->group(function () {
     Route::put('/update_pozisaun/{id}', [DocenteController::class, 'update_posicao'])->name('updateposicao');
     Route::delete('/funcionarioposicao/{id}', [DocenteController::class, 'destroyPozisaun'])->name('posicao.destroy');
     #end 
+
+    #start naturalidade
+    Route::get('/funcionario/inserir_naturalidade/{id_funcionario}', [DocenteController::class, 'create_naturalidade'])->name('inserir_naturalidade');
+    Route::post('/funcionario/naturalidade/store', [DocenteController::class, 'storeNaturalidade'])->name('store_naturalidade');
+    Route::get('/funcionario/alterar_naturalidade/{id_funcionario}', [DocenteController::class, 'editNaturalidade'])->name('alterar_naturalidade');
+    Route::get('funcionario/alterar_naturalidade/{id_naturalidade_funcionario?}', [DocenteController::class, 'alterarNaturalidade'])->name('alterar_naturalidade');
+
+
+    #end
     #create funcionario
     Route::get('/adiciona_funcionario', [DocenteController::class, 'formDocente'])->name('adiciona_funcionario.index');
     Route::post('/docentes/store', [DocenteController::class, 'store'])->name('docentes.store');
@@ -177,11 +228,11 @@ Route::middleware('check.access')->group(function () {
 
     Route::get('get-materia', [DisciplinasController::class, 'getMateria'])->name('get.materia');
 
-    Route::get('/materia_semestre', [DisciplinasController::class, 'showMateriaSemestre'])->name('materia_semestre.index');
-    Route::post('/materia/store', [DisciplinasController::class, 'storeMateriaSemestre'])->name('materiasemestre.store');
-    Route::put('/materia/update/{id}', [DisciplinasController::class, 'updateMateriaSemestre'])->name('materiasemestre.update');
-    Route::get('get-materia-semetre', [DisciplinasController::class, 'getMateriaSemestre'])->name('get.materia_semestre');
-    Route::delete('/materia/semestre/{id}', [DisciplinasController::class, 'destroyMateriaSemestre'])->name('materia_semestre.destroy');
+    Route::get('/materia_semestre', [DisciplinasController_Bcp::class, 'showMateriaSemestre'])->name('materia_semestre.index');
+    Route::post('/materia/store', [DisciplinasController_Bcp::class, 'storeMateriaSemestre'])->name('materiasemestre.store');
+    Route::put('/materia/update/{id}', [DisciplinasController_Bcp::class, 'updateMateriaSemestre'])->name('materiasemestre.update');
+    Route::get('get-materia-semetre', [DisciplinasController_Bcp::class, 'getMateriaSemestre'])->name('get.materia_semestre');
+    Route::delete('/materia/semestre/{id}', [DisciplinasController_Bcp::class, 'destroyMateriaSemestre'])->name('materia_semestre.destroy');
 
     // end
 
@@ -207,11 +258,17 @@ Route::middleware('check.access')->group(function () {
 
 
     // Web routes for Disciplinas
-    Route::get('disciplinas_index', [DisciplinasController::class, 'index'])->name('disciplinas_index.index');
+
+    // For the Silabos Materias page
+    Route::get('disciplinas_index', [DisciplinasController::class, 'index'])->name('disciplinas_index');
+
+
+    // Non-resource routes for other parts of "Disciplinas"
     Route::get('/disciplina_departamentos', [DisciplinasController::class, 'disciplina_departamentos'])->name('disciplinas.departamentos');
     Route::get('/disciplina_programas', [DisciplinasController::class, 'disciplina_programas'])->name('disciplinas.programas');
     Route::get('/disciplina_semestres', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.semestres');
-    Route::get('/disciplina_disciplinas', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
-    // Route::resource('departamentos', DisciplinasController::class);
-    // Route::resource('disciplinas', DisciplinasController::class);
+    Route::get('/disciplina_disciplinas/all', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas_index');
+    Route::get('disciplinas_index/disciplinas/{disciplina}', [DisciplinasController::class, 'show'])->name('disciplinas_index.disciplinas.show');
+
+    Route::get('disciplinas_index/disciplinas/{disciplina}/edit', [Disciplinas_DisciplinasController::class, 'edit'])->name('disciplinas_index.disciplinas.edit');
 });

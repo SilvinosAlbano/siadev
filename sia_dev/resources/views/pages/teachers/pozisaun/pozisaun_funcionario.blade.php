@@ -39,7 +39,7 @@
                     <div class="ui-alart-box">
                         <div class="dismiss-alart">
                             <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                Parabens🤩! {{ session('success') }} ✔
+                                Parabens! {{ session('success') }} ✔
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

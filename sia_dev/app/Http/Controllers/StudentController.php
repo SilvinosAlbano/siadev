@@ -6,7 +6,10 @@ use App\Models\ModelStudent;
 use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
 use App\Models\ModelMatricula;
+use App\Models\ModelLicencaEstudante;
+use App\Models\ModelNaturalidadeEstudante;
 use App\Models\ModelProgramaEstudo;
+use App\Models\ModelsemestreEstudante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
@@ -17,32 +20,185 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentImport;
 use App\Models\ModelPagamentoStudante;
+use App\Models\ViewMunicipioPosto;
 use App\Exports\PaymentsExport;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class StudentController extends Controller
 {
-    // public function index()
-    // {
-    //     $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])->paginate(10);
-    //     // $students = ModelStudent::all();
-    //     return view('pages.students.all_students', compact('students'));
-    // }
-
     public function index()
     {
         $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])
             ->whereHas('student')  // Ensures only students with related data are fetched
             ->paginate(10);
 
-        return view('pages.students.all_students', compact('students'));
+            $anos = DB::table('view_estudante')
+            // ->where('id_departamento', $id) // Use the same $id for the department
+            ->distinct()
+            ->pluck('ano_inicio');
+
+        return view('pages.students.all_students', compact('students','anos'));
+    }
+    public function getEstudanteGeral(Request $request)
+    {
+        $ano_inicio = $request->ano_inicio ?: date('Y');
+        $id_student = $request->id_student;
+        if ($request->ajax()) {
+            $data = DB::table('view_estudante')
+                ->when($ano_inicio, function ($query, $ano_inicio) {
+                    $query->where('ano_inicio', $ano_inicio); // Filter by `ano_inicio` if provided
+                })
+                ->select('*'); // Select all columns
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('students.detail', $row->id_student);
+                    // $deleteUrl = route('docentes.destroy', $row->id_student);
+
+                    $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Detalho</a>';
+                    $btn .= '';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
+    
+    
+    public function EscolhaEstudante()
+    {
+        $estudante_departamento = DB::table('students as a')
+        ->select(
+            'h.id_departamento',
+            'h.nome_departamento',
+            DB::raw('COUNT(a.id_student) as total_estudante')
+        )
+        ->leftJoin('matricula as g', 'g.id_student', '=', 'a.id_student')
+        ->leftJoin('programa_estudo as p', 'p.id_programa_estudo', '=', 'g.id_programa_estudo')
+        ->leftJoin('departamento as h', 'h.id_departamento', '=', 'p.id_departamento')
+        ->whereNotNull('h.id_departamento') // Exclude records where id_departamento is null
+        ->groupBy('h.id_departamento', 'h.nome_departamento')
+        ->get();
+
+        return view('pages.students.escolha_estudante',compact('estudante_departamento'));
+    }
+
+    public function showDetailEscolhaEstudante($id)
+    {
+        // Fetch the student details from the view_estudante based on id_departamento
+        $estudante = DB::table('view_estudante')
+            ->where('id_departamento', $id)
+            ->orderByDesc('created_at')
+            ->first();
+    
+        // Check if the data was found
+        if (!$estudante) {
+            return redirect()->back()->with('error', 'Details not found.');
+        }
+    
+        // Fetch unique ano_inicio values for the filter
+        $anos = DB::table('view_estudante')
+            ->where('id_departamento', $id) // Use the same $id for the department
+            ->distinct()
+            ->pluck('ano_inicio');
+    
+        return view('pages.students.dados_estudante_por_departamento', compact('estudante', 'anos','id'));
+    }
+    
+    public function getEstudantedepartamento(Request $request)
+    {
+        $id_departamento = $request->id_departamento;
+        $ano_inicio = $request->ano_inicio ?: date('Y'); // Define o ano atual como padrão se não for fornecido
+        
+        if ($request->ajax()) {
+            $data = DB::table('view_estudante')
+                ->where('id_departamento', $id_departamento) // Filtro pelo id_departamento
+                ->when($ano_inicio, function ($query, $ano_inicio) {
+                    $query->where('ano_inicio', $ano_inicio); // Aplica o filtro ano_inicio
+                })
+                ->select('*');
+    
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('students.edit', $row->id_student);
+                    $inserirUrl = route('students.detail', $row->id_student);
+                    $deleteUrl = route('docentes.destroy', $row->id_student);
+    
+                    $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Editar</a>';
+                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Inserir Valor</a>';
+                    $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Apagar</button>';
+    
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+    
+    public function exportEstudantes(Request $request)
+    {
+        $id_departamento = $request->input('id_departamento');
+        $ano_inicio = $request->input('ano_inicio');
+    
+        // Query filtered data
+        $data = DB::table('view_estudante')
+            ->where('id_departamento', $id_departamento)
+            ->when($ano_inicio, function ($query, $ano_inicio) {
+                return $query->where('ano_inicio', $ano_inicio);
+            })
+            ->get();
+    
+        // Prepare CSV
+        $filename = "estudantes_{$id_departamento}.csv";
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+    
+        $columns = ['NRE','Nome', 'Sexo', 'Data Moris', 'Departamento',' Programa Estudo', 'Semestre', 'Ano Academico'];
+    
+        $callback = function () use ($data, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns); // Header row
+    
+            foreach ($data as $row) {
+                fputcsv($file, [
+                    $row->nre,
+                    $row->nome_estudante,
+                    $row->sexo,
+                    $row->data_moris,
+                    $row->nome_departamento,
+                    $row->nome_programa,
+                    $row->numero_semestre,
+                    $row->ano_inicio,
+                ]);
+            }
+    
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
+    
+        
+
+
+
+   
     public function create()
     {
+        $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+         ->distinct()
+         ->get();
         $semestre = ModelSemestre::all();
       
         $programaEstudo = ModelProgramaEstudo::all(); // Ajustei o nome da variável
-        return view('pages.students.admission_form_student', compact('semestre', 'programaEstudo'));
+        return view('pages.students.admission_form_student', compact('semestre', 'programaEstudo','municipios'));
     }
 
     public function store(Request $request)
@@ -59,6 +215,13 @@ class StudentController extends Controller
             'id_programa_estudo' => 'required|string', // Ensure this matches the form field
             'id_semestre' => 'required|string', // Ensure this matches the form field
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
+            'ano_semestre' => 'nullable|string|max:255',
+            'id_aldeias' => 'nullable|string|max:255',
+            'id_suco' => 'nullable|string|max:255',
+            'id_posto_administrativo' => 'nullable|string|max:255',
+            'id_municipio' => 'nullable|string|max:255',
+            'nacionalidade' => 'nullable|string|max:255',
+            'endereco_atual' => 'nullable|string|max:255',
             // 'observation' => 'nullable|string',
             // 'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -102,7 +265,26 @@ class StudentController extends Controller
             'id_semestre' => $validatedData['id_semestre'],
         ]);
 
-        return redirect()->route('students.index')->with('success', 'Student created successfully!');
+        ModelsemestreEstudante::create([
+            'id_semestre_estudante' => (string) Str::uuid(),
+            'id_student' => $student->id_student,
+            'id_semestre' => $validatedData['id_semestre'],
+            'ano_semestre' => $validatedData['ano_semestre'],
+        ]);
+
+        ModelNaturalidadeEstudante::create([
+            'id_naturalidade_funcionario' => (string) Str::uuid(),
+            'id_student' => $student->id_student,
+            'id_municipio' => $validatedData['id_municipio'],
+            'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
+            'id_suco' => $validatedData['id_suco'],
+            'id_aldeias' => $validatedData['id_aldeias'],
+            'nacionalidade' => $validatedData['nacionalidade'],
+            'endereco_atual' => $validatedData['endereco_atual'],
+          
+        ]);
+
+        return redirect()->route('students.index')->with('success', 'Dados Estudante com sucesso gravados!');
     }
 
    
@@ -118,7 +300,18 @@ class StudentController extends Controller
         $semesters = ModelSemestre::all();
 
         // Passar o estudante, departamentos e semestres para a view
-        return view('pages.students.student_details', compact('student', 'modelDepartamentos', 'semesters'));
+        return view('pages.students.student_edit', compact('student', 'modelDepartamentos', 'semesters'));
+    }
+
+
+    public function detail_estudent($id_student)
+    {
+        $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id_student);
+        $detail = DB::table('view_estudante')
+        ->where('id_student', $id_student)
+        ->first();
+      
+        return view('pages.students.student_details', compact('detail', 'student'));
     }
 
     public function update(Request $request, $id_student)
@@ -192,12 +385,42 @@ class StudentController extends Controller
     
 
     #start student materia
+    // public function MateriaEstudante($id)
+    // {
+    //     $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id);
+
+    //     $detailho_docente_semestre_estudante = DB::table('view_curiculo')
+    //     ->where('id_student', $id)
+    //     ->orderBy('numero_semestre', 'asc')
+    //     ->get();
+      
+    //     return view('pages.students.estudante_materia.materia_estudante', compact('student','detailho_docente_semestre_estudante'));
+    // }
+
+
     public function MateriaEstudante($id)
     {
+        // Fetch curriculum details grouped by semester
+        $details = DB::table('view_curiculo')
+            ->select('codigo_materia', 'materia', 'numero_semestre', 'credito')
+            ->where('id_student', $id)
+            ->orderBy('numero_semestre')
+            ->get();
+    
+        // Fetch student details with related matriculas, semestre, and departamento
         $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id);
-      
-        return view('pages.students.estudante_materia.materia_estudante', compact('student'));
+    
+        // Group curriculum data by semester
+        $groupedBySemester = $details->groupBy('numero_semestre');
+    
+        // Pass both curriculum data and student data to the view
+        return view('pages.students.estudante_materia.materia_estudante', [
+            'groupedBySemester' => $groupedBySemester,
+            'student' => $student,
+        ]);
     }
+    
+
     #end
 
 
@@ -345,7 +568,7 @@ class StudentController extends Controller
             $pagamento->save();
 
             return redirect()->route('pagamento_estudante', ['id' => $request->input('id_student')])
-                ->with('success', 'Pagamento Estudamte inserida com sucesso.');
+                ->with('success', 'Pagamento Estudante inserida com sucesso!');
         }
 
 
@@ -451,5 +674,188 @@ class StudentController extends Controller
             // Export to CSV instead of Excel
             return Excel::download(new PaymentsExport($filters), 'payments.csv', \Maatwebsite\Excel\Excel::CSV);
         }
+
+        // estudante cuti
+        public function EstudanteLicenca( $id)
+        {
+        
+            $student = ModelStudent::findOrFail($id);
+            
+            $licensa = DB::table('view_licensa_estudante')
+            ->where('id_student', $id)
+            ->paginate(5);
+
+            
+           
+            return view('pages.students.estudante_licenca.estudante_licenca',compact('student','licensa') );
+        }
+
+    // formulario licensa
+        public function InserirLicenca( $id)
+        {
+        
+            $student = ModelStudent::findOrFail($id);
+            $tipo_licensa = DB::table('tipo_licensa')
+            ->paginate(5);
+            return view('pages.students.estudante_licenca.inserir_estudante_licensa',compact('student','id','tipo_licensa') );
+        }
+
+        public function LicensaStore(Request $request)
+        {
+            $request->validate([
+             'id_student' => 'required|string|max:255',
+             'id_tipo_licensa' => 'required|string|max:255',
+             'data_inicio_licensa' => 'required|string|max:255',
+             'data_fim_licensa' => 'required|string|max:255',
+            
+            ]);
     
+            $licensa = new ModelLicencaEstudante();
+            $licensa->id_student = $request->input('id_student');
+            $licensa->id_tipo_licensa = $request->input('id_tipo_licensa');
+            $licensa->data_inicio_licensa = $request->input('data_inicio_licensa');
+            $licensa->data_fim_licensa = $request->input('data_fim_licensa');
+            $licensa->observacao = $request->input('observacao');
+          
+            $licensa->save();
+    
+            return redirect()->route('estudante_licenca', ['id' => $request->input('id_student')])
+                ->with('success', 'Licensa registrado com sucesso.');
+        }
+    
+
+        public function LicensaAlterar( $id)
+        {
+        
+            $licensa = ModelLicencaEstudante::findOrFail($id);
+            // $student = ModelStudent::findOrFail($id);
+            $tipo_licensa = DB::table('tipo_licensa')
+            ->paginate(5);
+            $student = DB::table('view_licensa_estudante')
+            ->where('id_licensa_estudante', $id)
+            ->first();
+
+          
+      
+
+            return view('pages.students.estudante_licenca.alterar_licensa_estudante',compact('student','licensa','id','tipo_licensa') );
+        }
+
+
+        // Start semestre estudante 
+
+        public function SemestreEstudante( $id)
+        {
+        
+            $student = ModelStudent::findOrFail($id);        
+                
+                $semestreEstudantes = DB::table('view_semestre_estudante')
+                ->where('id_student', $id)
+                ->paginate(5);
+           
+            return view('pages.students.semestre_estudante.semestre',compact('student','semestreEstudantes') );
+        }
+
+
+        public function InserirSemestre( $id)
+        {    
+            $student = ModelStudent::findOrFail($id);
+            $tipo_semestre = DB::table('semestre')
+            ->paginate(5);
+            return view('pages.students.semestre_estudante.inserir_semestre',compact('student','id','tipo_semestre') );
+        }
+
+        public function SemestreStore(Request $request)
+        {
+            $request->validate([
+             'id_student' => 'required|string|max:255',
+             'id_semestre' => 'required|string|max:255',
+             'ano_semestre' => 'required|string|max:255',
+             'data_atualiza_semestre' => 'required|string|max:255',
+            
+            ]);
+    
+            $semestre = new ModelsemestreEstudante();
+            $semestre->id_student = $request->input('id_student');
+            $semestre->id_semestre = $request->input('id_semestre');
+            $semestre->ano_semestre = $request->input('ano_semestre');
+            $semestre->data_atualiza_semestre = $request->input('data_atualiza_semestre');
+            $semestre->observacao = $request->input('observacao');
+          
+            $semestre->save();
+    
+            return redirect()->route('semestre_estudante', ['id' => $request->input('id_student')])
+                ->with('success', 'Dados Semestre de estudante foi registrado com sucesso.');
+        }
+
+
+        public function SemestreAlterar( $id)
+        {
+        
+            $semestre = ModelsemestreEstudante::findOrFail($id);
+            // $student = ModelStudent::findOrFail($id);
+            $tipo_semestre = DB::table('tipo_licensa')
+            ->paginate(5);
+            $student = DB::table('view_estudante')
+            ->where('id_student', $id)
+            ->first();
+
+            return view('pages.students.semestre_estudante.alterar_semestre',compact('student','semestre','id','tipo_semestre') );
+        }
+
+
+        // naturalidade
+        public function create_naturalidade_estudante($id)
+        {
+          
+            $student = ModelStudent::findOrFail($id);
+                
+    
+             $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+             ->distinct()
+             ->get();
+            return view('pages.students.naturalidade_estudante.naturalidade_estudante_inserir', compact( 'id', 'student','municipios'));
+        }
+
+
+        public function storeNaturalidadeEstudante(Request $request)
+        {
+            $request->validate([
+             'id_aldeias' => 'required|string|max:255',
+             'id_suco' => 'required|string|max:255',
+             'id_posto_administrativo' => 'required|string|max:255',
+             'id_municipio' => 'required|string|max:255',
+            ]);
+    
+            $naturalidade = new ModelNaturalidadeEstudante();
+            $naturalidade->id_student = $request->input('id_student');
+            $naturalidade->id_municipio = $request->input('id_municipio');
+            $naturalidade->id_posto_administrativo = $request->input('id_posto_administrativo');
+            $naturalidade->id_suco = $request->input('id_suco');
+            $naturalidade->id_aldeias = $request->input('id_aldeias');
+            $naturalidade->nacionalidade = $request->input('nacionalidade');
+            $naturalidade->endereco_atual = $request->input('endereco_atual');
+            $naturalidade->observacao = $request->input('observacao');
+            $naturalidade->save();
+    
+            return redirect()->route('students.detail', ['id' => $request->input('id_student')])
+                ->with('success', 'Naturalidade inserida com sucesso.');
+        }
+
+
+        public function editNaturalidadeEstudante($id)
+        {
+            // Fetch the habilitacao by its ID
+            $edit = ModelNaturalidadeEstudante::findOrFail($id);
+    
+            $detail = DB::table('view_estudante')
+            ->where('id_student', $id)
+            // ->orderByDesc('created_at')
+            ->first();
+    
+            $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
+            ->distinct()
+            ->get();
+            return view('pages.students.naturalidade_estudante.naturalidade_alterar', compact('id','detail','edit','municipios'));
+        }
 }

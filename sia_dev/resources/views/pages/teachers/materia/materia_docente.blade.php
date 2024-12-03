@@ -48,9 +48,12 @@
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
                                     <tr>                                
-                                        <th>Materia Disciplina</th>    
-                                        <th>Data Inicio</th>  
-                                        <th>Data fim</th>                                     
+                                        <th> Disciplina</th> 
+                                        <th>Semestre</th>     
+                                        <th>Data Inicio Aula</th>  
+                                        <th>Data fim Aula</th>    
+                                        <th>Ano Academico</th>   
+                                        <th>Estado de Aula</th>                                     
                                         <th>Asaun</th>
                                        
                                     </tr>
@@ -59,40 +62,37 @@
                                     @foreach ($materiadocen as $data)
                                         <tr>
                                             <td>{{ $data->materia }}</td>
-                                            <td>{{ $data->data_inicio }}</td>
-                                            <td>{{ $data->data_fim }}</td>
+                                            <td>{{ $data->numero_semestre }}</td>
+                                            <td>{{ $data->data_inicio_aula }}</td>
+                                            
+                                            <td>{{ $data->data_fim_aula}}</td>
+                                            <td>{{ $data->ano_academico }}</td>
+                                            <td>{{ $data->estado_de_aula}}</td>
                                            
                                            
                                             <td>
-                                                <div class="dropdown">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                        <span class="flaticon-more-button-of-three-dots"></span>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <!-- Edit button -->
-                                                        <a class="dropdown-item" href="{{ route('alterar_docentemateria', $data->id_docente_materia) }}">
-                                                            <i class="fas fa-edit text-dark-pastel-green"></i> Edit
-                                                        </a>
+                                            <a class="btn btn-sm btn-success" href="{{ route('detailho_docente_semestre_estudante', $data->id_docente_materia) }}">
+                                                <i class="fas fa-eye"></i> Detail
+                                            </a>
+                                            <!-- Edit button -->
+                                            <a class="btn btn-sm btn-success" href="{{ route('alterar_docentemateria', $data->id_docente_materia) }}">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
 
+                                            <!-- Delete button -->
+                                            <a class="btn btn-sm btn-danger" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_docente_materia }}').submit();">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </a>
 
-                                                        <!-- Optionally, you can add a delete button -->
-                                                        
-
-                                                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $data->id_docente_materia }}').submit();">
-                                                        <i class="fas fa-trash text-orange-peel"></i> Delete
-                                                    </a>
-
-                                                    </div>
-
-                                                    <form id="delete-form-{{ $data->id_docente_materia }}" action="{{ route('docentemateria.destroy', $data->id_docente_materia) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this  data?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
+                                            <form id="delete-form-{{ $data->id_docente_materia }}" action="{{ route('docentemateria.destroy', $data->id_docente_materia) }}" method="POST" style="display: none;" onsubmit="return confirm('Are you sure you want to delete this data?');">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
-                                </tbody>
-                            </table>
+                                </tbody>                            </table>
                         </div>
 
                     </div>

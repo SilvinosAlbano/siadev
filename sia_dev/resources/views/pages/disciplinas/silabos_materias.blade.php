@@ -13,5 +13,6 @@
     <div class="card ui-tab-card mt-4">
         @include('pages.disciplinas.disciplinas_menu_tab')
     </div>
+    @include('pages.disciplinas.disciplinas.disciplinas')
 
 @endsection

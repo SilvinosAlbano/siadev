@@ -21,21 +21,18 @@
                 </div>
 
             </div>
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>🤦‍♀️
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+            @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                   🤩 {{ session('success') }}✔
-                </div>
-            @endif
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 
                 <form class="new-added-form mb-4" method="POST" action="{{ route('docentes.store') }}"   enctype="multipart/form-data">
                     @csrf
@@ -78,8 +75,8 @@
                                    <div class="row">
 
                                         <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                            <label>Municipio *</label>
-                                            <select class="select2" name="id_municipio" required>
+                                            <label>Municipio </label>
+                                            <select class="select2" name="id_municipio">
                                                 <option value="">Escolha *</option>
                                                 @foreach($municipios as $municipio)
                                                     <option value="{{ $municipio->id_municipio }}">{{ $municipio->municipio }}</option>
@@ -89,14 +86,14 @@
 
 
                                         <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                            <label>Posto *</label>
+                                            <label>Posto </label>
                                             <select class="select2" name="id_posto_administrativo">
                                                 <option selected disabled value="">Escolha *</option>
                                             </select>
                                         </div>
 
                                         <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                            <label>Suco *</label>
+                                            <label>Suco </label>
                                             <select class="select2" name="id_suco">
                                                 <option selected disabled value="">Escolha *</option>
                                             </select>                
@@ -106,57 +103,63 @@
                                      </div>
 
                                      <div class="row">
-                        <div class="col-xl-4 col-lg-6 col-12 form-group">
-                            <label>Aldeia *</label>
-                            <select class="select2" name="id_aldeias">
-                                <option selected disabled value="">Escolha *</option>
-                            </select>
-                        </div>
-                      <div class="col-xl-4 col-lg-6 col-12 form-group">
-                            <label>Nacionalidade *</label>
-                            <input type="text" name="nacionalidade" placeholder="" class="form-control border">
-                        </div>
+                                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                        <label>Aldeia </label>
+                                        <select class="select2" name="id_aldeias">
+                                            <option selected disabled value="">Escolha *</option>
+                                        </select>
+                                    </div>
 
-                        <div class="col-xl-4 col-lg-6 col-12 form-group">
-                            <label>Categoria *</label>
-                            <select class="select2" id="categoria" name="categoria" required>
-                                <option selected disabled value="">Escolha *</option>
-                                <option value="Docente">Docente</option>
-                                <option value="Admin">Admin</option>
-                            </select>
-                        </div>
-                        
-                    </div>
-                    
-                    <div class="row mb-2" id="tipoDataRow" style="display: none;">
-                            <div class="col-xl-4 col-lg-6 col-12 form-group">
-                                <label>Tipo Categoria Admin *</label>
-                                <select class="select2" name="id_tipo_categoria">
-                                    <option selected disabled value="">Escolha *</option>
-                                    @foreach ($tipo_admin as $est)
-                                        <option value="{{ $est->id_tipo_categoria }}">{{ $est->tipo_categoria }}</option>
-                                    @endforeach
-                                </select>
+                                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                        <label>Nacionalidade </label>
+                                        <input type="text" name="nacionalidade" placeholder="" class="form-control border">
+                                    </div>
+
+                                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                        <label>Categoria *</label>
+                                        <select class="select2" id="categoria" name="categoria" required>
+                                            <option selected disabled value="">Escolha *</option>
+                                            <option value="Docente">Docente</option>
+                                            <option value="Admin">Admin</option>
+                                        </select>
+                                    </div>
+                                
                             </div>
-                    </div>
+                    
+                            <div class="row mb-2" id="tipoDataRow" style="display: none;">
+                                    <div class="col-xl-4 col-lg-6 col-12 form-group">
+                                        <label>Tipo Categoria Admin *</label>
+                                        <select class="select2" name="id_tipo_categoria">
+                                            <option selected disabled value="">Escolha *</option>
+                                            @foreach ($tipo_admin as $est)
+                                                <option value="{{ $est->id_tipo_categoria }}">{{ $est->tipo_categoria }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                            </div>
 
                          <div class="row">                      
 
             
-                            <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
                                 <label>Ano Inicio</label>
                                 <input type="date" name="ano_inicio" placeholder="" class="form-control">
 
                             </div>
 
-                            <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
                                 <label>Numero de Contacto</label>
                                 <input type="text" name="no_contacto" placeholder="" class="form-control border">
 
                             </div>
-                            <div class="col-xl-4 col-lg-6 col-12 form-group">
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
                                 <label>E-mail</label>
                                 <input type="email" name="email" placeholder="" class="form-control border">
+
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                <label>Endereco Atual</label>
+                                <input type="text" name="endereco_atual" placeholder="" class="form-control border">
 
                             </div>
                         </div>
@@ -176,7 +179,7 @@
                             <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
                             <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                         </div>
-                    </div>
+                       </div>
 
                     <!-- sub -->
                                 
@@ -272,10 +275,8 @@
 
                         <!-- <div class="dropdown-divider"></div> -->
                     </div>
-                </div>
-            </div>
-
-        
+                 </div>
+               </div>        
          </form>
      </div>
  </div>
