@@ -24,3 +24,6 @@ class ModelDepartamento extends Model
         return $this->hasMany(ModelProgramaEstudo::class, 'id_departamento', 'id_departamento');
     }
 }
+
+
+// php artisan make:controller DisciplinasDepartamentoController

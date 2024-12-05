@@ -8,7 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DivisaoAdministrativaController;
 use App\Http\Controllers\DisciplinasController;
-use App\Http\Controllers\Disciplinas_DisciplinasController;
+use App\Http\Controllers\DisciplinasDepartamentoController;
+use App\Http\Controllers\DisciplinasDisciplinaController;
 use App\Http\Controllers\salasController;
 use App\Http\Controllers\Datascontroller;
 use App\Http\Controllers\HomeController;
@@ -210,7 +211,13 @@ Route::middleware('check.access')->group(function () {
     Route::get('/disciplina_departamentos', [DisciplinasController::class, 'disciplina_departamentos'])->name('disciplinas.departamentos');
     Route::get('/disciplina_programas', [DisciplinasController::class, 'disciplina_programas'])->name('disciplinas.programas');
     Route::get('/disciplina_semestres', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.semestres');
-    Route::get('/disciplina_disciplinas', [DisciplinasController::class, 'disciplina_disciplinas'])->name('disciplinas.disciplinas');
-    // Route::resource('departamentos', DisciplinasController::class);
-    // Route::resource('disciplinas', DisciplinasController::class);
+    // Route::get('/disciplina_disciplinas', [DisciplinasController::class, 'disciplina_semestres'])->name('disciplinas.disciplinas');
+    // Route::get('/disciplina_disciplinas', [DisciplinasDisciplinaController::class, 'index'])->name('disciplinas.disciplinas');
+
+    Route::prefix('disciplinas')->group(function () {
+        Route::get('/disciplina_disciplinas', [DisciplinasDisciplinaController::class, 'index'])->name('disciplinas.disciplinas');
+        Route::post('/store', [DisciplinasDisciplinaController::class, 'store'])->name('disciplinas.disciplinas.store');
+        Route::put('/{id}', [DisciplinasDisciplinaController::class, 'update'])->name('disciplinas.disciplinas.update');
+        Route::delete('/{id}', [DisciplinasDisciplinaController::class, 'destroy'])->name('disciplinas.disciplinas.destroy');
+    });
 });
