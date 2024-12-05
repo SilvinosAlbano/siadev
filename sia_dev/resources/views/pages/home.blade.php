@@ -9,9 +9,9 @@
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area text-center">
     <div class="university-logo">
-        <img src="{{ asset('images/logo_con.png') }}" alt="University Logo" class="logo" style="width: 50px;">
+        <!-- <img src="{{ asset('images/logo_con.png') }}" alt="University Logo" class="logo" style="width: 50px;"> -->
     </div>
-    <h3 class="mt-1">BEM-VINDO AO DASHBOARD DO SISTEMA DE INFORMAÇÃO ACADÊMICA DO INSTITUTO DE CIÊNCIA DA SAÚDE <br>ICS </h3>
+    <h3 class="mt-1"> DASHBOARD DO SISTEMA DE INFORMAÇÃO ACADÊMICA DO INSTITUTO DE CIÊNCIA DA SAÚDE <br>ICS </h3>
     <ul class="breadcrumb-list">
        
     </ul>

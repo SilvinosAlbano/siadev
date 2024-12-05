@@ -40,7 +40,9 @@
                          <a class="nav-link {{ request()->routeIs('materia_estudante') ? 'active text-danger' : '' }}" href="{{ route('materia_estudante', $student->id_student) }}">Curiculo</a>
                     </li>
 
-                  
+                    <li class="nav-item">
+                         <a class="nav-link {{ request()->routeIs('departamento_estudante') ? 'active text-danger' : '' }}" href="{{ route('departamento_estudante', $student->id_student) }}">Departamento</a>
+                    </li>
 
                     <li class="nav-item">
                          <a class="nav-link {{ request()->routeIs('matricula_estudante') ? 'active text-danger' : '' }}" href="{{ route('matricula_estudante', $student->id_student) }}">Matricula</a>

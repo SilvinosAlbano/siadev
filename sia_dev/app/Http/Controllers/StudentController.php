@@ -13,6 +13,7 @@ use App\Models\ModelsemestreEstudante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
+use App\Models\ModelIndicePagamento;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -130,7 +131,7 @@ class StudentController extends Controller
                     $deleteUrl = route('docentes.destroy', $row->id_student);
     
                     $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Editar</a>';
-                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Detail</a>';
+                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Inserir Valor</a>';
                     $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Apagar</button>';
     
                     return $btn;
@@ -690,6 +691,43 @@ class StudentController extends Controller
             return view('pages.students.estudante_licenca.estudante_licenca',compact('student','licensa') );
         }
 
+
+
+        public function TipoPagamentoIndice()
+        {
+
+            $departamento = ModelDepartamento::all();
+            return view('pages.students.monitora_pagamento_estudante.tipo_pagamento_indice', compact('departamento'));
+        }
+
+        public function getTipoIndice(Request $request)
+        {
+            if ($request->ajax()) {
+                // Obtendo dados da tabela ou view correta
+                $data = DB::table('view_tipo_pagamento')
+                    ->select('id_controlo_departamento', 'nome_departamento', 'ano_academico', 'total_indice'); // Ajuste conforme os campos disponíveis
+        
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($row) {
+                        // Construção dos botões de ação
+                        $editUrl = route('materia.edit', $row->id_controlo_departamento);
+        
+                        $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                        $btn .= ' <form action="' . route('materia.destroy', $row->id_controlo_departamento) . '" method="POST" style="display:inline;">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="delete btn btn-danger btn-sm" onclick="return confirm(\'Tem certeza de apagar este dado?\')">Delete</button>
+                                </form>';
+        
+                        return $btn;
+                    })
+                    ->rawColumns(['action']) // Necessário para permitir HTML nos botões
+                    ->make(true);
+            }
+        }
+        
+
     // formulario licensa
         public function InserirLicenca( $id)
         {
@@ -847,16 +885,15 @@ class StudentController extends Controller
         {
             // Fetch the habilitacao by its ID
             $edit = ModelNaturalidadeEstudante::findOrFail($id);
-         
     
             $detail = DB::table('view_estudante')
-            ->where('id_naturalidade_estudante', $id)
+            ->where('id_student', $id)
+            // ->orderByDesc('created_at')
             ->first();
     
             $municipios = ViewMunicipioPosto::select('id_municipio', 'municipio')
             ->distinct()
             ->get();
-            $student = ModelStudent::findOrFail($id);
-            return view('pages.students.naturalidade_estudante.naturalidade_estudante_alterar', compact('student','id','detail','edit','municipios'));
+            return view('pages.students.naturalidade_estudante.naturalidade_alterar', compact('id','detail','edit','municipios'));
         }
 }

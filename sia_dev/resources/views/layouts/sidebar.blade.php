@@ -34,12 +34,7 @@
 
 
 
-                        {{-- @if ($user->canAccess('read', 'students')) --}}
-                        <li class="nav-item">
-                            <a href="{{ route('lista_pagamento_estudante') }}" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Lista pagamento</a>
-                        </li>
-                        {{-- @endif --}}
+                      
 
                        
                     </ul>
@@ -72,7 +67,7 @@
 
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Curiculo
+                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Materia
                             </span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
@@ -90,21 +85,53 @@
 
 
                 <li class="nav-item sidebar-nav-item">
-                    <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Classes</span></a>
+                    <a href="#" class="nav-link"><i class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Horario</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>Todas
-                                Classes</a>
+                            <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>Horario
+                                </a>
                         </li>
+                       
+                    </ul>
+                </li>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Lista Presenca</span></a>
+                    <ul class="nav sub-group-menu">
                         <li class="nav-item">
-                            <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Roteiro de
-                                Classe</a>
+                            <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>Lista Prezensa
+                                </a>
                         </li>
+                       
+                    </ul>
+                </li>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Pagamento</span></a>
+                    <ul class="nav sub-group-menu">
+                    {{-- @if ($user->canAccess('read', 'students')) --}}
                         <li class="nav-item">
-                            <a href="/add_classes" class="nav-link"><i class="fas fa-angle-right"></i>Adicionar
-                                Classe</a>
+                            <a href="{{ route('lista_pagamento_estudante') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Lista pagamento</a>
                         </li>
+                        {{-- @endif --}}
+
+                        <li class="nav-item">
+                            <a href="{{ route('pagamento_indice') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Indice Pagamento</a>
+                        </li>
+                       
+                    </ul>
+                </li>
+
+                <li class="nav-item sidebar-nav-item">
+                    <a href="#" class="nav-link"><i class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul KRS</span></a>
+                    <ul class="nav sub-group-menu">
+                        <li class="nav-item">
+                            <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>KRS
+                                </a>
+                        </li>
+                       
                     </ul>
                 </li>
 
@@ -136,7 +163,7 @@
                 {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}} <!-- Comment lai tama sei uza atu dev -->
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Usuários</span></a>
+                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Modul Usuários</span></a>
                     <ul class="nav sub-group-menu">
                         <li class="nav-item">
                             <a href="/all_users" class="nav-link"><i class="fas fa-angle-right"></i>Todos

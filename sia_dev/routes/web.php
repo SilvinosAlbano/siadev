@@ -62,6 +62,9 @@ Route::middleware('check.access')->group(function () {
     Route::delete('/students/{id_student}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/lista_pagamento_estudante', [StudentController::class, 'listaPagamento'])->name('lista_pagamento_estudante');
     Route::get('/get-payment-student', [StudentController::class, 'getPaymentStudent'])->name('get.payment_student');
+    Route::get('/lista_pagamento_indice', [StudentController::class, 'TipoPagamentoIndice'])->name('pagamento_indice');
+    Route::get('get-indice-pagamento', [StudentController::class, 'getTipoIndice'])->name('get.indicepagamento');
+
     #start materia estudante
     Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
     #end
@@ -104,7 +107,7 @@ Route::middleware('check.access')->group(function () {
     #start naturalidade estudante
     Route::get('/estudante/inserir_naturalidade_estudante/{id_student}', [StudentController::class, 'create_naturalidade_estudante'])->name('inserir_naturalidade_estudante');
     Route::post('/estudante/naturalidade/store', [StudentController::class, 'storeNaturalidadeEstudante'])->name('store_naturalidade_estudante');
-    Route::get('/estudante/alterar_naturalidade/{id_student}', [StudentController::class, 'editNaturalidadeEstudante'])->name('alterar_naturalidade_estudante');
+    Route::get('/estudante/alterar_naturalidade/{id}', [StudentController::class, 'editNaturalidadeEstudante'])->name('alterar_naturalidade_estudante');
   
     #end
 
@@ -201,7 +204,7 @@ Route::middleware('check.access')->group(function () {
     Route::get('/funcionario/inserir_naturalidade/{id_funcionario}', [DocenteController::class, 'create_naturalidade'])->name('inserir_naturalidade');
     Route::post('/funcionario/naturalidade/store', [DocenteController::class, 'storeNaturalidade'])->name('store_naturalidade');
     Route::get('/funcionario/alterar_naturalidade/{id_funcionario}', [DocenteController::class, 'editNaturalidade'])->name('alterar_naturalidade');
-    Route::get('funcionario/alterar_naturalidade/{id_naturalidade_funcionario}', [DocenteController::class, 'alterarNaturalidade'])->name('alterar_naturalidade');
+    Route::get('funcionario/alterar_naturalidade/{id_naturalidade_funcionario?}', [DocenteController::class, 'alterarNaturalidade'])->name('alterar_naturalidade');
 
 
     #end

@@ -61,4 +61,6 @@ class DisciplinasController extends Controller
         // Return the view with the disciplina data
         return view('disciplinas.show', compact('disciplina'));
     }
+
+  
 }

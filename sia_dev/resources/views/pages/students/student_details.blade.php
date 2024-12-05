@@ -94,7 +94,7 @@
                                                 @if ($detail->id_naturalidade_estudante)
                                                         <!-- Show only the Edit button if id_naturalidade_estudante is not null -->
                                                         <li>
-                                                            <a href="{{ route('alterar_naturalidade_estudante', $detail->id_naturalidade_estudante) }}">
+                                                            <a href="{{ route('alterar_naturalidade_estudante', $detail->id_student) }}">
                                                                 <i class="fas fa-edit text-primary" title="editar dados"></i>
                                                             </a>
                                                         </li>
