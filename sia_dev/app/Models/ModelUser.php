@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ModelUser extends Authenticatable
 {
@@ -42,21 +43,16 @@ class ModelUser extends Authenticatable
         return $this->belongsTo(ModelDocente::class, 'docente_id_student');
     }
 
-    // Role relationship in User model
-    public function roles(): BelongsToMany
+    public function roles()
     {
-        return $this->belongsToMany(ModelRole::class, 'student_modules_roles', 'user_id', 'role_id')
-            ->withPivot('module_id', 'expired_date')
-            ->withTimestamps();
+        return $this->belongsToMany(ModelRole::class, 'student_modules_roles', 'user_id', 'role_id');
     }
 
-    // Module relationship in User model
-    public function modules(): BelongsToMany
+    public function modules()
     {
-        return $this->belongsToMany(ModelModule::class, 'student_modules_roles', 'user_id', 'module_id')
-            ->withPivot('role_id', 'expired_date')
-            ->withTimestamps();
+        return $this->belongsToMany(ModelModule::class, 'student_modules_roles', 'user_id', 'module_id');
     }
+
 
 
     public function hasRole($role)
@@ -68,8 +64,30 @@ class ModelUser extends Authenticatable
     {
         return $this->modules()->where('module_key', $module)->exists();
     }
+
     public function canAccess($permission, $module)
     {
+        /* // Check if user has roles
+        $roles = $this->roles()->pluck('role_name');  // Pluck the role names for debugging
+        Log::info("User roles: " . implode(', ', $roles->toArray()));
+
+        // Check for access in the pivot table
+        $hasAccess = $this->roles()
+            ->wherePivot('role_id', function ($query) use ($permission) {
+                $query->select('id_roles')
+                    ->from('roles')
+                    ->where('role_name', $permission);  // Matches 'Read'
+            })
+            ->whereHas('modules', function ($query) use ($module) {
+                $query->where('module_key', $module);  // Matches 'students'
+            })
+            ->exists();
+
+        Log::info("User ID: {$this->user_id}, Permission: {$permission}, Module: {$module}, Access: {$hasAccess}");
+
+        return $hasAccess; */
+        DB::enableQueryLog();
+
         $hasAccess = $this->roles()
             ->wherePivot('role_id', function ($query) use ($permission) {
                 $query->select('id_roles')
@@ -78,9 +96,11 @@ class ModelUser extends Authenticatable
             })
             ->whereHas('modules', function ($query) use ($module) {
                 $query->where('module_key', $module);
-            })->exists();
+            })
+            ->exists();
 
-        //Log::info("User ID: {$this->user_id}, Permission: {$permission}, Module: {$module}, Access: {$hasAccess}");
+        Log::debug(DB::getQueryLog()); // Log the generated SQL query
+        Log::info("User ID: {$this->user_id}, Permission: {$permission}, Module: {$module}, Access: {$hasAccess}");
 
         return $hasAccess;
     }

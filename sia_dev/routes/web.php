@@ -32,14 +32,11 @@ Route::post('password/reset', [AuthController::class, 'reset'])->name('password.
 
 // Example route for admin users
 // Route::group(['middleware' => ['auth', 'role:admin']], function () {
+
+// Route::get('/students/{id_student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+
 Route::middleware('check.access')->group(function () {
-    // Public Routes
-    // Route::get('/', function () {
-    //     return view('pages.home');
-    // });
-    // Route::get('/home', function () {
-    //     return view('pages.home');
-    // });
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 

@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Yajra\DataTables\DataTables;
 use App\Models\ModelStudent;
 use App\Models\ModelSemestre;
 use App\Models\ModelDepartamento;
 use App\Models\ModelMatricula;
 use App\Models\ModelProgramaEstudo;
+use App\Models\UserRoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
@@ -40,7 +42,7 @@ class StudentController extends Controller
     public function create()
     {
         $semestre = ModelSemestre::all();
-      
+
         $programaEstudo = ModelProgramaEstudo::all(); // Ajustei o nome da variável
         return view('pages.students.admission_form_student', compact('semestre', 'programaEstudo'));
     }
@@ -79,10 +81,12 @@ class StudentController extends Controller
             'date_of_birth' => $validatedData['date_of_birth'],
             'nre' => $validatedData['nre'],
             'id_programa_estudo' => $validatedData['id_programa_estudo'],
-           'start_year' => $validatedData['start_year'],
+            'start_year' => $validatedData['start_year'],
             'student_image' => $request->file('student_image') ? $request->file('student_image')->store('students') : null,
             // 'observation' => $validatedData['observation']
         ]);
+
+
 
         // Create the associated user
         ModelUser::create([
@@ -94,7 +98,16 @@ class StudentController extends Controller
             'tipo_usuario' => 'Estudante',
         ]);
 
-
+        DB::table('student_modules_roles')->insert([
+            'student_modules_roles_id' => Str::uuid(),
+            'role_id' => '6d2f6e72-bc3e-4e93-b2bb-fc6f4b3b7dbe', // Read role
+            'user_id' => $student->id_student,
+            'module_id' => 'f2d3c4b1-9189-4e27-9b5a-f7e6a7f8d8e9', // Students module
+            'expired_date' => null,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        // UserRoleController::assignRoles(Request $request, ModelUser $user)
         ModelMatricula::create([
             'id_matricula' => (string) Str::uuid(),
             'id_student' => $student->id_student,
@@ -105,7 +118,7 @@ class StudentController extends Controller
         return redirect()->route('students.index')->with('success', 'Student created successfully!');
     }
 
-   
+
 
 
     public function edit($id_student)
@@ -175,40 +188,40 @@ class StudentController extends Controller
         return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
     }
 
-   
+
 
     public function import_excel_post(Request $request)
     {
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
-    
+
         // Import the Excel file
         Excel::import(new StudentImport, $request->file('excel_file'));
 
-        
+
         return redirect()->route('students.index')->with('success', 'Student created successfully!');
     }
-    
+
 
     #start student materia
     public function MateriaEstudante($id)
     {
         $student = ModelStudent::with(['matriculas.semestre', 'matriculas.programaEstudo.departamento'])->findOrFail($id);
-      
+
         return view('pages.students.estudante_materia.materia_estudante', compact('student'));
     }
     #end
 
 
 
-     #start function departamento estudante
-     public function Departamentoestudante($id_estudent) 
-     {
+    #start function departamento estudante
+    public function Departamentoestudante($id_estudent)
+    {
         $student = ModelStudent::findOrFail($id_estudent);
         $prodi = DB::table('view_programa_estudo_estudante')
-        ->where('id_student', $id_estudent)
-        ->paginate(10);
+            ->where('id_student', $id_estudent)
+            ->paginate(10);
         $estudanteDepartamento = DB::select("
         SELECT 
             a.id_departamento_estudante,
@@ -224,161 +237,159 @@ class StudentController extends Controller
         WHERE a.id_student = ?
     ", [$id_estudent]);
 
-        return view('pages.students.estudante_departamento.departamentoEstudante',compact('student','estudanteDepartamento','prodi'));
-        
-     }
+        return view('pages.students.estudante_departamento.departamentoEstudante', compact('student', 'estudanteDepartamento', 'prodi'));
+    }
 
-     #end
-
+    #end
 
 
-       #start function Programa estudo estudante
-       public function ProgramaEstudo($id_estudent) 
-       {
-          $student = ModelStudent::findOrFail($id_estudent);
-          $prodi = DB::table('view_programa_estudo_estudante')
-          ->where('id_student', $id_estudent)
-          ->paginate(10);
-         
-  
-          return view('pages.students.estudante_programa_estudo.programa_estudo',compact('student','prodi'));
-          
-       }
-  
-       #end
+
+    #start function Programa estudo estudante
+    public function ProgramaEstudo($id_estudent)
+    {
+        $student = ModelStudent::findOrFail($id_estudent);
+        $prodi = DB::table('view_programa_estudo_estudante')
+            ->where('id_student', $id_estudent)
+            ->paginate(10);
+
+
+        return view('pages.students.estudante_programa_estudo.programa_estudo', compact('student', 'prodi'));
+    }
+
+    #end
 
 
     #start student materia
-        public function PagamentoEstudante($id)
-        {
-            $student = ModelStudent::findOrFail($id);
-            $pagamento = DB::table('view_pagamento_estudante')
+    public function PagamentoEstudante($id)
+    {
+        $student = ModelStudent::findOrFail($id);
+        $pagamento = DB::table('view_pagamento_estudante')
             ->where('id_student', $id)
             ->orderByDesc('id_controlo_departamento')
             ->paginate(10);
-            return view('pages.students.estudante_pagamento.pagamento',compact('student','pagamento'));
-        }
+        return view('pages.students.estudante_pagamento.pagamento', compact('student', 'pagamento'));
+    }
 
-        public function create_pagamento($id)
-        {
-            // Retrieve departamento data with left join and where clause
-            $departamento = DB::table('controlo_departamento_pagamento as a')
-                ->select(
-                    'a.id_controlo_departamento',
-                    'b.id_departamento',
-                    'b.nome_departamento',
-                    'a.total_indice',
-                    'a.ano_academico',
-                    'a.estado'
-                )
-                ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
-                ->whereNull('a.estado')
-                ->get();
-        
-            // Retrieve student details
-            $student = ModelStudent::findOrFail($id);
-        
-            // Retrieve semestre data
-            $semestre = ModelSemestre::all();
-        
-           
-            // Pass data to the view
-            return view('pages.students.estudante_pagamento.form_create_pagamento', compact('student', 'id', 'departamento', 'semestre'));
-        }
+    public function create_pagamento($id)
+    {
+        // Retrieve departamento data with left join and where clause
+        $departamento = DB::table('controlo_departamento_pagamento as a')
+            ->select(
+                'a.id_controlo_departamento',
+                'b.id_departamento',
+                'b.nome_departamento',
+                'a.total_indice',
+                'a.ano_academico',
+                'a.estado'
+            )
+            ->leftJoin('departamento as b', 'b.id_departamento', '=', 'a.id_departamento')
+            ->whereNull('a.estado')
+            ->get();
+
+        // Retrieve student details
+        $student = ModelStudent::findOrFail($id);
+
+        // Retrieve semestre data
+        $semestre = ModelSemestre::all();
 
 
-        // public function Pagamentostore(Request $request)
-        // {
-
-        //     $request->validate([
-        //         'id_controlo_departamento' => 'required|string|max:255',
-                
-        //     ]);
-    
-        //     $pagamento = new ModelPagamentoStudante();
-        //     $pagamento->id_student = $request->input('id_student');
-        //     $pagamento->id_semestre = $request->input('id_semestre');
-        //     $pagamento->id_controlo_departamento = $request->input('id_controlo_departamento');
-        //     $pagamento->data_selu = $request->input('data_selu');
-        //     $pagamento->tipo_selu = $request->input('tipo_selu');
-        //     $pagamento->selu_total = $request->input('selu_total');
-        //     $pagamento->falta = $request->input('falta');
-        //     $pagamento->observacao = $request->input('observacao');
-        //     $pagamento->save();
-    
-        //     return redirect()->route('pagamento_estudante', ['id' => $request->input('id_student')])
-        //         ->with('success', 'Pagamento Estudamte inserida com sucesso.');
-        // }
+        // Pass data to the view
+        return view('pages.students.estudante_pagamento.form_create_pagamento', compact('student', 'id', 'departamento', 'semestre'));
+    }
 
 
-        public function Pagamentostore(Request $request)
-        {
-            
-            $request->validate([
-                'id_controlo_departamento' => 'required|string|max:255',
-                // ... outras validações
-            ]);
+    // public function Pagamentostore(Request $request)
+    // {
 
-            $pagamento = new ModelPagamentoStudante();
-            $pagamento->id_student = $request->input('id_student');
-            $pagamento->id_semestre = $request->input('id_semestre');
-            $pagamento->id_controlo_departamento = $request->input('id_controlo_departamento');
-            $pagamento->data_selu = $request->input('data_selu');
-            $pagamento->tipo_selu = $request->input('tipo_selu');
-            $pagamento->selu_total = $request->input('selu_total');
-            $pagamento->observacao = $request->input('observacao');
-            // ... outros atributos
+    //     $request->validate([
+    //         'id_controlo_departamento' => 'required|string|max:255',
 
-            // Calcular o valor faltante
-            $totalIndice = $request->input('total_indice');
-            $seluTotal = $request->input('selu_total');
-            $falta = $totalIndice - $seluTotal;
-        
-            // Menggunakan mass assignment
-            $pagamento->fill([
-                'total_indice' => $totalIndice,
-                'selu_total' => $seluTotal,
-                'falta' => $falta,
-                // ... atribut lainnya
-            ]);
+    //     ]);
 
-            $pagamento->save();
+    //     $pagamento = new ModelPagamentoStudante();
+    //     $pagamento->id_student = $request->input('id_student');
+    //     $pagamento->id_semestre = $request->input('id_semestre');
+    //     $pagamento->id_controlo_departamento = $request->input('id_controlo_departamento');
+    //     $pagamento->data_selu = $request->input('data_selu');
+    //     $pagamento->tipo_selu = $request->input('tipo_selu');
+    //     $pagamento->selu_total = $request->input('selu_total');
+    //     $pagamento->falta = $request->input('falta');
+    //     $pagamento->observacao = $request->input('observacao');
+    //     $pagamento->save();
 
-            return redirect()->route('pagamento_estudante', ['id' => $request->input('id_student')])
-                ->with('success', 'Pagamento Estudamte inserida com sucesso.');
-        }
+    //     return redirect()->route('pagamento_estudante', ['id' => $request->input('id_student')])
+    //         ->with('success', 'Pagamento Estudamte inserida com sucesso.');
+    // }
 
 
+    public function Pagamentostore(Request $request)
+    {
 
-      
+        $request->validate([
+            'id_controlo_departamento' => 'required|string|max:255',
+            // ... outras validações
+        ]);
+
+        $pagamento = new ModelPagamentoStudante();
+        $pagamento->id_student = $request->input('id_student');
+        $pagamento->id_semestre = $request->input('id_semestre');
+        $pagamento->id_controlo_departamento = $request->input('id_controlo_departamento');
+        $pagamento->data_selu = $request->input('data_selu');
+        $pagamento->tipo_selu = $request->input('tipo_selu');
+        $pagamento->selu_total = $request->input('selu_total');
+        $pagamento->observacao = $request->input('observacao');
+        // ... outros atributos
+
+        // Calcular o valor faltante
+        $totalIndice = $request->input('total_indice');
+        $seluTotal = $request->input('selu_total');
+        $falta = $totalIndice - $seluTotal;
+
+        // Menggunakan mass assignment
+        $pagamento->fill([
+            'total_indice' => $totalIndice,
+            'selu_total' => $seluTotal,
+            'falta' => $falta,
+            // ... atribut lainnya
+        ]);
+
+        $pagamento->save();
+
+        return redirect()->route('pagamento_estudante', ['id' => $request->input('id_student')])
+            ->with('success', 'Pagamento Estudamte inserida com sucesso.');
+    }
+
+
+
+
     public function listaPagamento()
     {
-    
+
         $departments = DB::table('view_monitoramento_pagamento_estudante')
-        ->select('nome_departamento')
-        ->distinct()
-        ->orderBy('nome_departamento', 'asc')
-        ->get();
+            ->select('nome_departamento')
+            ->distinct()
+            ->orderBy('nome_departamento', 'asc')
+            ->get();
         return view('pages.students.monitora_pagamento_estudante.lista_pagamento_estudante', compact('departments'));
     }
 
     // public function getPaymentStudent(Request $request)
     // {
     //     if ($request->ajax()) {
-        
+
     //         // Use DB query without pagination as DataTables will handle pagination
     //         $data = DB::table('view_monitoramento_pagamento_estudante')->select('*');
-            
+
     //         return DataTables::of($data)
     //             ->addIndexColumn()
     //             ->addColumn('action', function($row){
     //                 $editUrl = route('pagamento_estudante', $row->id_student);
-                   
+
     //                 // Create Edit button
     //                 $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Detailho</a>';
-                    
+
     //                 // Append Detail button
-                   
+
     //                 return $btn;
     //             })
     //             ->rawColumns(['action'])
@@ -389,35 +400,35 @@ class StudentController extends Controller
     {
         if ($request->ajax()) {
             $query = DB::table('view_monitoramento_pagamento_estudante')->select('*');
-            
+
             // Apply search filters if provided
             if ($request->searchID) {
                 $query->where('nre', 'like', "%{$request->searchID}%");
             }
-            
+
             if ($request->searchName) {
                 $query->where('complete_name', 'like', "%{$request->searchName}%");
             }
-            
+
             if ($request->filterDepartment) {
                 $query->where('nome_departamento', $request->filterDepartment);
             }
-    
+
             if ($request->filterYear) {
                 $query->whereYear('data_selu', $request->filterYear);
             }
-    
+
             if ($request->filterMonth) {
                 $query->whereMonth('data_selu', $request->filterMonth);
             }
-    
+
             if ($request->filterPaymentStatus) {
                 $query->where('payment_status', $request->filterPaymentStatus);
             }
-    
+
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('action', function($row) {
+                ->addColumn('action', function ($row) {
                     $editUrl = route('pagamento_estudante', $row->id_student);
                     return '<a href="' . $editUrl . '" class="edit btn btn-primary btn-sm">Detalho Data</a>';
                 })
@@ -435,21 +446,20 @@ class StudentController extends Controller
             'month' => $request->get('filterMonth'),
             'payment_status' => $request->get('filterPaymentStatus'),
         ];
-    
+
         return Excel::download(new PaymentsExport($filters), 'payments.xlsx');
     }
 
-            public function exportPaymentsCSV(Request $request)
-        {
-            $filters = [
-                'department' => $request->get('filterDepartment'),
-                'year' => $request->get('filterYear'),
-                'month' => $request->get('filterMonth'),
-                'payment_status' => $request->get('filterPaymentStatus'),
-            ];
+    public function exportPaymentsCSV(Request $request)
+    {
+        $filters = [
+            'department' => $request->get('filterDepartment'),
+            'year' => $request->get('filterYear'),
+            'month' => $request->get('filterMonth'),
+            'payment_status' => $request->get('filterPaymentStatus'),
+        ];
 
-            // Export to CSV instead of Excel
-            return Excel::download(new PaymentsExport($filters), 'payments.csv', \Maatwebsite\Excel\Excel::CSV);
-        }
-    
+        // Export to CSV instead of Excel
+        return Excel::download(new PaymentsExport($filters), 'payments.csv', \Maatwebsite\Excel\Excel::CSV);
+    }
 }

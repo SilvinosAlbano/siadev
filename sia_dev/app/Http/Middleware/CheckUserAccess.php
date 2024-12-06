@@ -25,14 +25,6 @@ class CheckUserAccess
             return redirect()->route('auth.login')->with('error', 'You must be logged in to access this page.');
         }
 
-        // if ($permission && !$user->canAccess($permission, $module)) {
-        //     return redirect('/')->with('error', 'You do not have permission to access this module.');
-        // }
-
-        // if (!$user->hasModuleAccess($module)) {
-        //     return redirect('/')->with('error', 'You do not have access to this module.');
-        // }
-
         return $next($request);
     }
 }

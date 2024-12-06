@@ -10,35 +10,36 @@
     <div class="sidebar">
         <div class="sidebar-menu-content">
             <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-                {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}}
-                <li class="nav-item sidebar-nav-item">
-                    <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Estudantes</span></a>
-                    <ul class="nav sub-group-menu">
-                        {{-- @if ($user->canAccess('read', 'students')) --}}
-                        <li class="nav-item">
-                            <a href="{{ route('students.index') }}" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Todos os Estudantes</a>
-                        </li>
-                        {{-- @endif --}}
+                @if ($user->hasAnyAccess(['Read', 'Create', 'Update', 'Delete', 'Extract', 'Admin'], 'students'))
+                    <li class="nav-item sidebar-nav-item">
+                        <a href="#" class="nav-link"><i
+                                class="flaticon-classmates"></i><span>Estudantes</span></a>
+                        <ul class="nav sub-group-menu">
 
+                            @if ($user->canAccess('Read', 'students'))
+                                <li class="nav-item">
+                                    <a href="{{ route('students.index') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Todos os Estudantes</a>
+                                </li>
+                            @endif
 
+                            @if ($user->canAccess('Read', 'students'))
+                                <li class="nav-item">
+                                    <a href="{{ route('lista_pagamento_estudante') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Lista pagamento</a>
+                                </li>
+                            @endif
 
-                        {{-- @if ($user->canAccess('read', 'students')) --}}
-                        <li class="nav-item">
-                            <a href="{{ route('lista_pagamento_estudante') }}" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Lista pagamento</a>
-                        </li>
-                        {{-- @endif --}}
+                            @if ($user->canAccess('Create', 'admission_form_student'))
+                                <li class="nav-item">
+                                    <a href="/admission_form_student" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Formulário de Admissão</a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
 
-                        {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
-                        <li class="nav-item">
-                            <a href="/admission_form_student" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Formulário de Admissão</a>
-                        </li>
-                        {{-- @endif --}}
-                    </ul>
-                </li>
-                {{-- @endif --}}
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
                             class="flaticon-multiple-users-silhouette"></i><span>Funcionario</span></a>
@@ -62,24 +63,26 @@
 
                     </ul>
                 </li>
-                <li class="nav-item sidebar-nav-item">
-                    <a href="#" class="nav-link"><i
-                            class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Classes</span></a>
-                    <ul class="nav sub-group-menu">
-                        <li class="nav-item">
-                            <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>Todas
-                                Classes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Roteiro de
-                                Classe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/add_classes" class="nav-link"><i class="fas fa-angle-right"></i>Adicionar
-                                Classe</a>
-                        </li>
-                    </ul>
-                </li>
+                @if ($user->hasAnyAccess(['Read', 'Create', 'Update', 'Delete', 'Extract', 'Admin'], 'classes'))
+                    <li class="nav-item sidebar-nav-item">
+                        <a href="#" class="nav-link"><i
+                                class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Classes</span></a>
+                        <ul class="nav sub-group-menu">
+                            <li class="nav-item">
+                                <a href="/all_classes" class="nav-link"><i class="fas fa-angle-right"></i>Todas
+                                    Classes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/class_routine" class="nav-link"><i class="fas fa-angle-right"></i>Roteiro de
+                                    Classe</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/add_classes" class="nav-link"><i class="fas fa-angle-right"></i>Adicionar
+                                    Classe</a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
 
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
@@ -122,7 +125,7 @@
                 </li>
 
 
-                {{-- @if ($user->hasAnyAccess(['read', 'create', 'update', 'delete', 'extract', 'admin'], 'students')) --}} <!-- Comment lai tama sei uza atu dev -->
+                {{-- @if ($user->hasAnyAccess(['Read', 'Create', 'Update', 'Delete', 'Extract', 'Admin'], 'Usuarios')) --}} <!-- Comment lai tama sei uza atu dev -->
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i
                             class="flaticon-maths-class-materials-cross-of-a-pencil-and-a-ruler"></i><span>Usuários</span></a>
