@@ -47,7 +47,8 @@
                         <div class="table-responsive">
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
                                 <thead>
-                                    <tr>                                
+                                    <tr>     
+                                    <th> Departamento</th>                            
                                         <th> Disciplina</th> 
                                         <th>Semestre</th>     
                                         <th>Data Inicio Aula</th>  
@@ -61,6 +62,7 @@
                                 <tbody>
                                     @foreach ($materiadocen as $data)
                                         <tr>
+                                        <td>{{ $data->departamento_estudante }}</td>
                                             <td>{{ $data->materia }}</td>
                                             <td>{{ $data->numero_semestre }}</td>
                                             <td>{{ $data->data_inicio_aula }}</td>
@@ -72,11 +74,11 @@
                                            
                                             <td>
                                             <a class="btn btn-sm btn-success" href="{{ route('detailho_docente_semestre_estudante', $data->id_docente_materia) }}">
-                                                <i class="fas fa-eye"></i> Detail
+                                                <i class="fas fa-eye"></i> Ver Estudante
                                             </a>
                                             <!-- Edit button -->
                                             <a class="btn btn-sm btn-success" href="{{ route('alterar_docentemateria', $data->id_docente_materia) }}">
-                                                <i class="fas fa-edit"></i> Edit
+                                                <i class="fas fa-edit"></i> Editar
                                             </a>
 
                                             <!-- Delete button -->

@@ -43,7 +43,7 @@
                     @endif
                         <div class="table-responsive">
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
-                                <thead>
+                              <thead>
                                     <tr>        
                                        <th>Tipo Licensa </th>                         
                                         <th>Data Inicio Licensa </th>   

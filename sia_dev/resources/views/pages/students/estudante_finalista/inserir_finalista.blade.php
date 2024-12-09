@@ -1,52 +1,41 @@
 
 @extends('layouts.app')
-@section('title', 'Inserir Semestre')
+@section('title', 'Inserir Pagamento')
 @section('content') 
  
 
     
 @include('pages.students.header_students')     
 
+
           
               <div class="tab-content mt-4 mb-8">              
             
               @include('pages.students.student_menu_tab')
-                        
+             
+
                     <div class="card height-auto">
                         <div class="card-body border">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3>Inserir Semstre Estudante</h3>
+                                    <h3>Atualizar Estudante Para Finalista</h3>
                                 </div>
                             
                             </div>
                         
-                            <form class="new-added-form mb-4" method="POST" action="{{ route('semestre_estudante.store') }}"   enctype="multipart/form-data">
+                            <form class="new-added-form mb-4" method="POST" action="{{ route('finalista.store') }}"   enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="id_student" value="{{ $id }}">
-                              
+                                <input type="hidden" name="id_student" value="{{ $id }}">                             
                                 
-                                <div class="row">
-                                   <div class="col-4-xxxl col-lg-4 col-12 form-group">
+                                <div class="row">                                   
+                                    <div class="col-4-xxxl col-lg-6 col-12 form-group">
                                         <label>Ano Academico*</label>
-                                        <input type="number" name="ano_semestre" class="form-control border" required>
+                                        <input type="number" name="ano_academico" class="form-control border" required>
                                     </div>
-
-                                    <div class="col-4-xxxl col-lg-4 col-12 form-group">
-                                        <label>Escolha Semestre *</label>
-                                             <select class="select2" name="id_semestre">
-                                                <option selected disabled value="">Escolha *</option>
-                                                @foreach ($tipo_semestre as $row)
-                                                    <option value="{{ $row->id_semestre }}">{{ $row->numero_semestre }}</option>
-                                                @endforeach
-                                            </select>
-                                    </div>
-                                   
-
                                   
-                                    <div class="col-4-xxxl col-lg-4 col-12 form-group">
-                                        <label>Data Atualiza Semestre*</label>
-                                        <input type="date" name="data_atualiza_semestre" class="form-control border" required>
+                                    <div class="col-4-xxxl col-lg-6 col-12 form-group">
+                                        <label>Estatus*</label>
+                                        <input type="text" placeholder="Finalista" name="estatus" value="Finalista" class="form-control border" readonly required>
                                     </div>
                                     
                                  
@@ -72,6 +61,8 @@
              </div>
               
 
+     
+          
    
 @endsection
 

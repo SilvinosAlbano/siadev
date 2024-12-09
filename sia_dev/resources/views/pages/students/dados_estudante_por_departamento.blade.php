@@ -72,6 +72,7 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
+                        <th>NRE</th>
                         <th>Sexo</th>
                         <th>Data Moris</th>
                         <th>Departamento</th>
@@ -81,6 +82,7 @@
                     </tr>
                     <tr>
                         <th><input type="text" id="filter-nome_funcionario" placeholder="Filter Nome" class="form-control form-control-sm"></th>
+                        <th><input type="text" id="filter-nre" placeholder="Filter NRE" class="form-control form-control-sm"></th>
                         <th>
                             <select id="filter-sexo" class="form-control form-control-sm">
                                 <option value="">Select Sexo</option>
@@ -120,6 +122,7 @@
         },
         columns: [
             {data: 'complete_name', name: 'complete_name'},
+            {data: 'nre', name: 'nre'},
             {data: 'gender', name: 'gender'},
             { 
                 data: 'data_moris', 
@@ -148,6 +151,9 @@
 
     // Apply other filters
     $('#filter-nome_funcionario').on('keyup', function () {
+        table.column(0).search(this.value).draw();
+    });
+    $('#filter-nre').on('keyup', function () {
         table.column(0).search(this.value).draw();
     });
 

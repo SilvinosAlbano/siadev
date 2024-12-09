@@ -7,7 +7,7 @@
             <li><a href="/escolha_dados_docentes">Escolha Departamento</a></li>
             <li>Dados Estudante Geral</li>
         </ul>
-        <h3>Lista Estudante</h3>
+        <h3>Monitoramento Lista Estudante Nao Ativo</h3>
     </div>
     <!-- Breadcrumbs Area End Here -->
 
@@ -16,11 +16,7 @@
       
  
     <div class="card-body">
-        <div class="heading-layout1">
-            <div class="item-title">
-            <a class="btn-fill-lg bg-blue-dark btn-hover-yellow" href="/students/create"> Inserir novo <i class="fas fa-plus"></i> </a>
-            </div>
-        </div>
+      
         @if (session('error'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 {{ session('error') }}
@@ -46,7 +42,8 @@
         @endif
        
         <div class="row">
-        
+           
+
             <div class="col-4-xxxl col-xl-6 col-lg-6 col-12 form-group border">
                 <select id="filter-select-ano_inicio" class="form-control">
                     <option value="">--Escolha Estudante por Ano Academico--</option>
@@ -65,48 +62,6 @@
        
 
     </div>
-
-    <div class="row">
-    <div class="col-12 col-lg-6 col-xl-4 col-xxxl-3 form-group">
-    <form action="/import-excel" method="POST" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        
-        <div class="form-group">
-            <label for="file" class="font-weight-bold">Submete Lista estudante com formato (xlsx, xls, csv)</label>
-            
-            <!-- File input with custom styling -->
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" name="excel_file" id="file" accept=".xlsx,.xls,.csv" required>
-                <label class="custom-file-label" for="file">Escolha o arquivo</label>
-            </div>
-            
-            <!-- Feedback for selected file -->
-            <small class="form-text text-muted">Selecione um arquivo no formato .xlsx, .xls, ou .csv</small>
-        </div>
-        
-        <!-- Submit button aligned left with styling -->
-        <div class="text-left mt-3">
-            <button type="submit" class="btn btn-primary btn-block text-light">
-                <i class="fas fa-file-excel text-success"></i> Sumete
-            </button>
-        </div>
-    </form>
-</div>
-
-<!-- Custom file input styling using Bootstrap 4/5 -->
-<script>
-    // Display the selected file name
-    document.getElementById("file").addEventListener("change", function(event) {
-        var fileName = event.target.files[0].name;
-        var label = event.target.nextElementSibling;
-        label.textContent = fileName;
-    });
-</script>
-
-    </div>
-
-
-
 
         <div class="table-responsive">
             <table id="laravel_datatable" class="table display text-nowrap table-striped">
@@ -149,7 +104,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('get.estudantegeral') }}",
+            url: "{{ route('get.estudantenaoativo') }}",
             data: function (d) {
                 d.ano_inicio = $('#filter-select-ano_inicio').val(); // Pass only `ano_inicio`
             }
@@ -185,7 +140,7 @@ $(document).ready(function () {
     // Export CSV
     $('#export-csv').on('click', function () {
         var ano_inicio = $('#filter-select-ano_inicio').val();
-        var exportUrl = "{{ route('export.estudantes') }}?ano_inicio=" + (ano_inicio || '');
+        var exportUrl = "{{ route('export.estudantes_nao_ativo') }}?ano_inicio=" + (ano_inicio || '');
         window.location.href = exportUrl;
     });
 });

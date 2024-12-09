@@ -46,16 +46,16 @@
                     @endif
                         <div class="table-responsive">
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
-                                <thead>
+                              <thead>
                                     <tr>                                
-                                        <th>Departamento </th>   
-                                        <th>Idice Per Senestre </th>  
+                                        <!-- <th>Departamento </th>    -->
+                                        <th>Idice Per Semestre </th>  
                                         <th>Semestre</th>  
                                         <th>Data Selu</th>                                     
                                         <th>Tipo Selu</th>
                                         <th> Total Paid</th>
                                         <th> Remaining Balance</th>
-                                        <th>Payment Status</th>
+                                        <th>Status</th>
                                         <th></th>
                                        
                                     </tr>
@@ -64,9 +64,39 @@
                                     @foreach ($pagamento as $data)
                                         <tr>
                                        
-                                            <td>{{ $data->nome_departamento }} </td>                                           
+                                            <!-- <td>{{ $data->nome_departamento }} </td>                                            -->
                                            <td>$.{{ $data->total_indice }} em {{ $data->ano_academico }}</td> 
-                                            <td>{{ $data->numero_semestre }}</td>
+                                           <td>
+                                            Semestre @switch($data->numero_semestre)
+                                                    @case(1)
+                                                        I
+                                                        @break
+                                                    @case(2)
+                                                        II
+                                                        @break
+                                                    @case(3)
+                                                        III
+                                                        @break
+                                                    @case(4)
+                                                        IV
+                                                        @break
+                                                    @case(5)
+                                                        V
+                                                        @break
+                                                    @case(6)
+                                                        VI
+                                                        @break
+                                                    @case(7)
+                                                        VII
+                                                        @break
+                                                    @case(8)
+                                                        VIII
+                                                        @break
+                                                    @default
+                                                        {{ $data->numero_semestre }}
+                                                @endswitch
+                                            </td>
+                                            
                                             <td>{{ $data->data_selu }}</td>
                                            
                                             <td>{{ $data->tipo_selu }}</td>
@@ -159,7 +189,7 @@
                     <div class="ui-alart-box">
                         <div class="dismiss-alart">
                             <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                Well done! {{ session('success') }}
+                                {{ session('success') }}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -169,7 +199,7 @@
                     @endif
                         <div class="table-responsive">
                         <table class="table display data-table table-striped table-bordered table-box-wrap text-nowrap">
-                                <thead>
+                              <thead>
                                     <tr>                                
                                         <th>Departamento </th>   
                                         <th>Idice Per Senestre </th>  

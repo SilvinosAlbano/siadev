@@ -22,36 +22,38 @@
                             
                             </div>
                         
-                            <form class="new-added-form mb-4" method="POST" action="{{ route('semestre_estudante.store') }}"   enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('semestre_estudante.update', $editar->id_semestre_estudante) }}" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <input type="hidden" name="id_student" value="{{ $id }}">
                               
                                 
                                 
-                                
                                 <div class="row">
+                                    <div class="col-4-xxxl col-lg-4 col-12 form-group">
+                                            <label>Escolha Semestre *</label>
+                                                 <select class="select2" name="id_semestre">
+                                                   
+                                                    @foreach($tipo_semestre as $row)
+                                                    <option value="{{ $row->id_semestre }}"{{ $editar->id_semestre == $row->id_semestre ? 'selected' : '' }}>
+                                                        {{ $row->numero_semestre }}
+                                                    </option>
+                                                @endforeach
+                                                </select>
+                                              
+                                        </div>
                                    <div class="col-4-xxxl col-lg-4 col-12 form-group">
                                         <label>Ano Semestre*</label>
-                                        <input type="number" name="ano_semestre" class="form-control border" required>
+                                        <input type="number" name="ano_semestre" value="{{$editar->ano_semestre}}" class="form-control border" required>
                                     </div>
 
-                                    <div class="col-4-xxxl col-lg-4 col-12 form-group">
-                                        <label>Escolha Semestre *</label>
-                                             <select class="select2" name="id_semestre">
-                                                <option selected disabled value="">Escolha *</option>
-                                                @foreach($tipo_semestre as $row)
-                                                <option value="{{ $row->id_tipo_licensa }}" {{ $semestre->id_semestre == $row->id_semestre ? 'selected' : '' }}>
-                                                    {{ $row->numero_semestre }}
-                                                </option>
-                                            @endforeach
-                                            </select>
-                                    </div>
+                                    
                                    
 
                                   
                                     <div class="col-4-xxxl col-lg-4 col-12 form-group">
                                         <label>Data Atualiza Semestre*</label>
-                                        <input type="date" name="data_atualiza_semestre" class="form-control border" required>
+                                        <input type="date" name="data_atualiza_semestre" value="{{$editar->data_atualiza_semestre}}" class="form-control border" required>
                                     </div>
                                     
                                  

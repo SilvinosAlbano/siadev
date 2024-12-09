@@ -75,8 +75,23 @@ class DocenteController extends Controller
         ->whereNotNull('j.estatuto') // Exclude records where estatuto is null
         ->groupBy('j.estatuto')
         ->get();
+
+        $docente_nao_ativo = DB::table('view_docente')
+        ->whereNotNull('controlo_estado')
+        ->select('id_funcionario', 'nome_funcionario', 'controlo_estado') // Exemplo de seleção de colunas específicas
+        ->get();
     
-        return view('pages.teachers.escolha_modul_docente', compact('departamento','alerta_tipo_contrato'));
+        $total_docentes_nao_ativo = $docente_nao_ativo->count();
+
+
+        $pozisaun = DB::table('view_docente')
+        ->whereNotNull('id_pozisaun_funcionario')
+        ->select('id_funcionario', 'nome_funcionario','id_pozisaun_funcionario', 'deleted_at','nome_pozisaun') // Exemplo de seleção de colunas específicas
+        ->get();
+    
+        $pozisaun_funcionario = $pozisaun->count();
+
+        return view('pages.teachers.escolha_modul_docente', compact('departamento','alerta_tipo_contrato','docente_nao_ativo','total_docentes_nao_ativo','pozisaun','pozisaun_funcionario'));
 
     }
 
@@ -94,6 +109,8 @@ class DocenteController extends Controller
             // Optionally, handle the case where no data was found
             return redirect()->back()->with('error', 'Details not found.');
         }
+
+       
 
         return view('pages.teachers.docente_por_departamento', compact('docente'));
     }
@@ -482,9 +499,6 @@ class DocenteController extends Controller
 
 
 
-
-
-
     #start habilitacao   
 
     public function showHabilitacoes($id)
@@ -804,10 +818,16 @@ class DocenteController extends Controller
             ->first();
     
         // Busca as matérias do docente filtradas por id_funcionario e id_semestre
-        $materiadocen = DB::table('view_docente_materia_estudante')
-            ->where('id_funcionario', $id)
-            ->orderByDesc('created_at')
-            ->get();
+        $materiadocen = DB::table('view_estudante_cada_materia')
+        ->select('id_materia', 'materia', 'numero_semestre', 'data_inicio_aula', 'data_fim_aula', 'ano_academico', 'estado_de_aula','id_docente_materia','departamento_estudante') // Include only required columns
+        ->where('id_funcionario', $id)
+        
+        ->groupBy('id_materia', 'materia', 'numero_semestre', 'data_inicio_aula', 'data_fim_aula', 'ano_academico', 'estado_de_aula','id_docente_materia','departamento_estudante') // Group by all selected columns to avoid duplicates
+        ->orderBy('materia') // Order alphabetically or as needed
+        ->get();
+    
+    
+    
     
         // Retorna a view com os dados
         return view('pages.teachers.materia.materia_docente', compact('materiadocen', 'detail'));
@@ -952,7 +972,7 @@ public function getMateriaSemestreBySemestre(Request $request)
             return redirect()->back()->with('error', 'Details not found.');
         }
 
-        $detailho_docente_semestre_estudante = DB::table('view_docente_materia_estudante')
+        $detailho_docente_semestre_estudante = DB::table('view_estudante_cada_materia')
         ->where('id_docente_materia', $id)
         ->paginate(10);
 

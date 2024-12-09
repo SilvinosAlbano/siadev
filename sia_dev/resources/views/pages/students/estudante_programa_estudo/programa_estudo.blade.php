@@ -46,13 +46,12 @@
                     @endif
                         <div class="table-responsive">
                         <table class="table data-table display table-striped table-bordered table-box-wrap text-nowrap">
-                                <thead>
+                              <thead>
                                     <tr>
                                        <th>Faculdade</th>   
                                         <th>Departamento</th>                                            
                                         <th>Programa Estudo</th>       
-                                        <th>Semestre</th> 
-                                        <th>Ano Academic</th>                                
+                                                                     
                                         <th>Asaun</th>
                                        
                                     </tr>
@@ -63,11 +62,8 @@
                                         <td>{{ $data->nome_faculdade }}</td>
                                             <td>{{ $data->nome_departamento }}</td>
                                             <td>{{ $data->tipo_programa }}</td>
-                                            <td>{{ $data->numero_semestre }}</td>
-                                            <td>{{ $data->ano_academico }}</td>
-
-                                            
                                            
+
                                            
                                             <td>
                                                 <div class="dropdown">

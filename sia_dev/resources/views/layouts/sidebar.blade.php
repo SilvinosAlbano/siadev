@@ -16,7 +16,7 @@
                     <ul class="nav sub-group-menu">
                       <li class="nav-item">
                             <a href="{{ route('escolha_estudante') }}" class="nav-link"><i
-                                    class="fas fa-angle-right"></i>Dados Estudante</a>
+                                    class="fas fa-angle-right"></i>Modul Estudante</a>
                         </li>
                         {{-- @if ($user->canAccess('create', 'admission_form_student')) --}}
                         <li class="nav-item">
@@ -32,6 +32,15 @@
                         </li>
                         {{-- @endif --}}
 
+                        <li class="nav-item">
+                            <a href="{{ route('estudantenaoativo') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Estudante Nao Ativo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('view_monitoramento_finalista') }}" class="nav-link"><i
+                                    class="fas fa-angle-right"></i>Estudante Finalista</a>
+                        </li>
+
 
 
                       
@@ -46,7 +55,7 @@
                     <ul class="nav sub-group-menu">
                        <li class="nav-item">
                             <a href="/escolha_dados_docentes" class="nav-link"><i class="fas fa-angle-right"></i>
-                                Docentes</a>
+                             Modul   Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a href="/adiciona_funcionario" class="nav-link"><i class="fas fa-angle-right"></i>Registo
@@ -136,11 +145,11 @@
                 </li>
 
                
-
+<!-- 
                 <li class="nav-item">
                     <a href="/student_attendence" class="nav-link"><i
                             class="flaticon-checklist"></i><span>Atendimentos</span></a>
-                </li>
+                </li> -->
 
                 <li class="nav-item sidebar-nav-item">
                     <a href="#" class="nav-link"><i

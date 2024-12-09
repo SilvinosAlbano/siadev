@@ -83,6 +83,8 @@ class HomeController extends Controller
     //         e.nome_departamento,
     //         c.numero_semestre
     // ");
+
+    
     
         return view('pages.home', compact('totalFuncionario','totalEstudante','data','genderData','countDepartamento','countdocentelevel'));
     }

@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Exports;
 namespace App\Http\Controllers;
 use Yajra\DataTables\DataTables;
 use App\Models\ModelStudent;
@@ -10,6 +11,7 @@ use App\Models\ModelLicencaEstudante;
 use App\Models\ModelNaturalidadeEstudante;
 use App\Models\ModelProgramaEstudo;
 use App\Models\ModelsemestreEstudante;
+use App\Models\ModelFinalista;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ModelUser;
@@ -25,9 +27,14 @@ use App\Models\ViewMunicipioPosto;
 use App\Exports\PaymentsExport;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use Illuminate\Contracts\Support\Responsable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
 
 class StudentController extends Controller
 {
+
+    
     public function index()
     {
         $students = ModelMatricula::with(['student', 'semestre', 'programaEstudo.departamento'])
@@ -68,7 +75,47 @@ class StudentController extends Controller
         }
     }
 
-    
+    public function EstudanteNaoAtivo()
+    {
+       
+            $anos = DB::table('view_estudante')
+            // ->where('id_departamento', $id) // Use the same $id for the department
+            ->distinct()
+            ->pluck('ano_inicio');
+
+        return view('pages.students.estudante_nao_ativo', compact('anos'));
+    }
+
+    public function getEstudanteNaoAtivo(Request $request)
+{
+    $ano_inicio = $request->ano_inicio ?: date('Y');
+    $id_student = $request->id_student;
+
+    if ($request->ajax()) {
+        $data = DB::table('view_estudante')
+            ->when($ano_inicio, function ($query, $ano_inicio) {
+                $query->where('ano_inicio', $ano_inicio); // Filter by `ano_inicio` if provided
+            })
+            ->whereNotNull('controlo_estado') // Filter rows where `controlo_estado` is not null
+            ->whereNull('estado')            // Filter rows where `estado` is null
+            ->select('*');                   // Select all columns
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $editUrl = route('students.detail', $row->id_student);
+                // $deleteUrl = route('docentes.destroy', $row->id_student);
+
+                $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Detalho</a>';
+                $btn .= '';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+}
+
     
     public function EscolhaEstudante()
     {
@@ -128,10 +175,9 @@ class StudentController extends Controller
                 ->addColumn('action', function ($row) {
                     $editUrl = route('students.edit', $row->id_student);
                     $inserirUrl = route('students.detail', $row->id_student);
-                    $deleteUrl = route('docentes.destroy', $row->id_student);
-    
+                    $deleteUrl = route('students.destroy', $row->id_student);
                     $btn = '<a href="' . $editUrl . '" class="edit btn btn-primary">Editar</a>';
-                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Inserir Valor</a>';
+                    $btn .= ' <a href="' . $inserirUrl . '" class="input btn btn-info btn-sm">Detail</a>';
                     $btn .= ' <button type="button" class="delete btn btn-danger btn-sm" onclick="confirmDelete(\'' . $deleteUrl . '\')">Apagar</button>';
     
                     return $btn;
@@ -140,6 +186,51 @@ class StudentController extends Controller
                 ->make(true);
         }
     }
+
+    public function ViewMonitoramentoFinalista()
+    {
+       
+        $departamento = ModelDepartamento::all();
+
+        return view('pages.students.estudante_finalista.monitoramento_finalista',compact('departamento'));
+    }
+    public function getMonitoramentoFinalista(Request $request)
+    {
+        if ($request->ajax()) {
+            // Get filters from request
+            $nomeDepartamento = $request->input('nome_departamento');
+            $anoAcademico = $request->input('ano_academico');
+    
+            // Build the query with optional filters
+            $data = DB::table('view_finalista_estudante')
+                ->select('*');
+    
+            if ($nomeDepartamento) {
+                $data->where('nome_departamento', 'LIKE', '%' . $nomeDepartamento . '%');
+            }
+    
+            if ($anoAcademico) {
+                $data->where('ano_academico', $anoAcademico);
+            }
+    
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    // Initialize $btn
+                    $btn = '';
+    
+                    // Add Detail button
+                    $detailUrl = route('semestre_estudante', $row->id_student);
+                    $btn .= '<a href="' . $detailUrl . '" class="detail btn btn-info btn-sm">Detail</a>';
+    
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+    
+    
     
     public function exportEstudantes(Request $request)
     {
@@ -187,7 +278,50 @@ class StudentController extends Controller
     }
     
         
-
+    public function exportEstudantesNaoAtivo(Request $request)
+    {
+        $id_departamento = $request->input('id_departamento');
+        $ano_inicio = $request->input('ano_inicio');
+    
+        // Query filtered data
+        $data = DB::table('view_estudante')
+            ->where('id_departamento', $id_departamento)
+            ->when($ano_inicio, function ($query, $ano_inicio) {
+                return $query->where('ano_inicio', $ano_inicio);
+            })
+            ->get();
+    
+        // Prepare CSV
+        $filename = "estudantes_{$id_departamento}.csv";
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+    
+        $columns = ['NRE','Nome', 'Sexo', 'Data Moris', 'Departamento',' Programa Estudo', 'Semestre', 'Ano Academico'];
+    
+        $callback = function () use ($data, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns); // Header row
+    
+            foreach ($data as $row) {
+                fputcsv($file, [
+                    $row->nre,
+                    $row->nome_estudante,
+                    $row->sexo,
+                    $row->data_moris,
+                    $row->nome_departamento,
+                    $row->nome_programa,
+                    $row->numero_semestre,
+                    $row->ano_inicio,
+                ]);
+            }
+    
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
 
 
    
@@ -204,17 +338,16 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        // $dateOfBirth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+        // Validate incoming request data
         $validatedData = $request->validate([
             'complete_name' => 'required|string|max:255',
             'gender' => 'required|string|in:Male,Female',
             'place_of_birth' => 'required|string|max:255',
-            // 'date_of_birth' => 'required|date_format:d/m/Y',
             'date_of_birth' => 'required|date',
-            'nre' => 'required|string|max:50',
+            'nre' => 'required|string|max:50|unique:students,nre', // Add unique validation here
             'faculty' => 'required|string|max:255',
-            'id_programa_estudo' => 'required|string', // Ensure this matches the form field
-            'id_semestre' => 'required|string', // Ensure this matches the form field
+            'id_programa_estudo' => 'required|string',
+            'id_semestre' => 'required|string',
             'start_year' => 'required|integer|min:1900|max:' . date('Y'),
             'ano_semestre' => 'nullable|string|max:255',
             'id_aldeias' => 'nullable|string|max:255',
@@ -223,17 +356,28 @@ class StudentController extends Controller
             'id_municipio' => 'nullable|string|max:255',
             'nacionalidade' => 'nullable|string|max:255',
             'endereco_atual' => 'nullable|string|max:255',
-            // 'observation' => 'nullable|string',
-            // 'student_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
+        // Check if nre already exists in the database
+        $existingStudent = ModelStudent::where('nre', $validatedData['nre'])->first();
+        if ($existingStudent) {
+            return redirect()->back()->withErrors(['nre' => 'O número NRE já está em uso.'])->withInput();
+        }
+    
+        // Handle file upload
         if ($request->hasFile('student_image')) {
             $image = $request->file('student_image');
             $student_image = $image->hashName();
             $image->storeAs('public/asset/posts', $student_image);
             $validatedData['student_image'] = $student_image;
         }
-
+    
+        // Set nullable fields to null if not provided
+        $nullableFields = ['id_posto_administrativo', 'id_municipio', 'id_suco', 'id_aldeias', 'nacionalidade', 'endereco_atual'];
+        foreach ($nullableFields as $field) {
+            $validatedData[$field] = $validatedData[$field] ?? null;
+        }
+    
         // Create the student
         $student = ModelStudent::create([
             'id_student' => (string) Str::uuid(),
@@ -243,51 +387,52 @@ class StudentController extends Controller
             'date_of_birth' => $validatedData['date_of_birth'],
             'nre' => $validatedData['nre'],
             'id_programa_estudo' => $validatedData['id_programa_estudo'],
-           'start_year' => $validatedData['start_year'],
+            'start_year' => $validatedData['start_year'],
             'student_image' => $request->file('student_image') ? $request->file('student_image')->store('students') : null,
-            // 'observation' => $validatedData['observation']
         ]);
-
-        // Create the associated user
+    
+        // Create associated user
         ModelUser::create([
             'user_id' => (string) Str::uuid(),
             'username' => $student->nre,
-            'email' => null, // Set email to null or receive it from request
-            'password' => Hash::make('defaultpassword'), // You may want to create a random password or handle it otherwise
+            'email' => null,
+            'password' => Hash::make('defaultpassword'),
             'docente_id_student' => $student->id_student,
             'tipo_usuario' => 'Estudante',
         ]);
-
-
+    
+        // Create associated matricula and semestre estudante
         ModelMatricula::create([
             'id_matricula' => (string) Str::uuid(),
             'id_student' => $student->id_student,
             'id_programa_estudo' => $validatedData['id_programa_estudo'],
             'id_semestre' => $validatedData['id_semestre'],
         ]);
-
+    
         ModelsemestreEstudante::create([
             'id_semestre_estudante' => (string) Str::uuid(),
             'id_student' => $student->id_student,
             'id_semestre' => $validatedData['id_semestre'],
             'ano_semestre' => $validatedData['ano_semestre'],
         ]);
-
-        ModelNaturalidadeEstudante::create([
-            'id_naturalidade_funcionario' => (string) Str::uuid(),
-            'id_student' => $student->id_student,
-            'id_municipio' => $validatedData['id_municipio'],
-            'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
-            'id_suco' => $validatedData['id_suco'],
-            'id_aldeias' => $validatedData['id_aldeias'],
-            'nacionalidade' => $validatedData['nacionalidade'],
-            'endereco_atual' => $validatedData['endereco_atual'],
-          
-        ]);
-
-        return redirect()->route('students.index')->with('success', 'Dados Estudante com sucesso gravados!');
+    
+        // Create naturalidade estudante if applicable
+        if ($validatedData['id_municipio'] || $validatedData['id_posto_administrativo'] || $validatedData['id_suco'] || $validatedData['id_aldeias'] || $validatedData['nacionalidade'] || $validatedData['endereco_atual']) {
+            ModelNaturalidadeEstudante::create([
+                'id_naturalidade_estudante' => (string) Str::uuid(),
+                'id_student' => $student->id_student,
+                'id_municipio' => $validatedData['id_municipio'],
+                'id_posto_administrativo' => $validatedData['id_posto_administrativo'],
+                'id_suco' => $validatedData['id_suco'],
+                'id_aldeias' => $validatedData['id_aldeias'],
+                'nacionalidade' => $validatedData['nacionalidade'] ?? 'Desconhecida',
+                'endereco_atual' => $validatedData['endereco_atual'] ?? '',
+            ]);
+        }
+    
+        return redirect()->route('students.index')->with('success', 'Dados do estudante gravados com sucesso!');
     }
-
+    
    
 
 
@@ -358,15 +503,28 @@ class StudentController extends Controller
         return redirect()->route('students.show', ['id_student' => $id_student])->with('success', 'Student updated successfully!');
     }
 
-    public function destroy(ModelStudent $student)
+    // public function destroys(ModelStudent $student)
+    // {
+    //     if ($student->student_image) {
+    //         Storage::delete('public/asset/posts/' . $student->student_image);
+    //     }
+
+    //     $student->delete();
+
+    //     return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
+    // }
+
+    public function destroy($id)
     {
-        if ($student->student_image) {
-            Storage::delete('public/asset/posts/' . $student->student_image);
-        }
-
-        $student->delete();
-
-        return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
+        // Find the docente by its ID
+        $student = ModelStudent::findOrFail($id);
+   
+        // Update the `controlo_estado` field to 'deleted'
+        $student->controlo_estado = 'Nao Ativo';
+        $student->save();
+   
+        // Redirect back with success message
+        return redirect()->route('students.index')->with('success', 'Estudante Desabilitar Com Sucesso');
     }
 
    
@@ -790,8 +948,12 @@ class StudentController extends Controller
                 $semestreEstudantes = DB::table('view_semestre_estudante')
                 ->where('id_student', $id)
                 ->paginate(5);
+                  
+                $finalista = DB::table('view_finalista_estudante')
+                ->where('id_student', $id)
+                ->paginate(5);
            
-            return view('pages.students.semestre_estudante.semestre',compact('student','semestreEstudantes') );
+            return view('pages.students.semestre_estudante.semestre',compact('student','semestreEstudantes','finalista') );
         }
 
 
@@ -830,16 +992,97 @@ class StudentController extends Controller
         public function SemestreAlterar( $id)
         {
         
-            $semestre = ModelsemestreEstudante::findOrFail($id);
+        
+            $semestre = ModelsemestreEstudante::all();
             // $student = ModelStudent::findOrFail($id);
-            $tipo_semestre = DB::table('tipo_licensa')
+            $tipo_semestre = DB::table('semestre')
             ->paginate(5);
-            $student = DB::table('view_estudante')
-            ->where('id_student', $id)
+            $student = DB::table('view_estudante_cada_materia')
+            ->where('id_semestre_estudante', $id)
             ->first();
 
-            return view('pages.students.semestre_estudante.alterar_semestre',compact('student','semestre','id','tipo_semestre') );
+            $editar = DB::table('view_semestre_estudante')
+            ->where('id_semestre_estudante', $id)
+            ->first();
+          
+
+            return view('pages.students.semestre_estudante.alterar_semestre',compact('student','semestre','id','tipo_semestre','editar') );
         }
+
+        public function updateSemestreEstudante(Request $request, $id)
+        {
+            $request->validate([
+              'id_student' => 'required|string|max:255',
+             'id_semestre' => 'required|string|max:255',
+             'ano_semestre' => 'required|string|max:255',
+           
+            ]);
+    
+            $semestreestudantes = ModelsemestreEstudante::findOrFail($id); // Find the habilitacao to update
+            $semestreestudantes->id_student = $request->input('id_student');
+            $semestreestudantes->id_semestre = $request->input('id_semestre');
+            $semestreestudantes->ano_semestre = $request->input('ano_semestre');
+            $semestreestudantes->data_atualiza_semestre = $request->input('data_atualiza_semestre');
+            $semestreestudantes->save(); // Save the updated habilitacao
+    
+            // Redirect back to the habilitacao page with a success message
+            return redirect()->route('semestre_estudante', ['id' => $request->input('id_student')])
+            ->with('success', 'Dados Semestre de estudante foi atualizado com sucesso.');
+        }
+     
+        public function destroySemestre($id)
+        {
+            try {
+                ModelsemestreEstudante::findOrFail($id)->delete();
+                return redirect()->back()->with('success', 'Semestre Estudante excluído com sucesso!');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erro ao excluir finalista.');
+            }
+        }
+
+        //start finalista
+        public function CreateFinalista( $id)
+        {    
+            $student = ModelStudent::findOrFail($id);
+           
+            return view('pages.students.estudante_finalista.inserir_finalista',compact('student','id') );
+        }
+
+        public function storeFinalista(Request $request)
+        {
+            $request->validate([
+                'id_student' => 'required|string|max:255',
+                'ano_academico' => 'required|string|max:255',
+                'estatus' => 'required|string|max:255',
+            ]);
+        
+            try {
+                $finalista = new ModelFinalista();
+                $finalista->id_student = $request->input('id_student');
+                $finalista->ano_academico = $request->input('ano_academico');
+                $finalista->estatus = $request->input('estatus');
+                $finalista->observacao = $request->input('observacao');
+                
+                $finalista->save();
+        
+                return redirect()->route('semestre_estudante', ['id' => $request->input('id_student')])
+                    ->with('success1', 'Dados Finalista foi registrado com sucesso.');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error1', 'Falha ao registrar os dados do Finalista. Por favor, tente novamente.');
+            }
+        }
+        
+        public function destroyFinalista($id)
+        {
+            try {
+                ModelFinalista::findOrFail($id)->delete();
+                return redirect()->back()->with('success2', 'Finalista excluído com sucesso!');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erro ao excluir finalista.');
+            }
+        }
+
+        #remata
 
 
         // naturalidade

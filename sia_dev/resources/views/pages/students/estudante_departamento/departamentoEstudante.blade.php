@@ -46,7 +46,7 @@
                     @endif
                         <div class="table-responsive">
                         <table class="table data-table display table-striped table-bordered table-box-wrap text-nowrap">
-                                <thead>
+                             <thead class="text-white" style="background-color:cadetblue;">
                                     <tr>
                                        <th>Faculdade</th>   
                                         <th>Departamento</th>                                            

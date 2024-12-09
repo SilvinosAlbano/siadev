@@ -46,8 +46,11 @@ Route::middleware('check.access')->group(function () {
     // Students Routes
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('/export-estudantes', [StudentController::class, 'exportEstudantes'])->name('export.estudantes');
-    Route::get('get-estudante-geral', [StudentController::class, 'getEstudanteGeral'])->name('get.estudantegeral');
+    Route::get('/export-estudantes-nao-ativo', [StudentController::class, 'exportEstudantesNaoAtivo'])->name('export.estudantes_nao_ativo');
 
+    Route::get('get-estudante-geral', [StudentController::class, 'getEstudanteGeral'])->name('get.estudantegeral');
+    Route::get('get-estudante-nao-ativo', [StudentController::class, 'getEstudanteNaoAtivo'])->name('get.estudantenaoativo');
+    Route::get('estudante-nao-ativo', [StudentController::class, 'EstudanteNaoAtivo'])->name('estudantenaoativo');
     Route::resource('students', StudentController::class);
     Route::get('/escolha_estudante', [StudentController::class, 'EscolhaEstudante'])->name('escolha_estudante');
     Route::get('/detailho_escolha_departamento/{id}', [StudentController::class, 'showDetailEscolhaEstudante'])->name('detailho_escolha_departamento');
@@ -68,6 +71,17 @@ Route::middleware('check.access')->group(function () {
     #start materia estudante
     Route::get('/estudante/materia/{id}', [StudentController::class, 'MateriaEstudante'])->name('materia_estudante');
     #end
+    #start route create finalista
+    Route::get('/estudante/finalista/{id}', [StudentController::class, 'CreateFinalista'])->name('inserir_finalista');
+    Route::post('/finalista', [StudentController::class, 'storeFinalista'])->name('finalista.store');
+    Route::put('/finalista/{id_finalista}', [StudentController::class, 'updateFinalista'])->name('finalista.update');
+    Route::delete('/finalista/{id}', [StudentController::class, 'destroyFinalista'])->name('destroy_finalista');
+    Route::get('/monitoramneto/finalista/', [StudentController::class, 'ViewMonitoramentoFinalista'])->name('view_monitoramento_finalista');
+    Route::get('/monitoramento-finalista', [StudentController::class, 'getMonitoramentoFinalista'])->name('monitoramento.finalista');
+
+   
+    #end
+
 
     #start Departamento estudante
     Route::get('/estudante/departamento/{id}', [StudentController::class, 'DepartamentoEstudante'])->name('departamento_estudante');
@@ -102,6 +116,9 @@ Route::middleware('check.access')->group(function () {
     Route::get('/estudante/inserir_semestre/{id}', [StudentController::class, 'InserirSemestre'])->name('inserir_semestre');
     Route::post('/semestre_store', [StudentController::class, 'SemestreStore'])->name('semestre_estudante.store');
    Route::get('/alterar_semestre_estudante/{id}', [StudentController::class, 'SemestreAlterar'])->name('alterar_semestre_estudante'); 
+   Route::delete('/semestre-apagar/{id}', [StudentController::class, 'destroySemestre'])->name('destroy_semestre');
+  
+   Route::put('/update_semestre/{id}', [StudentController::class, 'updateSemestreEstudante'])->name('semestre_estudante.update');
     #ned semestre
 
     #start naturalidade estudante

@@ -47,7 +47,12 @@
                                             <label>Número Registo Estudante (NRE)</label>
                                             <input type="text" class="form-control" name="nre"
                                                 value="{{ old('nre', $student->nre ?? '') }}" required>
-                                        </div>
+                                                @error('nre')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                         </div>
 
                                        
                                         

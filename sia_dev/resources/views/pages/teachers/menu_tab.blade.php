@@ -28,14 +28,7 @@
                         <a class="nav-link active {{ request()->routeIs('alterar_habilitacao.index') ? 'active' : '' }}" href="{{ route('alterar_habilitacao.index', $detail->id_funcionario) }}">Alterar Habilitação</a>
                     </li>
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('departamento') ? 'active' : '' }}" href="{{ route('departamento', $detail->id_funcionario) }}">Departamento</a>
-                    </li>
-                    @if (request()->routeIs('inserir_departamento'))
-                    <li class="nav-item">
-                        <a class="nav-link active {{ request()->routeIs('inserir_departamento') ? 'active' : '' }}" href="{{ route('inserir_departamento', $detail->id_funcionario) }}">Inserir Departamento</a>
-                    </li>
-                    @endif
+                   
                     @if (request()->routeIs('alterar_departamento.index'))
                     <li class="nav-item">
                         <a class="nav-link active {{ request()->routeIs('alterar_departamento.index') ? 'active' : '' }}" href="{{ route('alterar_departamento.index', $detail->id_funcionario) }}">Alterar Departamento</a>

@@ -61,17 +61,17 @@
                                 <td class="font-medium text-dark-medium">{{ $detail->categoria }}</td>
                             </tr>
                             <tr>
-                                <td>Estatuto:</td>
+                                <td>Tipo Contrato:</td>
                                 <td class="font-medium text-dark-medium">{{ $detail->estatuto }}</td>
                             </tr>
 
                             <tr>
-                                <td>Numero Contacto:</td>
-                                <td class="font-medium text-dark-medium">{{ $detail->no_contacto }}</td>
+                                <td>Nivel Educacao:</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->habilitacao }}</td>
                             </tr>
                             <tr>
-                                <td>E-mail:</td>
-                                <td class="font-medium text-dark-medium">{{ $detail->email }}</td>
+                                <td>Contacto:</td>
+                                <td class="font-medium text-dark-medium">{{ $detail->email }}-{{ $detail->no_contacto }}</td>
                             </tr>
                             
                         </tbody>

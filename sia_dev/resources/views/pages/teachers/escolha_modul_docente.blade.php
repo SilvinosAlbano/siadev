@@ -47,12 +47,12 @@
     </div>
 
     <div class="row gutters-20">
-        <div class="col-6 mt-4 mb-4">
+        <div class="col-3 mt-4 mb-4">
             <div class="card dashboard-card pd-b-20">
                 <div class="card-body">
                     <div class="heading-layout1">
                         <div class="item-title">
-                            <h3>Alerta Tipo Contrato Docemte</h3>
+                            <h3>Alertas Tipo Contrato Docemte</h3>
                         </div>
                     </div>
                     @foreach ($alerta_tipo_contrato as $data)
@@ -67,6 +67,52 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-4 mt-4 mb-4">
+            <div class="card dashboard-card pd-b-20">
+                <div class="card-body">
+                    <div class="heading-layout1">
+                        <div class="item-title">
+                            <h3>Alertas Docente Nao Ativo</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-danger text-dark" role="alert">
+                        <p class="text-dark"><strong>Total Funcionários Nao Ativo:</strong> {{ $total_docentes_nao_ativo }}</p>
+                          @foreach($docente_nao_ativo as $docente)
+
+                           ⏯ {{ $docente->nome_funcionario }}  <br>
+                            @endforeach
+                         </div>
+
+                                    
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-4 mt-4 mb-4">
+            <div class="card dashboard-card pd-b-20">
+                <div class="card-body">
+                    <div class="heading-layout1">
+                        <div class="item-title">
+                            <h3>Alertas Docente Com Cargo</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-primary text-dark" role="alert">
+                        <p class="text-dark"><strong>Total Funcionários Nao Ativo:</strong> {{ $pozisaun_funcionario }}</p>
+                          @foreach($pozisaun as $docente)
+
+                           ⏯ {{ $docente->nome_funcionario }}:{{ $docente->nome_pozisaun }}  <br>
+                            @endforeach
+                         </div>
+
+                                    
+                </div>
+            </div>
+        </div>
     </div>
+    
 
 @endsection

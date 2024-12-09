@@ -22,7 +22,7 @@
             <div class="card-body">
                 <div class="heading-layout1">
                     <div class="item-title">
-                        <h3>Formulario Configura Valor Indice de Departamento</h3>
+                        <h3>Formulario  Registrar</h3>
                     </div>
                 </div>
 
